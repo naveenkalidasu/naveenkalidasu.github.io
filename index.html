@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day Cancellation (Dec 27 - Apr 10)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .calendar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .day {
+      padding: 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      text-align: center;
+      width: 50px;
+    }
+    .day.cancelled {
+      background-color: #ffcccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>Day Cancellation (Dec 27 - Apr 10)</h1>
+  <div class="calendar" id="calendar">
+    <!-- Days will be dynamically generated here -->
+  </div>
+
+  <script>
+    // Define the date range
+    const startDate = new Date('2023-12-27'); // December 27, 2023
+    const endDate = new Date('2024-04-10');   // April 10, 2024
+
+    // Calculate the number of days in the range
+    const timeDifference = endDate - startDate;
+    const totalDays = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)) + 1; // Include both start and end dates
+
+    // Get the calendar container
+    const calendar = document.getElementById('calendar');
+    const storageKey = 'cancelledDays';
+
+    // Load cancelled days from localStorage
+    const cancelledDays = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    // Function to format a date as "Month Day"
+    function formatDate(date) {
+      return date.toLocaleString('default', { month: 'short', day: 'numeric' });
+    }
+
+    // Generate the calendar
+    for (let i = 0; i < totalDays; i++) {
+      const currentDate = new Date(startDate);
+      currentDate.setDate(startDate.getDate() + i);
+
+      const dayElement = document.createElement('div');
+      dayElement.classList.add('day');
+      dayElement.textContent = formatDate(currentDate);
+
+      // Check if the day is already cancelled
+      if (cancelledDays.includes(currentDate.toISOString().split('T')[0])) {
+        dayElement.classList.add('cancelled');
+        dayElement.textContent += ' (Cancelled)';
+        dayElement.removeEventListener('click', cancelDay); // Prevent re-clicking
+      } else {
+        dayElement.addEventListener('click', () => cancelDay(dayElement, currentDate));
+      }
+
+      calendar.appendChild(dayElement);
+    }
+
+    // Function to cancel a day
+    function cancelDay(dayElement, date) {
+      if (!dayElement.classList.contains('cancelled')) {
+        dayElement.classList.add('cancelled');
+        dayElement.textContent += ' (Cancelled)';
+        dayElement.removeEventListener('click', cancelDay); // Prevent re-clicking
+
+        // Save the cancelled day in localStorage
+        const dateString = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        cancelledDays.push(dateString);
+        localStorage.setItem(storageKey, JSON.stringify(cancelledDays));
+      }
+    }
+  </script>
+</body>
+</html>
