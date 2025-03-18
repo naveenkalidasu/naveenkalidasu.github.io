@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Todo List</title>
+    <style>
+        body{
+            color: white;
+        }
+      
+        .todo-container {
+            margin-top: 20px;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background-color:blue;
+            border-radius: 5px;
+        }
+        .todo-item.completed {
+            background-color: #e0e0e0;
+            text-decoration: line-through;
+            color: #666;
+        }
+        .delete-btn {
+            margin-left: auto;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            margin-right: 10px;
+            margin-left:10% ;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        h1{
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1 align="center">Todo List</h1>
+    <div>
+        <input type="text" id="todoInput" placeholder="Enter a new task" align="center">
+        <button onclick="addTodo()">Add</button>
+    </div>
+    <div id="todoList" class="todo-container"></div>
+
+    <script>
+        let todos = [];
+
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const task = input.value.trim();
+            
+            if (task) {
+                todos.push({ text: task, completed: false });
+                input.value = '';
+                renderTodos();
+            }
+        }
+
+        function toggleTodo(index) {
+            todos[index].completed = !todos[index].completed;
+            renderTodos();
+        }
+
+        function deleteTodo(index) {
+            todos.splice(index, 1);
+            renderTodos();
+        }
+
+        function renderTodos() {
+            const todoList = document.getElementById('todoList');
+            todoList.innerHTML = '';
+
+            todos.forEach((todo, index) => {
+                const div = document.createElement('div');
+                div.className = 'todo-item' + (todo.completed ? ' completed' : '');
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = todo.completed;
+                checkbox.onclick = () => toggleTodo(index);
+                
+                const text = document.createElement('span');
+                text.textContent = todo.text;
+                text.style.marginLeft = '10px';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.onclick = () => deleteTodo(index);
+
+                div.appendChild(checkbox);
+                div.appendChild(text);
+                div.appendChild(deleteBtn);
+                todoList.appendChild(div);
+            });
+        }
+        document.getElementById('todoInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTodo();
+            }
+        });
+    </script>
+</body>
+</html>
