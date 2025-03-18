@@ -16,10 +16,29 @@
             transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
             overflow-x: hidden;
         }
-
-        /* Removed smooth scroll */
+        a {
+            text-decoration: none;
+            position: relative;
+            color: #1a73e8;
+          }
+          
+          a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #1a73e8;
+            transition: width 0.3s ease-in-out;
+          }
+          
+          a:hover::after {
+            width: 100%;
+          }
+    
         html {
-            /* scroll-behavior: smooth; */
+        
         }
 
         .loader {
@@ -482,16 +501,17 @@
         <div class="projects-grid">
             <div class="project-card">
                 <i class="fas fa-exchange-alt"></i>
-                <h3>Currency Converter</h3>
+                <a href="https://naveenkalidasu.github.io/currencyconverter.html">Currency Converter</a>
                 <p>A simple web app that converts currency values based on live exchange rates.</p>
             </div>
             <div class="project-card">
                 <i class="fas fa-tasks"></i>
-                <h3>To-Do List</h3>
+                <a href="https://naveenkalidasu.github.io/todolist(pro1).html">To-do-List</a>
                 <p>A task management app where users can add, edit, and delete tasks.</p>
             </div>
             <div class="project-card">
                 <i class="fas fa-cloud-sun-rain"></i>
+                
                 <h3>Weather App</h3>
                 <p>A web app displaying real-time weather data for any location.</p>
             </div>
