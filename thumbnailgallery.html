@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Thumbnail Gallery</title>
+  <style>
+    :root {
+      --primary: #3498db;
+      --secondary: #2ecc71;
+      --dark: #2c3e50;
+      --light: #ecf0f1;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: var(--dark);
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 3px;
+      background: var(--primary);
+      bottom: -10px;
+      left: 25%;
+      border-radius: 3px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .back-btn.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-btn:hover {
+      background: var(--secondary);
+      transform: translateY(-50%) translateX(-5px);
+    }
+
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .filter-btn {
+      padding: 8px 20px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      aspect-ratio: 1/1;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    .gallery-item .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: white;
+      padding: 20px;
+      transform: translateY(100%);
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover .overlay {
+      transform: translateY(0);
+    }
+
+    .gallery-item .title {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+
+    .gallery-item .category {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      display: inline-block;
+      padding: 3px 8px;
+      background: var(--primary);
+      border-radius: 50px;
+    }
+
+    /* Lightbox Styles */
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 5px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .lightbox-close:hover {
+      color: var(--primary);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-nav button {
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.2rem;
+    }
+
+    .lightbox-nav button:hover {
+      background: var(--primary);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .gallery-item {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+
+      h1 {
+        font-size: 2rem;
+        padding-top: 40px;
+      }
+
+      .back-btn {
+        top: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-buttons {
+        gap: 5px;
+      }
+
+      .filter-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Interactive Gallery</h1>
+      <button class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Back
+      </button>
+    </header>
+
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="nature">Nature</button>
+      <button class="filter-btn" data-filter="architecture">Architecture</button>
+      <button class="filter-btn" data-filter="people">People</button>
+      <button class="filter-btn" data-filter="animals">Animals</button>
+    </div>
+
+    <div class="gallery">
+      <!-- Nature -->
+      <div class="gallery-item" data-category="nature">
+        <img src="https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg" alt="Mountain">
+        <div class="overlay">
+          <h3 class="title">Mountain View</h3>
+          <span class="category">Nature</span>
+        </div>
+      </div>
+      <div class="gallery-item" data-category="nature">
+        <img src="https://images.pexels.com/photos/15286/pexels-photo.jpg" alt="Forest">
+        <div class="overlay">
+          <h3 class="title">Deep Forest</h3>
+          <span class="category">Nature</span>
+        </div>
+      </div>
+      <div class="gallery-item" data-category="nature">
+        <img src="https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg" alt="Ocean">
+        <div class="overlay">
+          <h3 class="title">Ocean Waves</h3>
+          <span class="category">Nature</span>
+        </div>
+      </div>
+
+      <!-- Architecture -->
+      <div class="gallery-item" data-category="architecture">
+        <img src="https://images.pexels.com/photos/323775/pexels-photo-323775.jpeg" alt="Building">
+        <div class="overlay">
+          <h3 class="title">Modern Architecture</h3>
+          <span class="category">Architecture</span>
+        </div>
+      </div>
+      <div class="gallery-item" data-category="architecture">
+        <img src="https://images.pexels.com/photos/358443/pexels-photo-358443.jpeg" alt="Bridge">
+        <div class="overlay">
+          <h3 class="title">Golden Bridge</h3>
+          <span class="category">Architecture</span>
+        </div>
+      </div>
+      <div class="gallery-item" data-category="architecture">
+        <img src="https://images.pexels.com/photos/373912/pexels-photo-373912.jpeg" alt="Skyscraper">
+        <div class="overlay">
+          <h3 class="title">City Skyscraper</h3>
+          <span class="category">Architecture</span>
+        </div>
+      </div>
+
+      <!-- People -->
+      <div class="gallery-item" data-category="people">
+        <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg" alt="Portrait">
+        <div class="overlay">
+          <h3 class="title">Portrait Photography</h3>
+          <span class="category">People</span>
+        </div>
+      </div>
+      <div class="gallery-item" data-category="people">
+        <img src="https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg" alt="Street">
+        <div class="overlay">
+          <h3 class="title">Street Life</h3>
+          <span class="category">People</span>
+        </div>
+      </div>
+
+      <!-- Animals -->
+      <div class="gallery-item" data-category="animals">
+        <img src="https://images.pexels.com/photos/247502/pexels-photo-247502.jpeg" alt="Lion">
+        <div class="overlay">
+          <h3 class="title">Wild Lion</h3>
+          <span class="category">Animals</span>
+        </div>
+      </div>
+      <div class="gallery-item" data-category="animals">
+        <img src="https://images.pexels.com/photos/45853/grey-crowned-crane-bird-crane-animal-45853.jpeg" alt="Bird">
+        <div class="overlay">
+          <h3 class="title">Colorful Bird</h3>
+          <span class="category">Animals</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox">
+    <div class="lightbox-content">
+      <span class="lightbox-close">&times;</span>
+      <img src="" alt="">
+      <div class="lightbox-nav">
+        <button class="prev-btn">❮</button>
+        <button class="next-btn">❯</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const backBtn = document.querySelector('.back-btn');
+      const lightbox = document.querySelector('.lightbox');
+      const lightboxImg = document.querySelector('.lightbox img');
+      const lightboxClose = document.querySelector('.lightbox-close');
+      const prevBtn = document.querySelector('.prev-btn');
+      const nextBtn = document.querySelector('.next-btn');
+      
+      let currentImageIndex = 0;
+      const images = Array.from(galleryItems).map(item => item.querySelector('img').src);
+
+      // Filter Gallery Items
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Update active button
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+
+          const filter = button.dataset.filter;
+
+          // Filter items
+          galleryItems.forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
+              item.style.display = 'block';
+              item.style.animation = 'fadeIn 0.5s ease forwards';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Lightbox Functionality
+      galleryItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          currentImageIndex = index;
+          lightboxImg.src = images[currentImageIndex];
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      // Close Lightbox
+      lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+
+      // Navigation in Lightbox
+      prevBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        lightboxImg.src = images[currentImageIndex];
+      });
+
+      nextBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        lightboxImg.src = images[currentImageIndex];
+      });
+
+      // Keyboard Navigation
+      document.addEventListener('keydown', (e) => {
+        if (lightbox.classList.contains('active')) {
+          if (e.key === 'Escape') {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+          } else if (e.key === 'ArrowLeft') {
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            lightboxImg.src = images[currentImageIndex];
+          } else if (e.key === 'ArrowRight') {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            lightboxImg.src = images[currentImageIndex];
+          }
+        }
+      });
+
+      // Back Button Visibility
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 200) {
+          backBtn.classList.add('visible');
+        } else {
+          backBtn.classList.remove('visible');
+        }
+      });
+
+      // Back to Top Functionality
+      backBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>
