@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Document</title>
+    <style>
+        .border{
+            border: 2px solid black;
+            width: 300px;
+            height: 400px;
+            margin-left: 40%;
+            position: fixed;
+            gap: 5px;
+            text-align: center;
+            background-color: rgb(22, 157, 175);
+        }
+       
+        
+        .in{
+            margin-top: 40%;
+        }
+    </style>
+</head>
+<body>
+   <div class="border">
+    <div class="in">
+        <p><b><u>CURRENCY CONVERTER</u></b></p>
+    <input type="number" placeholder="Enter the rupees:" id="input">
+    <br>
+    <p>CONVERTED TO:</p>
+    <select id="currency">
+        <option >SELECT</option>
+        <option value="USD">AMERICA</option>
+        <option value="RSD">Russia</option>
+        <option value="UK">United Kingdom</option>
+        <option value="JP">japan</option>
+      
+
+       
+    </select> 
+    <button onclick="i()">Sumbit</button>
+    <p id="output"></p>
+    </div>
+   </div>
+    <script>
+        function i()
+        {
+            let p=document.getElementById('input').value;
+            let q=document.getElementById('currency').value;
+          
+            if(q=='USD')
+            {
+                let Converted=(p/86.42).toFixed(2);
+                document.getElementById('output').innerHTML=`₹${p}&nbsp;=&nbsp;$&nbsp;${Converted} dollars`;
+            }
+            else if(q=='RSD')
+            {
+                let Converted=(p/90.727).toFixed(2);
+                document.getElementById('output').innerHTML=` ₹${p}&nbsp;=&nbsp;<i class='fa-solid fa-ruble-sign'></i>&nbsp;${Converted}  Yen`;
+            }
+            else if(q=='JP')
+            {
+                let Converted=(p/ 0.5747 ).toFixed(2);
+                document.getElementById('output').innerHTML=`₹${p}&nbsp;=&nbsp;<i class='fa-solid fa-yen-sign'></i>&nbsp;${Converted} Yen`;
+            }
+            else if(q=='UK')
+            {
+                let Converted=(p/109.57).toFixed(2);
+                document.getElementById('output').innerHTML=`₹${p}&nbsp;=&nbsp;<i class='fa-solid fa-pound-sign'></i>&nbsp;${Converted} Pound `;
+            }
+            else 
+            {
+                alert("Please Select the country");
+            }
+           
+
+        }
+    </script>
+</body>
+</html>
