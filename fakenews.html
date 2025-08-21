@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthCheck AI - Fake News Detector</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-top: 40px;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .analyze-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .analyze-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .analyze-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #2c3e50;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .confidence-meter {
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+        
+        .factors {
+            margin-top: 20px;
+        }
+        
+        .factor {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .factor i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .fa-check-circle {
+            color: #27ae60;
+        }
+        
+        .fa-times-circle {
+            color: #e74c3c;
+        }
+        
+        .fa-exclamation-circle {
+            color: #f39c12;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .examples {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .example-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .example-btn:hover {
+            background: #c0392b;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .disclaimer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TruthCheck AI</h1>
+            <p class="tagline">AI-Powered Fake News Detection</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2>Check News Article</h2>
+                <p>Paste the text of a news article or social media post below to analyze its credibility</p>
+                <textarea id="news-text" placeholder="Paste article text here..."></textarea>
+                
+                <button class="analyze-btn" id="analyze-btn">
+                    <i class="fas fa-search"></i> Analyze Content
+                </button>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing content with AI...</p>
+                </div>
+            </div>
+            
+            <div class="results-section" id="results-section">
+                <div class="result-header">
+                    <h2>Analysis Results</h2>
+                    <span id="verdict-label" class="verdict-label">Unverified</span>
+                </div>
+                
+                <p id="verdict-text">Our AI analysis suggests this content is likely fake.</p>
+                
+                <h3>Confidence Level</h3>
+                <div class="confidence-meter">
+                    <div class="confidence-fill" id="confidence-fill"></div>
+                </div>
+                <p id="confidence-text">87% confidence</p>
+                
+                <div class="factors">
+                    <h3>Key Factors</h3>
+                    <div class="factor">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Sensationalist language detected</span>
+                    </div>
+                    <div class="factor">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Source citations appear valid</span>
+                    </div>
+                    <div class="factor">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Mixed sentiment analysis results</span>
+                    </div>
+                    <div class="factor">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Emotional manipulation patterns identified</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="examples">
+                <p>Try an example: </p>
+                <button class="example-btn" id="example1">Example 1 (Reliable)</button>
+                <button class="example-btn" id="example2">Example 2 (Questionable)</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>TruthCheck AI - Prototype | This is a demonstration of a fake news detection system</p>
+        <div class="disclaimer">
+            Disclaimer: This is a basic prototype and should not be used for actual fact-checking purposes.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const loadingElement = document.getElementById('loading');
+            const resultsSection = document.getElementById('results-section');
+            const newsText = document.getElementById('news-text');
+            const confidenceFill = document.getElementById('confidence-fill');
+            const confidenceText = document.getElementById('confidence-text');
+            const verdictLabel = document.getElementById('verdict-label');
+            const verdictText = document.getElementById('verdict-text');
+            const example1Btn = document.getElementById('example1');
+            const example2Btn = document.getElementById('example2');
+            
+            // Example reliable news text
+            const reliableExample = "NASA's Perseverance rover has successfully collected its first sample of Martian rock. The core sample, slightly thicker than a pencil, was sealed in a titanium tube for eventual return to Earth. This marks a historic first step in the Mars Sample Return campaign, a partnership between NASA and ESA to bring Martian samples to Earth for detailed analysis.";
+            
+            // Example questionable news text
+            const questionableExample = "BREAKING: Scientists discover that COVID-19 vaccines contain microchips that allow governments to track citizens! The shocking revelation was made by a whistleblower who used to work for a major pharmaceutical company. Studies show that vaccinated people are experiencing unusual magnetic fields around their arms where they received the shot. This confirms our worst fears about the global vaccination agenda.";
+            
+            // Set up example buttons
+            example1Btn.addEventListener('click', () => {
+                newsText.value = reliableExample;
+            });
+            
+            example2Btn.addEventListener('click', () => {
+                newsText.value = questionableExample;
+            });
+            
+            // Analyze button click handler
+            analyzeBtn.addEventListener('click', () => {
+                const text = newsText.value.trim();
+                
+                if (text.length < 50) {
+                    alert('Please enter a longer text for analysis (at least 50 characters)');
+                    return;
+                }
+                
+                // Show loading animation
+                loadingElement.style.display = 'block';
+                resultsSection.style.display = 'none';
+                
+                // Simulate AI processing time
+                setTimeout(() => {
+                    analyzeText(text);
+                }, 2000);
+            });
+            
+            // Function to analyze the text (simulated)
+            function analyzeText(text) {
+                // Hide loading animation
+                loadingElement.style.display = 'none';
+                
+                // Show results section
+                resultsSection.style.display = 'block';
+                
+                // Simple heuristic analysis (in a real app, this would be done with ML/NLP)
+                const lowerText = text.toLowerCase();
+                let confidence = 70;
+                let isReliable = false;
+                
+                // Check for indicators of reliable content
+                if (lowerText.includes('study') || lowerText.includes('research') || 
+                    lowerText.includes('scientist') || lowerText.includes('according to')) {
+                    confidence += 10;
+                }
+                
+                // Check for indicators of questionable content
+                if (lowerText.includes('breaking') || lowerText.includes('shocking') || 
+                    lowerText.includes('whistleblower') || lowerText.includes('agenda')) {
+                    confidence -= 15;
+                }
+                
+                if (lowerText.includes('!')) {
+                    // Reduce confidence for each exclamation mark (sensationalism)
+                    const exclamationCount = (lowerText.match(/!/g) || []).length;
+                    confidence -= exclamationCount * 2;
+                }
+                
+                // Cap confidence between 5% and 95%
+                confidence = Math.max(5, Math.min(95, confidence));
+                
+                // Determine if content is reliable
+                isReliable = confidence > 65;
+                
+                // Update UI with results
+                confidenceFill.style.width = `${confidence}%`;
+                confidenceText.textContent = `${Math.round(confidence)}% confidence`;
+                
+                if (isReliable) {
+                    verdictLabel.textContent = 'Likely Reliable';
+                    verdictLabel.style.color = '#27ae60';
+                    verdictText.textContent = 'Our AI analysis suggests this content appears to be reliable.';
+                    confidenceFill.style.background = '#27ae60';
+                } else {
+                    verdictLabel.textContent = 'Questionable';
+                    verdictLabel.style.color = '#e74c3c';
+                    verdictText.textContent = 'Our AI analysis suggests this content may be misleading or false.';
+                    confidenceFill.style.background = '#e74c3c';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
