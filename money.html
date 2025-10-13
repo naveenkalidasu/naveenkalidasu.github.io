@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 WealthFlow Tracker | Outr Style</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+
+  :root {
+    --bg-dark: #0b0c10;
+    --bg-card: rgba(10, 10, 30, 0.6);
+    --neon-blue: #00f3ff;
+    --neon-pink: #ff4ef7;
+    --neon-green: #4effa3;
+    --accent: linear-gradient(45deg, #00f3ff, #ff4ef7);
+    --shadow-glow: 0 0 20px rgba(0,255,255,0.5);
+    --text-light: #f0f0f0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #0b0c10, #1b1c2a);
+    color: var(--text-light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+  }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    background: var(--accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px #00f3ff, 0 0 40px #ff4ef7;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 30px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,255,255,0.2);
+    box-shadow: 0 0 15px rgba(0,255,255,0.3);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+    flex: 1;
+    min-width: 300px;
+    animation: fadeIn 0.8s ease forwards;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 0 30px rgba(0,255,255,0.7), 0 0 50px rgba(255,78,247,0.5);
+    transform: translateY(-5px);
+  }
+
+  .card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: var(--neon-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .total-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .total-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 15px;
+    border-left: 5px solid;
+    background: rgba(0,0,0,0.3);
+    text-shadow: 0 0 5px #00f3ff;
+    transition: all 0.3s ease;
+  }
+
+  .total-item.saved { border-color: var(--neon-green); }
+  .total-item.spent { border-color: var(--neon-pink); }
+  .total-item.balance { border-color: var(--neon-blue); }
+
+  .total-label {
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .total-amount {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #fff;
+    text-shadow: 0 0 8px #00f3ff;
+  }
+
+  .input-group {
+    margin-bottom: 12px;
+  }
+
+  label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: rgba(0,0,0,0.3);
+    color: var(--text-light);
+    font-size: 1rem;
+    box-shadow: 0 0 10px rgba(0,255,255,0.2) inset;
+    transition: all 0.3s ease;
+  }
+
+  input:focus, select:focus {
+    box-shadow: 0 0 15px #00f3ff, 0 0 25px #ff4ef7 inset;
+    background: rgba(0,0,0,0.5);
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #00f3ff, #ff4ef7);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00f3ff, 0 0 20px #ff4ef7;
+    transition: all 0.3s ease;
+  }
+
+  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px #00f3ff, 0 0 40px #ff4ef7;
+  }
+
+  .chart-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,255,255,0.2);
+    box-shadow: 0 0 20px rgba(0,255,255,0.4);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+  }
+
+  .history-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,255,255,0.2);
+    box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+  }
+
+  .history-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+  }
+
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.2);
+    border-left: 3px solid;
+    transition: all 0.3s ease;
+  }
+
+  .history-item:hover {
+    background: rgba(0,0,0,0.4);
+    box-shadow: 0 0 10px #00f3ff;
+  }
+
+  .history-date {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .history-amount.saved-amount {
+    color: var(--neon-green);
+    text-shadow: 0 0 5px #4effa3;
+  }
+
+  .history-amount.spent-amount {
+    color: var(--neon-pink);
+    text-shadow: 0 0 5px #ff4ef7;
+  }
+
+  .history-category {
+    font-size: 0.8rem;
+    background: rgba(0,255,255,0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+
+  .empty-history {
+    text-align: center;
+    padding: 30px;
+    color: rgba(255,255,255,0.3);
+    font-style: italic;
+  }
+
+  footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.9rem;
+  }
+
+  /* Animations */
+  @keyframes fadeIn { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
+  @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(15px);} }
+
+  .decoration {
+    position: fixed;
+    z-index: -1;
+    border-radius: 50%;
+    animation: float 12s ease-in-out infinite;
+  }
+  .decoration-1 {
+    top: 5%; left: 5%; width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,255,255,0.15), transparent);
+  }
+  .decoration-2 {
+    bottom: 10%; right: 5%; width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(255,78,247,0.1), transparent);
+    animation-delay: 2s;
+  }
+  .decoration-3 {
+    top: 15%; right: 10%; width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(78,255,163,0.1), transparent);
+    animation-delay: 4s;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard { flex-direction: column; }
+    .card { min-width: 100%; }
+    h1 { font-size: 2rem; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="decoration decoration-1"></div>
+<div class="decoration decoration-2"></div>
+<div class="decoration decoration-3"></div>
+
+<header>
+  <h1>💰 WealthFlow Tracker</h1>
+  <p class="subtitle">Track your finances in Outr-style neon</p>
+</header>
+
+<div class="dashboard">
+  <div class="card">
+    <div class="card-title">📊 Financial Overview</div>
+    <div class="total-box">
+      <div class="total-item saved">
+        <div class="total-label">Total Saved</div>
+        <div class="total-amount" id="totalSaved">₹0</div>
+      </div>
+      <div class="total-item spent">
+        <div class="total-label">Total Spent</div>
+        <div class="total-amount" id="totalSpent">₹0</div>
+      </div>
+      <div class="total-item balance">
+        <div class="total-label">Current Balance</div>
+        <div class="total-amount" id="totalBalance">₹0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">➕ Add Transaction</div>
+    <div class="input-group">
+      <label for="transactionType">Transaction Type</label>
+      <select id="transactionType">
+        <option value="saved">Income/Saved</option>
+        <option value="spent">Expense</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="amount">Amount (₹)</label>
+      <input type="number" id="amount" placeholder="Enter amount">
+    </div>
+    <div class="input-group">
+      <label for="category">Category</label>
+      <select id="category">
+        <option value="General">General</option>
+        <option value="Salary">Salary</option>
+        <option value="Investment">Investment</option>
+        <option value="Gift">Gift</option>
+        <option value="Food">Food & Dining</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Transport">Transport</option>
+        <option value="Bills">Bills & Utilities</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="description">Description (Optional)</label>
+      <input type="text" id="description" placeholder="Add a note">
+    </div>
+    <button onclick="addTransaction()">Add Transaction</button>
+  </div>
+</div>
+
+<div class="chart-container">
+  <div class="chart-card">
+    <div class="card-title">📈 Financial Trends</div>
+    <canvas id="moneyChart" width="400" height="250"></canvas>
+  </div>
+</div>
+
+<div class="history-container">
+  <div class="history-card">
+    <div class="card-title">🕒 Recent Transactions</div>
+    <div class="history-list" id="transactionHistory">
+      <!-- Transaction history will be populated here -->
+    </div>
+  </div>
+</div>
+
+<footer>
+  ✨ Organized Wealth, Peaceful Mind ✨
+</footer>
+
+<script>
+  // --- Your existing JS logic remains unchanged ---
+  const transactionType = document.getElementById('transactionType');
+  const amountInput = document.getElementById('amount');
+  const categoryInput = document.getElementById('category');
+  const descriptionInput = document.getElementById('description');
+  const totalSavedEl = document.getElementById('totalSaved');
+  const totalSpentEl = document.getElementById('totalSpent');
+  const totalBalanceEl = document.getElementById('totalBalance');
+  const transactionHistoryEl = document.getElementById('transactionHistory');
+  const ctx = document.getElementById('moneyChart').getContext('2d');
+
+  let records = JSON.parse(localStorage.getItem('wealthFlowRecords')) || { saved: 0, spent: 0, transactions: [] };
+
+  let chart = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: ['Savings', 'Expenses'], datasets: [{ label: 'Amount (₹)', data: [records.saved, records.spent], backgroundColor: ['rgba(78,255,163,0.8)','rgba(255,78,247,0.8)'], borderColor: ['rgba(78,255,163,1)','rgba(255,78,247,1)'], borderWidth: 1, borderRadius: 10 }] },
+    options: { responsive:true, plugins:{legend:{display:false}, title:{display:true,text:'Savings vs Expenses',color:'#fff',font:{size:16}}}, scales:{x:{ticks:{color:'#00f3ff'},grid:{color:'rgba(255,255,255,0.1)'}},y:{ticks:{color:'#00f3ff'},grid:{color:'rgba(255,255,255,0.1)'},beginAtZero:true}}, animation:{duration:1000,easing:'easeOutElastic'} }
+  });
+
+  function updateUI() { totalSavedEl.textContent = `₹${records.saved.toLocaleString()}`; totalSpentEl.textContent = `₹${records.spent.toLocaleString()}`; totalBalanceEl.textContent = `₹${(records.saved-records.spent).toLocaleString()}`; updateChart(); updateTransactionHistory(); }
+
+  function updateChart() { chart.data.datasets[0].data = [records.saved, records.spent]; chart.update(); }
+
+  function updateTransactionHistory() {
+    if(records.transactions.length===0){transactionHistoryEl.innerHTML='<div class="empty-history">No transactions yet. Add your first transaction above!</div>';return;}
+    const sortedTransactions = [...records.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date));
+    const recentTransactions = sortedTransactions.slice(0,10);
+    transactionHistoryEl.innerHTML = recentTransactions.map(t=>`<div class="history-item"><div><div class="history-date">${new Date(t.date).toLocaleDateString()}</div><div>${t.description||t.category}</div></div><div><span class="history-amount ${t.type==='saved'?'saved-amount':'spent-amount'}">${t.type==='saved'?'+':'-'}₹${t.amount.toLocaleString()}</span><div class="history-category">${t.category}</div></div></div>`).join('');
+  }
+
+  function addTransaction() {
+    const type = transactionType.value; const amount = parseFloat(amountInput.value); const category = categoryInput.value; const description = descriptionInput.value;
+    if(!amount||amount<=0){alert('Please enter a valid amount');return;}
+    type==='saved'?records.saved+=amount:records.spent+=amount;
+    records.transactions.push({type, amount, category, description, date:new Date().toISOString()});
+    localStorage.setItem('wealthFlowRecords', JSON.stringify(records));
+    updateUI();
+    amountInput.value=''; descriptionInput.value=''; categoryInput.value='General';
+    showNotification('Transaction added successfully!', type==='saved'?'success':'info');
+  }
+
+  function showNotification(message,type){
+    const n=document.createElement('div'); n.textContent=message; n.style.cssText=`position:fixed;top:20px;right:20px;padding:15px 20px;border-radius:10px;color:white;font-weight:500;z-index:1000;opacity:0;transform:translateX(100%);transition:all 0.3s ease;background:${type==='success'?'rgba(78,255,163,0.9)':'rgba(0,243,255,0.9)'};`; document.body.appendChild(n);
+    setTimeout(()=>{n.style.opacity='1';n.style.transform='translateX(0)';},100);
+    setTimeout(()=>{n.style.opacity='0';n.style.transform='translateX(100%)';setTimeout(()=>{document.body.removeChild(n);},300);},3000);
+  }
+
+  updateUI();
+</script>
+
+</body>
+</html>
