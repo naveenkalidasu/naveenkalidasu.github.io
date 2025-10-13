@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: "Poppins", sans-serif;
-      background: #f8fafc;
+      background: #f0f4f8;
       color: #222;
       display: flex;
       flex-direction: column;
@@ -23,13 +23,13 @@
     }
 
     .chart-container {
-      width: 90%;
-      max-width: 700px;
+      width: 95%;
+      max-width: 900px;
       margin-bottom: 25px;
       background: #fff;
-      padding: 15px;
+      padding: 20px;
       border-radius: 15px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .grid {
@@ -37,14 +37,14 @@
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 15px;
       width: 90%;
-      max-width: 1000px;
+      max-width: 1100px;
     }
 
     .day-card {
       background: #fff;
       border-radius: 15px;
       padding: 20px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
       text-align: center;
       border: 3px solid transparent;
@@ -73,7 +73,7 @@
 
     button {
       margin-top: 10px;
-      background: #2563eb;
+      background: linear-gradient(90deg,#2563eb,#1e40af);
       color: #fff;
       border: none;
       padding: 8px 14px;
@@ -83,11 +83,11 @@
     }
 
     button:hover {
-      background: #1e3a8a;
+      background: linear-gradient(90deg,#1e3a8a,#1e40af);
     }
 
     .completed button {
-      background: #ef4444;
+      background: linear-gradient(90deg,#ef4444,#b91c1c);
     }
 
     @media (max-width: 600px) {
@@ -119,36 +119,37 @@
 
     const grid = document.getElementById("dayGrid");
 
+    // Start date (Oct 13, 2025)
+    const startDate = new Date(2025, 9, 13); // month 0-indexed
+
+    function formatDate(date) {
+      const options = { month: 'short', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+
     // Generate 49-day plan
     for (let i = 1; i <= totalDays; i++) {
       const dayCard = document.createElement("div");
       dayCard.classList.add("day-card");
 
-      // Main subject pattern (3 AOR → 3 FLAT → repeat)
       const block = Math.floor((i - 1) / 3);
       const mainSubject = mainSubjects[block % 2];
-
-      // Extra subject cycle (DWDM → CN → AI → repeat)
       const extraSubject = extraSubjects[(i - 1) % extraSubjects.length];
 
-      // Lesson numbers
       const mainLesson = ((Math.floor((i - 1) / 3)) % lessonsPerSubject) + 1;
       const extraLesson = ((i - 1) % lessonsPerSubject) + 1;
 
-      // Revision check
-      const mainText = (block >= lessonsPerSubject)
-        ? `Revision (Lesson ${(mainLesson)})`
-        : `Lesson ${mainLesson}`;
-      const extraText = (Math.floor((i - 1) / extraSubjects.length) >= lessonsPerSubject)
-        ? `Revision (Lesson ${(extraLesson)})`
-        : `Lesson ${extraLesson}`;
+      const mainText = (block >= lessonsPerSubject) ? `Revision (Lesson ${mainLesson})` : `Lesson ${mainLesson}`;
+      const extraText = (Math.floor((i - 1) / extraSubjects.length) >= lessonsPerSubject) ? `Revision (Lesson ${extraLesson})` : `Lesson ${extraLesson}`;
 
-      if (completedDays.includes(i)) {
-        dayCard.classList.add("completed");
-      }
+      const currentDate = new Date(startDate);
+      currentDate.setDate(startDate.getDate() + (i - 1));
+      const dateText = formatDate(currentDate);
+
+      if (completedDays.includes(i)) dayCard.classList.add("completed");
 
       dayCard.innerHTML = `
-        <h2>Day ${i}</h2>
+        <h2>Day ${i} - ${dateText}</h2>
         <p><strong>Main:</strong> ${mainSubject}</p>
         <p class="lesson">${mainText}</p>
         <p class="subject"><strong>Extra:</strong> ${extraSubject}</p>
@@ -167,14 +168,12 @@
         completedDays.push(day);
         card.classList.add("completed");
         btn.textContent = "Unmark";
-
         progress[main]++;
         progress[extra]++;
       } else {
         completedDays.splice(index, 1);
         card.classList.remove("completed");
         btn.textContent = "Mark Complete";
-
         progress[main]--;
         progress[extra]--;
       }
@@ -184,30 +183,61 @@
       updateChart();
     }
 
-    // Bar chart
-    const ctx = document.getElementById("progressChart");
+    // Stacked horizontal bar chart
+    const ctx = document.getElementById("progressChart").getContext("2d");
+    const maxLessons = lessonsPerSubject * 3; // approximate max per subject
+
     const chart = new Chart(ctx, {
-      type: "bar",
+      type: 'bar',
       data: {
         labels: ["AOR", "FLAT", "DWDM", "CN", "AI"],
         datasets: [{
-          label: "Progress (Days Completed)",
+          label: 'Completed',
           data: [progress.AOR, progress.FLAT, progress.DWDM, progress.CN, progress.AI],
-          backgroundColor: ["#f87171", "#fbbf24", "#34d399", "#60a5fa", "#a78bfa"]
+          backgroundColor: ['#f87171','#fbbf24','#34d399','#60a5fa','#a78bfa'],
+          borderRadius: 20,
+          barPercentage: 0.6
+        },{
+          label: 'Remaining',
+          data: [
+            Math.max(0,maxLessons-progress.AOR),
+            Math.max(0,maxLessons-progress.FLAT),
+            Math.max(0,maxLessons-progress.DWDM),
+            Math.max(0,maxLessons-progress.CN),
+            Math.max(0,maxLessons-progress.AI)
+          ],
+          backgroundColor: '#e5e7eb',
+          borderRadius: 20,
+          barPercentage: 0.6
         }]
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: totalDays / 2
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${ctx.raw} Days`
+            }
           }
+        },
+        scales: {
+          x: { stacked: true, beginAtZero:true, max: maxLessons },
+          y: { stacked: true }
         }
       }
     });
 
     function updateChart() {
       chart.data.datasets[0].data = [progress.AOR, progress.FLAT, progress.DWDM, progress.CN, progress.AI];
+      chart.data.datasets[1].data = [
+        Math.max(0,maxLessons-progress.AOR),
+        Math.max(0,maxLessons-progress.FLAT),
+        Math.max(0,maxLessons-progress.DWDM),
+        Math.max(0,maxLessons-progress.CN),
+        Math.max(0,maxLessons-progress.AI)
+      ];
       chart.update();
     }
 
