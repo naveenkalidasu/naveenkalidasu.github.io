@@ -3,171 +3,663 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💰 WealthFlow Tracker - Neon Outr</title>
+<title>💰 WealthFlow Tracker - Premium Financial Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary:#00f3ff;
-  --secondary:#4effa3;
-  --accent:#ff4ef8;
-  --success:#4effa3;
-  --danger:#ff6b8b;
-  --dark:#0f2027;
-  --card-bg:rgba(255,255,255,0.08);
-  --shadow:0 8px 32px rgba(0,0,0,0.2);
+  --primary: #00f3ff;
+  --primary-dark: #00c4cc;
+  --secondary: #4effa3;
+  --secondary-dark: #3ad182;
+  --accent: #ff4ef8;
+  --accent-dark: #e03dd9;
+  --success: #4effa3;
+  --danger: #ff6b8b;
+  --warning: #ffb84e;
+  --dark: #0a161b;
+  --darker: #050e12;
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-bg-hover: rgba(255, 255, 255, 0.12);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glow-primary: 0 0 20px rgba(0, 243, 255, 0.5);
+  --glow-secondary: 0 0 20px rgba(78, 255, 163, 0.5);
+  --glow-accent: 0 0 20px rgba(255, 78, 248, 0.5);
+  --border-radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  font-family:'Roboto',sans-serif;
-  background:linear-gradient(135deg,var(--dark),#203a43,#2c5364);
-  color:#f8f9fa;
-  min-height:100vh;
-  margin:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:20px;
-  overflow-x:hidden;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, var(--darker), var(--dark), #1a2e35);
+  color: #f8f9fa;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+  position: relative;
 }
 
-header {text-align:center;margin-bottom:25px;}
-h1 {
-  font-family:'Orbitron',sans-serif;
-  font-size:2.5rem;
-  background:linear-gradient(90deg,var(--primary),var(--accent));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  text-shadow:0 0 25px rgba(0,243,255,0.3);
-  margin-bottom:10px;
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(0, 243, 255, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 30%, rgba(78, 255, 163, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 50% 80%, rgba(255, 78, 248, 0.05) 0%, transparent 20%);
+  z-index: -1;
 }
-.subtitle {color:rgba(255,255,255,0.7);font-size:1rem;}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+  position: relative;
+  padding-top: 20px;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3.2rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  position: relative;
+  display: inline-block;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 10%;
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+  border-radius: 3px;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
 
 .dashboard {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:20px;
-  width:100%;
-  max-width:1200px;
-  margin-bottom:30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  width: 100%;
+  max-width: 1300px;
+  margin-bottom: 40px;
 }
 
 /* Big Highlight for Current Balance */
 .balance-highlight {
-  text-align:center;
-  background:radial-gradient(circle at center, rgba(0,243,255,0.15), rgba(0,0,0,0.2));
-  border:2px solid var(--primary);
-  box-shadow:0 0 25px rgba(0,243,255,0.5);
-  border-radius:20px;
-  padding:40px 20px;
-  width:90%;
-  max-width:600px;
-  margin:30px auto;
-  animation:glowPulse 2.5s infinite alternate;
+  text-align: center;
+  background: radial-gradient(circle at center, rgba(0, 243, 255, 0.15), rgba(0, 0, 0, 0.3));
+  border: 2px solid var(--primary);
+  box-shadow: var(--glow-primary);
+  border-radius: 24px;
+  padding: 50px 30px;
+  width: 90%;
+  max-width: 700px;
+  margin: 30px auto;
+  animation: glowPulse 2.5s infinite alternate;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
 }
+
+.balance-highlight::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: var(--transition);
+  opacity: 0;
+}
+
+.balance-highlight:hover::before {
+  opacity: 1;
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
 .balance-highlight h2 {
-  font-family:'Orbitron',sans-serif;
-  font-size:1.8rem;
-  color:var(--secondary);
-  margin-bottom:10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: var(--secondary);
+  margin-bottom: 15px;
+  text-shadow: 0 0 15px rgba(78, 255, 163, 0.5);
 }
+
 .balance-highlight .balance-amount {
-  font-size:3.2rem;
-  font-weight:700;
-  color:var(--primary);
-  text-shadow:0 0 20px var(--primary),0 0 40px rgba(0,243,255,0.7);
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-shadow: 0 0 20px var(--primary), 0 0 40px rgba(0, 243, 255, 0.7);
+  letter-spacing: 1px;
 }
+
 @keyframes glowPulse {
-  from { box-shadow:0 0 20px rgba(0,243,255,0.3);}
-  to { box-shadow:0 0 40px rgba(0,243,255,0.7);}
+  from { box-shadow: 0 0 20px rgba(0, 243, 255, 0.3); }
+  to { box-shadow: 0 0 40px rgba(0, 243, 255, 0.7), 0 0 60px rgba(0, 243, 255, 0.4); }
 }
 
 .card {
-  background:var(--card-bg);
-  backdrop-filter:blur(20px);
-  border-radius:20px;
-  padding:25px;
-  box-shadow:var(--shadow);
-  flex:1;
-  min-width:300px;
-  transition:0.3s;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  box-shadow: var(--shadow);
+  flex: 1;
+  min-width: 320px;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
 }
-.card:hover {transform:translateY(-5px);}
-.card-title {font-size:1.2rem;font-weight:600;margin-bottom:15px;}
 
-.total-box {display:flex;flex-direction:column;gap:15px;}
-.total-item {display:flex;justify-content:space-between;align-items:center;padding:15px;border-radius:15px;background:rgba(255,255,255,0.05);}
-.total-item.saved {border-left:5px solid var(--success);}
-.total-item.spent {border-left:5px solid var(--danger);}
-.total-label {font-weight:500;}
-.total-amount {font-weight:700;}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease;
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  background: var(--card-bg-hover);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.total-box {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.total-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.total-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.total-item.saved::before {
+  background: var(--success);
+}
+
+.total-item.spent::before {
+  background: var(--danger);
+}
+
+.total-item:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.total-label {
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.total-amount {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
 
 input, select {
-  width:100%;
-  padding:12px 15px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.3);
-  background:rgba(0,0,0,0.3);
-  color:#fff;
-  font-size:1rem;
-  outline:none;
-  transition:0.3s;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  font-family: 'Montserrat', sans-serif;
 }
-input:focus,select:focus {
-  border-color:var(--primary);
-  box-shadow:0 0 10px var(--primary);
+
+input:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 243, 255, 0.3);
+  background: rgba(0, 0, 0, 0.4);
 }
-select option {background:var(--dark);color:#fff;}
+
+select option {
+  background: var(--dark);
+  color: #fff;
+}
+
 select {
-  appearance:none;
-  background-image:url("data:image/svg+xml;utf8,<svg fill='%23ffffff' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat:no-repeat;
-  background-position:right 12px center;
-  background-size:12px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%2300f3ff' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px;
 }
 
 button {
-  width:100%;
-  margin-top:10px;
-  padding:14px;
-  background:linear-gradient(90deg,var(--primary),var(--accent));
-  border:none;
-  border-radius:12px;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 4px 15px rgba(0,243,255,0.3);
-  transition:0.3s;
+  width: 100%;
+  margin-top: 10px;
+  padding: 16px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.5px;
 }
-button:hover {transform:translateY(-3px);}
 
-.chart-container {width:100%;max-width:1200px;margin-bottom:30px;}
-.chart-card {background:var(--card-bg);border-radius:20px;padding:25px;backdrop-filter:blur(20px);}
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
 
-.history-container {width:100%;max-width:1200px;margin-bottom:30px;}
-.history-card {background:var(--card-bg);border-radius:20px;padding:25px;backdrop-filter:blur(20px);}
-.history-list {max-height:300px;overflow-y:auto;margin-top:15px;}
-.history-item {display:flex;justify-content:space-between;align-items:center;padding:12px 15px;margin-bottom:10px;border-radius:12px;background:rgba(255,255,255,0.05);}
-.saved-amount {color:var(--success);}
-.spent-amount {color:var(--danger);}
-.history-category {font-size:0.9rem;background:rgba(255,255,255,0.1);padding:4px 10px;border-radius:20px;}
-.empty-history {text-align:center;padding:30px;color:rgba(255,255,255,0.5);}
+button:hover::before {
+  left: 100%;
+}
 
-footer {margin-top:auto;padding:20px;text-align:center;color:rgba(255,255,255,0.6);}
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 243, 255, 0.5);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.chart-container, .history-container {
+  width: 100%;
+  max-width: 1300px;
+  margin-bottom: 40px;
+}
+
+.chart-card, .history-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: var(--transition);
+}
+
+.chart-card:hover, .history-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.history-list {
+  max-height: 350px;
+  overflow-y: auto;
+  margin-top: 20px;
+  padding-right: 10px;
+}
+
+/* Custom scrollbar */
+.history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: var(--transition);
+  border-left: 4px solid transparent;
+}
+
+.history-item.saved {
+  border-left-color: var(--success);
+}
+
+.history-item.spent {
+  border-left-color: var(--danger);
+}
+
+.history-item:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.history-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-date {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 5px;
+}
+
+.history-description {
+  font-weight: 500;
+}
+
+.history-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.saved-amount {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.spent-amount {
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.history-category {
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 5px;
+}
+
+.empty-history {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+footer {
+  margin-top: auto;
+  padding: 25px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  .balance-highlight .balance-amount {
+    font-size: 3rem;
+  }
+  
+  .dashboard {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+/* Animation for new transactions */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease forwards;
+}
+
+/* Stats cards */
+.stats-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 1300px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 200px;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  background: var(--card-bg-hover);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-card.savings .stat-value {
+  color: var(--success);
+}
+
+.stat-card.expenses .stat-value {
+  color: var(--danger);
+}
+
+.stat-card.transactions .stat-value {
+  color: var(--primary);
+}
+
+/* Toggle switch for dark/light mode */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--card-bg);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  z-index: 100;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle:hover {
+  transform: rotate(30deg);
+  background: var(--card-bg-hover);
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--success);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s;
+  z-index: 1000;
+  font-weight: 500;
+}
+
+.notification.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.notification.error {
+  background: var(--danger);
+}
 </style>
 </head>
 <body>
+
+<div class="theme-toggle" id="themeToggle">
+  <span>🌙</span>
+</div>
 
 <header>
   <h1>💰 WealthFlow Tracker</h1>
   <p class="subtitle">Track your finances with style and precision</p>
 </header>
 
+<!-- Stats Cards -->
+<div class="stats-container">
+  <div class="stat-card savings">
+    <div class="stat-label">Total Savings</div>
+    <div class="stat-value" id="totalSavings">₹0</div>
+    <div class="stat-label">This Month</div>
+  </div>
+  <div class="stat-card expenses">
+    <div class="stat-label">Total Expenses</div>
+    <div class="stat-value" id="totalExpenses">₹0</div>
+    <div class="stat-label">This Month</div>
+  </div>
+  <div class="stat-card transactions">
+    <div class="stat-label">Transactions</div>
+    <div class="stat-value" id="totalTransactions">0</div>
+    <div class="stat-label">This Month</div>
+  </div>
+</div>
+
 <!-- Big Center Highlight -->
 <div class="balance-highlight">
-  <h2>💎 Current Balance</h2>
+  <h2>Current Balance</h2>
   <div class="balance-amount" id="totalBalance">₹0</div>
 </div>
 
@@ -188,26 +680,34 @@ footer {margin-top:auto;padding:20px;text-align:center;color:rgba(255,255,255,0.
 
   <div class="card">
     <div class="card-title">➕ Add Transaction</div>
-    <label>Transaction Type</label>
-    <select id="transactionType">
-      <option value="saved">Income/Saved</option>
-      <option value="spent">Expense</option>
-    </select>
-    <label>Amount (₹)</label>
-    <input type="number" id="amount" placeholder="Enter amount">
-    <label>Category</label>
-    <select id="category">
-      <option value="General">General</option>
-      <option value="Salary">Salary</option>
-      <option value="Food">Food & Dining</option>
-      <option value="Shopping">Shopping</option>
-      <option value="Bills">Bills</option>
-      <option value="Transport">Transport</option>
-      <option value="Entertainment">Entertainment</option>
-      <option value="Other">Other</option>
-    </select>
-    <label>Description (Optional)</label>
-    <input type="text" id="description" placeholder="Add a note">
+    <div class="form-group">
+      <label>Transaction Type</label>
+      <select id="transactionType">
+        <option value="saved">Income/Saved</option>
+        <option value="spent">Expense</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Amount (₹)</label>
+      <input type="number" id="amount" placeholder="Enter amount">
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select id="category">
+        <option value="General">General</option>
+        <option value="Salary">Salary</option>
+        <option value="Food">Food & Dining</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Bills">Bills</option>
+        <option value="Transport">Transport</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Description (Optional)</label>
+      <input type="text" id="description" placeholder="Add a note">
+    </div>
     <button onclick="addTransaction()">Add Transaction</button>
   </div>
 </div>
@@ -225,74 +725,263 @@ footer {margin-top:auto;padding:20px;text-align:center;color:rgba(255,255,255,0.
   </div>
 </div>
 
+<div class="notification" id="notification">Transaction added successfully!</div>
+
 <footer>✨ Organized Wealth, Peaceful Mind ✨</footer>
 
 <script>
-const transactionType=document.getElementById('transactionType');
-const amountInput=document.getElementById('amount');
-const categoryInput=document.getElementById('category');
-const descriptionInput=document.getElementById('description');
-const totalSavedEl=document.getElementById('totalSaved');
-const totalSpentEl=document.getElementById('totalSpent');
-const totalBalanceEl=document.getElementById('totalBalance');
-const transactionHistoryEl=document.getElementById('transactionHistory');
-const ctx=document.getElementById('moneyChart').getContext('2d');
+// DOM Elements
+const transactionType = document.getElementById('transactionType');
+const amountInput = document.getElementById('amount');
+const categoryInput = document.getElementById('category');
+const descriptionInput = document.getElementById('description');
+const totalSavedEl = document.getElementById('totalSaved');
+const totalSpentEl = document.getElementById('totalSpent');
+const totalBalanceEl = document.getElementById('totalBalance');
+const totalSavingsEl = document.getElementById('totalSavings');
+const totalExpensesEl = document.getElementById('totalExpenses');
+const totalTransactionsEl = document.getElementById('totalTransactions');
+const transactionHistoryEl = document.getElementById('transactionHistory');
+const notificationEl = document.getElementById('notification');
+const themeToggle = document.getElementById('themeToggle');
+const ctx = document.getElementById('moneyChart').getContext('2d');
 
-let records=JSON.parse(localStorage.getItem('wealthFlowRecords'))||{saved:0,spent:0,transactions:[]};
+// Initialize data
+let records = JSON.parse(localStorage.getItem('wealthFlowRecords')) || {
+  saved: 0, 
+  spent: 0, 
+  transactions: [],
+  monthlyData: {
+    savings: 0,
+    expenses: 0,
+    transactionCount: 0
+  }
+};
 
-let chart=new Chart(ctx,{
-  type:'bar',
-  data:{
-    labels:['Saved','Spent'],
-    datasets:[{data:[records.saved,records.spent],
-      backgroundColor:['rgba(78,255,163,0.8)','rgba(255,78,247,0.8)'],
-      borderRadius:10
+// Initialize chart
+let chart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Saved', 'Spent'],
+    datasets: [{
+      data: [records.saved, records.spent],
+      backgroundColor: [
+        'rgba(78, 255, 163, 0.8)',
+        'rgba(255, 78, 247, 0.8)'
+      ],
+      borderColor: [
+        'rgba(78, 255, 163, 1)',
+        'rgba(255, 78, 247, 1)'
+      ],
+      borderWidth: 2,
+      borderRadius: 10,
+      hoverOffset: 15
     }]
   },
-  options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: 'rgba(255, 255, 255, 0.8)',
+          font: {
+            family: 'Montserrat',
+            size: 14
+          },
+          padding: 20
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        titleColor: 'white',
+        bodyColor: 'white',
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: true
+      }
+    },
+    cutout: '65%'
+  }
 });
 
-function updateUI(){
-  totalSavedEl.textContent=`₹${records.saved.toLocaleString()}`;
-  totalSpentEl.textContent=`₹${records.spent.toLocaleString()}`;
-  totalBalanceEl.textContent=`₹${(records.saved-records.spent).toLocaleString()}`;
-  chart.data.datasets[0].data=[records.saved,records.spent];
+// Update UI with current data
+function updateUI() {
+  totalSavedEl.textContent = `₹${records.saved.toLocaleString()}`;
+  totalSpentEl.textContent = `₹${records.spent.toLocaleString()}`;
+  totalBalanceEl.textContent = `₹${(records.saved - records.spent).toLocaleString()}`;
+  
+  // Update stats
+  totalSavingsEl.textContent = `₹${records.monthlyData.savings.toLocaleString()}`;
+  totalExpensesEl.textContent = `₹${records.monthlyData.expenses.toLocaleString()}`;
+  totalTransactionsEl.textContent = records.monthlyData.transactionCount;
+  
+  // Update chart
+  chart.data.datasets[0].data = [records.saved, records.spent];
   chart.update();
+  
   updateTransactionHistory();
 }
 
-function updateTransactionHistory(){
-  if(records.transactions.length===0){
-    transactionHistoryEl.innerHTML='<div class="empty-history">No transactions yet!</div>';
+// Update transaction history display
+function updateTransactionHistory() {
+  if (records.transactions.length === 0) {
+    transactionHistoryEl.innerHTML = '<div class="empty-history">No transactions yet! Add your first transaction above.</div>';
     return;
   }
-  transactionHistoryEl.innerHTML=records.transactions.slice(-10).reverse().map(t=>`
-  <div class="history-item">
-    <div>
-      <div>${new Date(t.date).toLocaleDateString()}</div>
-      <div>${t.description||t.category}</div>
-    </div>
-    <div>
-      <span class="${t.type==='saved'?'saved-amount':'spent-amount'}">${t.type==='saved'?'+':'-'}₹${t.amount}</span>
-      <div class="history-category">${t.category}</div>
-    </div>
-  </div>`).join('');
+  
+  transactionHistoryEl.innerHTML = records.transactions
+    .slice(-10)
+    .reverse()
+    .map(t => {
+      const date = new Date(t.date);
+      const now = new Date();
+      const isToday = date.toDateString() === now.toDateString();
+      const isThisMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+      
+      let dateText;
+      if (isToday) {
+        dateText = 'Today';
+      } else if (isThisMonth) {
+        dateText = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      } else {
+        dateText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+      
+      return `
+      <div class="history-item ${t.type} slide-in">
+        <div class="history-details">
+          <div class="history-date">${dateText}</div>
+          <div class="history-description">${t.description || t.category}</div>
+        </div>
+        <div class="history-amount">
+          <span class="${t.type === 'saved' ? 'saved-amount' : 'spent-amount'}">
+            ${t.type === 'saved' ? '+' : '-'}₹${t.amount.toLocaleString()}
+          </span>
+          <div class="history-category">${t.category}</div>
+        </div>
+      </div>`;
+    })
+    .join('');
 }
 
-function addTransaction(){
-  const type=transactionType.value;
-  const amount=parseFloat(amountInput.value);
-  const category=categoryInput.value;
-  const description=descriptionInput.value;
-  if(!amount||amount<=0){alert('Enter a valid amount');return;}
-  if(type==='saved')records.saved+=amount;else records.spent+=amount;
-  records.transactions.push({type,amount,category,description,date:new Date().toISOString()});
-  localStorage.setItem('wealthFlowRecords',JSON.stringify(records));
-  amountInput.value='';descriptionInput.value='';
+// Add a new transaction
+function addTransaction() {
+  const type = transactionType.value;
+  const amount = parseFloat(amountInput.value);
+  const category = categoryInput.value;
+  const description = descriptionInput.value;
+  
+  if (!amount || amount <= 0) {
+    showNotification('Please enter a valid amount', true);
+    return;
+  }
+  
+  // Update totals
+  if (type === 'saved') {
+    records.saved += amount;
+    
+    // Update monthly data if transaction is from this month
+    const now = new Date();
+    const transactionDate = new Date();
+    if (transactionDate.getMonth() === now.getMonth() && transactionDate.getFullYear() === now.getFullYear()) {
+      records.monthlyData.savings += amount;
+      records.monthlyData.transactionCount += 1;
+    }
+  } else {
+    records.spent += amount;
+    
+    // Update monthly data if transaction is from this month
+    const now = new Date();
+    const transactionDate = new Date();
+    if (transactionDate.getMonth() === now.getMonth() && transactionDate.getFullYear() === now.getFullYear()) {
+      records.monthlyData.expenses += amount;
+      records.monthlyData.transactionCount += 1;
+    }
+  }
+  
+  // Add transaction to history
+  records.transactions.push({
+    type,
+    amount,
+    category,
+    description,
+    date: new Date().toISOString()
+  });
+  
+  // Save to localStorage
+  localStorage.setItem('wealthFlowRecords', JSON.stringify(records));
+  
+  // Reset form
+  amountInput.value = '';
+  descriptionInput.value = '';
+  
+  // Update UI and show notification
+  updateUI();
+  showNotification(`${type === 'saved' ? 'Income' : 'Expense'} of ₹${amount} added successfully!`);
+}
+
+// Show notification
+function showNotification(message, isError = false) {
+  notificationEl.textContent = message;
+  notificationEl.className = 'notification';
+  
+  if (isError) {
+    notificationEl.classList.add('error');
+  }
+  
+  notificationEl.classList.add('show');
+  
+  setTimeout(() => {
+    notificationEl.classList.remove('show');
+  }, 3000);
+}
+
+// Theme toggle functionality
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('light-theme');
+  
+  if (document.body.classList.contains('light-theme')) {
+    themeToggle.innerHTML = '☀️';
+    // In a real implementation, you would update all CSS variables for light theme
+  } else {
+    themeToggle.innerHTML = '🌙';
+  }
+});
+
+// Initialize the UI
+updateUI();
+
+// Add some sample data if empty (for demo purposes)
+if (records.transactions.length === 0) {
+  // Add sample transactions
+  const sampleTransactions = [
+    { type: 'saved', amount: 50000, category: 'Salary', description: 'Monthly salary', date: new Date().toISOString() },
+    { type: 'spent', amount: 3500, category: 'Food', description: 'Groceries', date: new Date(Date.now() - 86400000).toISOString() },
+    { type: 'spent', amount: 1200, category: 'Transport', description: 'Fuel', date: new Date(Date.now() - 172800000).toISOString() },
+    { type: 'saved', amount: 10000, category: 'Other', description: 'Freelance work', date: new Date(Date.now() - 259200000).toISOString() }
+  ];
+  
+  sampleTransactions.forEach(t => {
+    if (t.type === 'saved') {
+      records.saved += t.amount;
+    } else {
+      records.spent += t.amount;
+    }
+    records.transactions.push(t);
+  });
+  
+  // Set monthly data for demo
+  records.monthlyData = {
+    savings: 60000,
+    expenses: 4700,
+    transactionCount: 4
+  };
+  
+  localStorage.setItem('wealthFlowRecords', JSON.stringify(records));
   updateUI();
 }
-
-updateUI();
 </script>
 </body>
 </html>
