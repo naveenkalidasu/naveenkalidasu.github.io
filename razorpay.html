@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment Prototype</title>
+    <style>
+        :root {
+            --upi-color: #5f259f; /* Signature UPI Purple */
+            --bg-light: #f4f7fe;
+            --text-dark: #2d3748;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .payment-card {
+            background: white;
+            width: 350px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .merchant-info h2 {
+            margin: 10px 0 5px;
+            color: var(--text-dark);
+            font-size: 1.4rem;
+        }
+
+        .amount-tag {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--upi-color);
+            margin-bottom: 20px;
+        }
+
+        /* QR Container */
+        .qr-wrapper {
+            background: #fff;
+            padding: 15px;
+            border: 2px solid #edf2f7;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 20px 0;
+            position: relative;
+            min-height: 200px;
+            min-width: 200px;
+        }
+
+        #qr-image {
+            width: 200px;
+            height: 200px;
+            display: none; /* Hidden until loaded */
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--upi-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 40%;
+            left: 40%;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .instruction {
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .footer-branding {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-card">
+        <div class="merchant-info">
+            <h2>Razor pay securely</h2>
+            <p class="instruction">Scan the QR to pay via any UPI app</p>
+        </div>
+
+        <div class="amount-tag">₹499.00</div>
+
+        <div class="qr-wrapper">
+            <div id="loader" class="loader"></div>
+            <img id="qr-image" src="" alt="Payment QR Code">
+        </div>
+
+        <p class="instruction">
+            <strong>Merchant ID:</strong> paytmqr28100@paytm<br>
+            Valid for: <span id="timer">05:00</span>
+        </p>
+
+        <div class="footer-branding">
+            <span>BHIM</span> | <span>Google Pay</span> | <span>PhonePe</span>
+        </div>
+    </div>
+
+    <script>
+        // Prototype Data
+        const upiID = "sample@upi"; // Replace with a test ID
+        const amount = "499.00";
+        const name = "Acme Store";
+        
+        // Construct standard UPI String (Protocol: upi://pay?...)
+        const upiString = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+        
+        // Use QRServer API to turn the string into a QR Image
+        const qrImg = document.getElementById('qr-image');
+        const loader = document.getElementById('loader');
+        
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`;
+
+        // Hide loader when image finishes downloading
+        qrImg.onload = function() {
+            loader.style.display = 'none';
+            qrImg.style.display = 'block';
+        };
+
+        // Simple Countdown Timer
+        let time = 300;
+        const timerElement = document.getElementById('timer');
+        
+        setInterval(() => {
+            const minutes = Math.floor(time / 60);
+            let seconds = time % 60;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            timerElement.innerHTML = `0${minutes}:${seconds}`;
+            if(time > 0) time--;
+        }, 1000);
+    </script>
+</body>
+</html>
