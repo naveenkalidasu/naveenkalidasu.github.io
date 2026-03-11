@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA 180 · multi‑entry tracker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #0a0c10;
+      background-image: radial-gradient(circle at 25% 0%, #1b2f3c15 0%, transparent 40%),
+                        radial-gradient(circle at 75% 100%, #2386360c 0%, transparent 40%);
+      color: #eef3f9;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 1300px;
+      max-width: 100%;
+    }
+
+    /* header with glass */
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: rgba(13, 17, 23, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      border: 1px solid #30363d50;
+      box-shadow: 0 12px 30px -10px #00000080;
+    }
+
+    .logo h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      background: linear-gradient(145deg, #b9e6ff, #cbbdff, #ffdfb0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.3px;
+    }
+
+    .insight-badge {
+      display: flex;
+      gap: 2rem;
+      background: #1c242c;
+      padding: 0.5rem 1.8rem;
+      border-radius: 40px;
+      border: 1px solid #3b4655;
+    }
+
+    /* stats cards — refined */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin: 2rem 0 2.5rem;
+    }
+
+    .stat-card {
+      background: #151e26;
+      border-radius: 30px;
+      padding: 1.2rem 2rem 1.2rem 1.8rem;
+      flex: 1 1 160px;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      border: 1px solid #314558;
+      box-shadow: 0 8px 0 #0d1219;
+      transition: 0.1s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: #56789a;
+      box-shadow: 0 11px 0 #0d1219;
+    }
+
+    .stat-icon {
+      font-size: 2.3rem;
+    }
+
+    .stat-content h4 {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #9cb1cc;
+    }
+
+    .stat-content .value {
+      font-size: 2.2rem;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    /* section headers with levels hint */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin: 2rem 0 1rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.8rem;
+      font-weight: 450;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .level-tag {
+      background: #1f4f7a;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      border: 1px solid #569bcb;
+    }
+
+    /* grid — softer, bigger cells */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+      gap: 10px;
+      background: #121a22;
+      padding: 28px 22px;
+      border-radius: 42px;
+      border: 1px solid #2b3b4e;
+      box-shadow: inset 0 2px 3px #030405, 0 16px 28px -8px black;
+      margin-bottom: 2rem;  /* add bottom margin since missed section removed */
+    }
+
+    .day {
+      aspect-ratio: 1/1;
+      background: #23303b;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #d7e3f0;
+      cursor: pointer;
+      transition: 0.12s;
+      box-shadow: 0 5px 0 #15212b;
+      border: 1px solid #40586d;
+    }
+
+    .day.done {
+      background: #1f6feb;
+      background: linear-gradient(145deg, #2266b8, #1e469a);
+      border-color: #7cb9ff;
+      box-shadow: 0 5px 0 #0d2c55;
+      color: white;
+    }
+
+    .day.missed {
+      background: #6d2b2b;
+      border-color: #c45a5a;
+    }
+
+    /* ======= MODERN MODAL (multi‑entry, expandable) ======= */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(2, 6, 16, 0.85);
+      backdrop-filter: blur(14px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-panel {
+      background: #1d2a37;
+      width: 700px;
+      max-width: 96%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: 50px;
+      padding: 2.2rem 2rem;
+      border: 1px solid #4d6f92;
+      box-shadow: 0 40px 60px #000000ee;
+      scrollbar-width: thin;
+      scrollbar-color: #4a6f8f #12212e;
+    }
+
+    .modal-panel h3 {
+      font-size: 2.2rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: linear-gradient(145deg, #f0fcff, #dbbaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* platform cards inside modal */
+    .platform-section {
+      background: #14232f;
+      border-radius: 36px;
+      padding: 1.4rem 1.8rem;
+      margin-bottom: 2rem;
+      border: 1px solid #2e5170;
+      box-shadow: inset 0 0 0 1px #3c6180;
+    }
+
+    .platform-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.4rem;
+      font-size: 1.4rem;
+    }
+
+    .platform-title input[type="number"] {
+      width: 80px;
+      background: #0b1a26;
+      border: 1px solid #4f789c;
+      border-radius: 60px;
+      padding: 0.5rem 0.8rem;
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      margin-left: auto;
+    }
+
+    /* dynamic problem list */
+    .problem-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .problem-item {
+      background: #0c1923;
+      border-radius: 26px;
+      padding: 1rem 1.4rem;
+      border: 1px solid #3f6180;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .problem-item input {
+      background: #0d1f2f;
+      border: 1.5px solid #2f5377;
+      border-radius: 30px;
+      padding: 10px 16px;
+      color: white;
+      font-size: 0.9rem;
+      flex: 1 1 160px;
+    }
+
+    .problem-item input:focus {
+      border-color: #4790df;
+      outline: none;
+    }
+
+    .problem-item .item-index {
+      color: #aac5e2;
+      font-weight: 700;
+      min-width: 30px;
+    }
+
+    /* small button for add/remove */
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .icon-btn {
+      background: #2d4b68;
+      border: none;
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: 1px solid #5b8eb0;
+    }
+
+    .icon-btn:hover {
+      background: #3f6792;
+    }
+
+    .btn-add {
+      background: #1c5a3f;
+      border-color: #37996b;
+      width: auto;
+      padding: 0 22px;
+      border-radius: 40px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: flex-end;
+      margin-top: 32px;
+    }
+
+    .btn {
+      padding: 12px 34px;
+      border-radius: 60px;
+      border: none;
+      font-weight: 600;
+      background: #253c51;
+      color: white;
+      border: 1px solid #537e9e;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #26734a;
+      border-color: #45b67c;
+      box-shadow: 0 5px 0 #0b4129;
+    }
+
+    .btn-primary:hover {
+      background: #2f9362;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #0b4129;
+    }
+
+    .btn-secondary:hover {
+      background: #335f7a;
+    }
+
+    /* link preview (inside item, small) */
+    .link-hint {
+      font-size: 0.7rem;
+      color: #7f9fc7;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    hr {
+      border: 1px solid #26435b;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- header -->
+  <div class="brand-bar">
+    <div class="logo"><h1>⍟ 180·DSA | levels & languages</h1></div>
+    <div class="insight-badge">
+      <span>🔥 max streak <strong id="streakDisplay">0</strong></span>
+      <span>✅ active <strong id="activeDays">0</strong></span>
+    </div>
+  </div>
+
+  <!-- stats cards -->
+  <div class="stats-row">
+    <div class="stat-card"><span class="stat-icon">📌</span><div class="stat-content"><h4>Total</h4><div class="value" id="total">0</div></div></div>
+    <div class="stat-card"><span class="stat-icon">⚡</span><div class="stat-content"><h4>LeetCode</h4><div class="value" id="lc">0</div></div></div>
+    <div class="stat-card"><span class="stat-icon">🍽️</span><div class="stat-content"><h4>CodeChef</h4><div class="value" id="cc">0</div></div></div>
+    <div class="stat-card"><span class="stat-icon">🎯</span><div class="stat-content"><h4>GFG</h4><div class="value" id="gfg">0</div></div></div>
+  </div>
+
+  <!-- grid area with level indicator (missed section completely removed) -->
+  <div class="section-header">
+    <h2>📅 180 day grid <span class="level-tag">beginner · intermediate · advanced</span></h2>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <!-- missed days section has been removed as requested -->
+</div>
+
+<!-- ========== DYNAMIC MODAL (multi‑problem per platform) ========== -->
+<div class="modal" id="modal">
+  <div class="modal-panel" id="modalPanel">
+    <h3 id="dayTitle">Day 1</h3>
+
+    <!-- LeetCode dynamic block -->
+    <div class="platform-section" id="lcPlatform">
+      <div class="platform-title">
+        <span>⚡ LEETCODE</span>
+        <input type="number" id="lcGlobalCount" min="0" value="1" placeholder="count">
+      </div>
+      <div id="lcProblems" class="problem-list"><!-- filled by js --></div>
+      <button class="icon-btn btn-add" id="addLcBtn">➕ add problem</button>
+    </div>
+
+    <!-- CodeChef dynamic block -->
+    <div class="platform-section" id="ccPlatform">
+      <div class="platform-title">
+        <span>🍽️ CODECHEF</span>
+        <input type="number" id="ccGlobalCount" min="0" value="1" placeholder="count">
+      </div>
+      <div id="ccProblems" class="problem-list"></div>
+      <button class="icon-btn btn-add" id="addCcBtn">➕ add problem</button>
+    </div>
+
+    <!-- GFG dynamic block -->
+    <div class="platform-section" id="gfgPlatform">
+      <div class="platform-title">
+        <span>🎯 GEEKSFORGEEKS</span>
+        <input type="number" id="gfgGlobalCount" min="0" value="1" placeholder="count">
+      </div>
+      <div id="gfgProblems" class="problem-list"></div>
+      <button class="icon-btn btn-add" id="addGfgBtn">➕ add problem</button>
+    </div>
+
+    <hr>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMultiDay()">Save progress</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Data structure: 
+    // data[day] = { lc: [ {name, link} ], cc: [ {name, link} ], gfg: [ {name, link} ] }
+    let data = JSON.parse(localStorage.getItem('dsaTracker_multi_v2')) || {};
+
+    // ----- helpers -----
+    function computeStreak() {
+      let days = Object.keys(data).map(d => parseInt(d)).filter(d => !isNaN(d)).sort((a,b)=>a-b);
+      if (!days.length) return 0;
+      let streak = 1, maxStr = 1;
+      for (let i=1; i<days.length; i++) {
+        if (days[i] === days[i-1]+1) { streak++; maxStr = Math.max(maxStr, streak); }
+        else streak = 1;
+      }
+      return maxStr;
+    }
+
+    // render main grid
+    function renderGrid() {
+      const gridEl = document.getElementById('grid');
+      gridEl.innerHTML = '';
+      for (let i=1; i<=180; i++) {
+        let div = document.createElement('div');
+        div.className = 'day' + (data[i] ? ' done' : '');
+        div.innerText = i;
+        div.onclick = () => openModal(i);
+        gridEl.appendChild(div);
+      }
+      updateStatsMissed();
+    }
+
+    // update stats, streak (missed no longer shown)
+    function updateStatsMissed() {
+      let lcTot=0, ccTot=0, gfgTot=0;
+      for (let d in data) {
+        let entry = data[d];
+        if (entry.lc) lcTot += entry.lc.length;
+        if (entry.cc) ccTot += entry.cc.length;
+        if (entry.gfg) gfgTot += entry.gfg.length;
+      }
+      let total = lcTot+ccTot+gfgTot;
+      document.getElementById('total').innerText = total;
+      document.getElementById('lc').innerText = lcTot;
+      document.getElementById('cc').innerText = ccTot;
+      document.getElementById('gfg').innerText = gfgTot;
+      document.getElementById('streakDisplay').innerText = computeStreak();
+      let active = Object.keys(data).length;
+      document.getElementById('activeDays').innerText = active;
+
+      // missed days section removed – no need to update anything
+    }
+
+    // modal globals
+    let currentDay = null;
+    const modal = document.getElementById('modal');
+
+    // function to rebuild problem rows for a platform based on array + containerId + platform key
+    function renderProblemRows(containerId, problemsArray, platformKey, dayData) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      if (!problemsArray || problemsArray.length===0) {
+        // if empty, show one empty row by default for better UX
+        if (platformKey === 'lc') problemsArray = [{name:'', link:''}];
+        else if (platformKey === 'cc') problemsArray = [{name:'', link:''}];
+        else if (platformKey === 'gfg') problemsArray = [{name:'', link:''}];
+        else problemsArray = [];
+      }
+      problemsArray.forEach((prob, idx) => {
+        let row = document.createElement('div');
+        row.className = 'problem-item';
+        row.innerHTML = `
+          <span class="item-index">#${idx+1}</span>
+          <input type="text" class="prob-name" placeholder="problem name" value="${escapeHtml(prob.name || '')}">
+          <input type="url" class="prob-link" placeholder="https://link" value="${escapeHtml(prob.link || '')}">
+          <div class="row-actions">
+            <button class="icon-btn" onclick="removeProblem('${platformKey}', ${idx})">−</button>
+          </div>
+          <div class="link-hint">🔗 paste link</div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // simple escape
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // attach global remove function
+    window.removeProblem = function(platform, idx) {
+      if (!currentDay) return;
+      let dayData = data[currentDay] || {lc:[], cc:[], gfg:[]};
+      if (platform === 'lc' && dayData.lc) dayData.lc.splice(idx,1);
+      if (platform === 'cc' && dayData.cc) dayData.cc.splice(idx,1);
+      if (platform === 'gfg' && dayData.gfg) dayData.gfg.splice(idx,1);
+      data[currentDay] = dayData;
+      // re-open modal to refresh
+      openModal(currentDay);
+    };
+
+    // add problem function
+    window.addProblem = function(platform) {
+      if (!currentDay) return;
+      let dayData = data[currentDay] || {lc:[], cc:[], gfg:[]};
+      if (!dayData[platform]) dayData[platform] = [];
+      dayData[platform].push({name:'', link:''});
+      data[currentDay] = dayData;
+      openModal(currentDay); // simple re-render
+    };
+
+    // open modal: populate based on day
+    window.openModal = function(day) {
+      currentDay = day;
+      modal.style.display = 'flex';
+      document.getElementById('dayTitle').innerText = 'Day ' + day;
+
+      let dayData = data[day] || {lc:[], cc:[], gfg:[]};
+      if (!dayData.lc) dayData.lc = [];
+      if (!dayData.cc) dayData.cc = [];
+      if (!dayData.gfg) dayData.gfg = [];
+
+      // set global count inputs to length (cosmetic)
+      document.getElementById('lcGlobalCount').value = dayData.lc.length || 1;
+      document.getElementById('ccGlobalCount').value = dayData.cc.length || 1;
+      document.getElementById('gfgGlobalCount').value = dayData.gfg.length || 1;
+
+      // render each problem list
+      renderProblemRows('lcProblems', dayData.lc, 'lc', dayData);
+      renderProblemRows('ccProblems', dayData.cc, 'cc', dayData);
+      renderProblemRows('gfgProblems', dayData.gfg, 'gfg', dayData);
+    };
+
+    // add listeners for + buttons (global)
+    document.getElementById('addLcBtn').onclick = () => addProblem('lc');
+    document.getElementById('addCcBtn').onclick = () => addProblem('cc');
+    document.getElementById('addGfgBtn').onclick = () => addProblem('gfg');
+
+    // save: read from all input fields inside modal
+    window.saveMultiDay = function() {
+      if (!currentDay) return;
+
+      function collectProblems(containerId) {
+        let items = [];
+        let container = document.getElementById(containerId);
+        if (!container) return items;
+        let rows = container.querySelectorAll('.problem-item');
+        rows.forEach(row => {
+          let nameInput = row.querySelector('.prob-name');
+          let linkInput = row.querySelector('.prob-link');
+          if (nameInput || linkInput) {
+            items.push({
+              name: nameInput ? nameInput.value.trim() : '',
+              link: linkInput ? linkInput.value.trim() : ''
+            });
+          }
+        });
+        return items;
+      }
+
+      let lcProblems = collectProblems('lcProblems');
+      let ccProblems = collectProblems('ccProblems');
+      let gfgProblems = collectProblems('gfgProblems');
+
+      // store even if empty arrays
+      data[currentDay] = {
+        lc: lcProblems,
+        cc: ccProblems,
+        gfg: gfgProblems
+      };
+
+      localStorage.setItem('dsaTracker_multi_v2', JSON.stringify(data));
+      closeModal();
+      renderGrid(); // refresh .done class
+    };
+
+    window.closeModal = function() {
+      modal.style.display = 'none';
+      currentDay = null;
+    };
+
+    // click outside to close
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // initial render
+    renderGrid();
+  })();
+</script>
+<!-- extra style for modal buttons -->
+<style>
+  .problem-item .row-actions .icon-btn { background: #964343; border-color: #c87878; }
+  .problem-item .row-actions .icon-btn:hover { background: #b15555; }
+  .btn-add { background: #1c5a3f; margin-left: 6px; }
+  .btn-add:hover { background: #247b53; }
+  .modal-panel::-webkit-scrollbar { width: 10px; background: #122633; }
+  .modal-panel::-webkit-scrollbar-thumb { background: #3e6182; border-radius: 20px; }
+</style>
+</body>
+</html>
