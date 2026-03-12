@@ -3,638 +3,991 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DSA 180 · multi‑entry tracker</title>
+  <title>DSA 180 · ultimate tracker</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
     }
 
     body {
-      background: #0a0c10;
-      background-image: radial-gradient(circle at 25% 0%, #1b2f3c15 0%, transparent 40%),
-                        radial-gradient(circle at 75% 100%, #2386360c 0%, transparent 40%);
-      color: #eef3f9;
+      background: #03060b;
+      background-image: 
+        radial-gradient(circle at 10% 20%, #1d3445 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, #1f4a3a 0%, transparent 35%);
+      color: #edf5ff;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 2rem 1rem;
-      min-height: 100vh;
+      padding: 1.5rem;
     }
 
     .container {
-      width: 1300px;
+      width: 1400px;
       max-width: 100%;
     }
 
-    /* header with glass */
-    .brand-bar {
+    /* ========== ANIMATIONS ========== */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes flameFlicker {
+      0% { opacity: 0.9; transform: scale(1); text-shadow: 0 0 10px #ff9900, 0 0 30px #ff5500; }
+      25% { opacity: 1; transform: scale(1.08); text-shadow: 0 0 20px #ffcc00, 0 0 40px #ff6600; }
+      50% { opacity: 0.95; transform: scale(1.05); text-shadow: 0 0 15px #ffaa00, 0 0 50px #ff3300; }
+      75% { opacity: 1; transform: scale(1.1); text-shadow: 0 0 25px #ffdd00, 0 0 35px #ff4400; }
+      100% { opacity: 0.9; transform: scale(1); text-shadow: 0 0 10px #ff9900, 0 0 30px #ff5500; }
+    }
+
+    @keyframes pulseGlow {
+      0% { filter: brightness(1); transform: scale(1); }
+      100% { filter: brightness(1.3); transform: scale(1.02); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ========== HEADER ========== */
+    .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.5rem;
       margin-bottom: 2rem;
-      background: rgba(13, 17, 23, 0.7);
-      backdrop-filter: blur(10px);
-      padding: 0.8rem 2rem;
-      border-radius: 60px;
-      border: 1px solid #30363d50;
-      box-shadow: 0 12px 30px -10px #00000080;
+      background: rgba(8, 18, 28, 0.8);
+      backdrop-filter: blur(15px);
+      padding: 1rem 2.2rem;
+      border-radius: 80px;
+      border: 1px solid #3f5b7a;
+      box-shadow: 0 20px 35px -10px #000000, 0 0 0 1px #2a4b70 inset;
     }
 
-    .logo h1 {
+    .logo {
       font-size: 2rem;
-      font-weight: 600;
-      background: linear-gradient(145deg, #b9e6ff, #cbbdff, #ffdfb0);
+      font-weight: 700;
+      background: linear-gradient(135deg, #b0e0ff, #d9b8ff, #ffd7a5, #a5f0d1);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.3px;
+      animation: gradientFlow 6s ease infinite;
     }
 
-    .insight-badge {
+    .streak-badge {
       display: flex;
-      gap: 2rem;
-      background: #1c242c;
-      padding: 0.5rem 1.8rem;
-      border-radius: 40px;
-      border: 1px solid #3b4655;
+      gap: 2.5rem;
+      background: #0f1e2c;
+      padding: 0.7rem 2.2rem;
+      border-radius: 50px;
+      border: 1px solid #4f7193;
+      font-weight: 500;
     }
 
-    /* stats cards — refined */
-    .stats-row {
+    .streak-badge span {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1.2rem;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ========== NAVIGATION ========== */
+    .nav-bar {
+      display: flex;
+      gap: 0.8rem;
+      background: #0b1722;
+      padding: 0.6rem;
+      border-radius: 60px;
+      width: fit-content;
+      margin: 1.8rem 0 2.2rem;
+      border: 1px solid #365476;
+      box-shadow: 0 10px 20px -5px #00000080;
+    }
+
+    .nav-btn {
+      padding: 1rem 2.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      background: transparent;
+      color: #b4d0f0;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .nav-btn:hover::before {
+      left: 100%;
+    }
+
+    .nav-btn.active {
+      background: #1d6df0;
+      color: white;
+      box-shadow: 0 6px 0 #0a2f66, 0 0 15px #1d6df0;
+      transform: translateY(-2px);
+    }
+
+    /* ========== STATS CARDS ========== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
       margin: 2rem 0 2.5rem;
     }
 
     .stat-card {
-      background: #151e26;
+      background: #121f2d;
       border-radius: 30px;
-      padding: 1.2rem 2rem 1.2rem 1.8rem;
-      flex: 1 1 160px;
+      padding: 1.5rem;
       display: flex;
       align-items: center;
       gap: 1.2rem;
-      border: 1px solid #314558;
-      box-shadow: 0 8px 0 #0d1219;
-      transition: 0.1s ease;
+      border: 1px solid #3f6485;
+      box-shadow: 0 10px 0 #09131d, 0 0 0 1px #5f8bb9 inset;
+      transition: 0.2s;
     }
 
     .stat-card:hover {
-      transform: translateY(-3px);
-      border-color: #56789a;
-      box-shadow: 0 11px 0 #0d1219;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 0 #09131d, 0 0 0 2px #7aafe6 inset;
     }
 
     .stat-icon {
-      font-size: 2.3rem;
+      font-size: 2.8rem;
+      filter: drop-shadow(0 4px 4px #00000060);
     }
 
     .stat-content h4 {
-      font-size: 0.9rem;
+      color: #9eb9d8;
       font-weight: 400;
-      color: #9cb1cc;
+      font-size: 0.95rem;
     }
 
-    .stat-content .value {
-      font-size: 2.2rem;
-      font-weight: 600;
+    .stat-value {
+      font-size: 2.6rem;
+      font-weight: 700;
       line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff, #c5e0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    /* section headers with levels hint */
+    /* ========== SECTIONS ========== */
+    .section {
+      display: none;
+      animation: slideIn 0.4s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
     .section-header {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
-      margin: 2rem 0 1rem;
+      margin: 2rem 0 1.5rem;
     }
 
     .section-header h2 {
-      font-size: 1.8rem;
-      font-weight: 450;
+      font-size: 2rem;
+      font-weight: 500;
       display: flex;
       align-items: center;
+      gap: 15px;
+    }
+
+    .badge {
+      background: #1f4f8a;
+      padding: 0.3rem 1.5rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      border: 1px solid #6ca2e0;
+    }
+
+    /* ========== DAY GRID ========== */
+    .grid-container {
+      background: #0d1924;
+      border-radius: 50px;
+      padding: 2.2rem;
+      border: 1px solid #365c80;
+      box-shadow: inset 0 2px 5px #000000, 0 20px 30px -10px black;
+    }
+
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
       gap: 12px;
     }
 
-    .level-tag {
-      background: #1f4f7a;
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      border: 1px solid #569bcb;
-    }
-
-    /* grid — softer, bigger cells */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
-      gap: 10px;
-      background: #121a22;
-      padding: 28px 22px;
-      border-radius: 42px;
-      border: 1px solid #2b3b4e;
-      box-shadow: inset 0 2px 3px #030405, 0 16px 28px -8px black;
-      margin-bottom: 2rem;  /* add bottom margin since missed section removed */
-    }
-
-    .day {
+    .day-cell {
       aspect-ratio: 1/1;
-      background: #23303b;
-      border-radius: 18px;
+      background: #1d3142;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
       font-weight: 600;
-      color: #d7e3f0;
+      font-size: 1.1rem;
       cursor: pointer;
-      transition: 0.12s;
-      box-shadow: 0 5px 0 #15212b;
-      border: 1px solid #40586d;
+      border: 1px solid #4c6f92;
+      box-shadow: 0 7px 0 #0c1a28;
+      transition: 0.1s;
+      position: relative;
+      overflow: hidden;
     }
 
-    .day.done {
-      background: #1f6feb;
-      background: linear-gradient(145deg, #2266b8, #1e469a);
-      border-color: #7cb9ff;
-      box-shadow: 0 5px 0 #0d2c55;
+    .day-cell::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .day-cell:hover::after {
+      opacity: 1;
+    }
+
+    .day-cell.completed {
+      background: linear-gradient(145deg, #2266c0, #153b7a);
+      border-color: #8bbaff;
+      box-shadow: 0 7px 0 #0b2350, 0 0 20px #1d6df0;
       color: white;
     }
 
-    .day.missed {
-      background: #6d2b2b;
-      border-color: #c45a5a;
+    .day-cell.missed {
+      background: #6d3333;
+      border-color: #c97a7a;
+      box-shadow: 0 7px 0 #3e1e1e;
     }
 
-    /* ======= MODERN MODAL (multi‑entry, expandable) ======= */
+    /* ========== PROFILE SECTION ========== */
+    .profile-container {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .profile-info {
+      background: #10212e;
+      border-radius: 50px;
+      padding: 2.5rem;
+      border: 1px solid #4575a3;
+      box-shadow: 0 20px 30px -10px black;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(145deg, #1d6df0, #9f6ee7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      border: 3px solid #9ac4ff;
+      box-shadow: 0 0 30px #1d6df0;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.8rem;
+    }
+
+    .profile-stat-item {
+      background: #07212e;
+      padding: 1.5rem;
+      border-radius: 30px;
+      border: 1px solid #3b6d95;
+    }
+
+    .profile-stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #aad0ff;
+    }
+
+    /* ========== STREAK ANIMATION SECTION ========== */
+    .streak-animation-box {
+      background: #0a1e2c;
+      border-radius: 60px;
+      padding: 2.5rem 2rem;
+      border: 1px solid #5699d4;
+      box-shadow: 0 0 40px #1d6df060, inset 0 0 30px #1d6df030;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .streak-animation-box::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, #ffaa3350 0%, transparent 60%);
+      animation: pulseGlow 3s infinite alternate;
+    }
+
+    .flame-container {
+      font-size: 8rem;
+      line-height: 1;
+      animation: flameFlicker 1.5s infinite ease-in-out;
+      filter: drop-shadow(0 0 30px #ff9900);
+      margin-bottom: 1rem;
+    }
+
+    .streak-number-large {
+      font-size: 6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffd966, #ffa64d, #ff7b2b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulseGlow 1.2s infinite alternate;
+      line-height: 1;
+    }
+
+    .streak-label {
+      font-size: 1.4rem;
+      background: #1b3349;
+      padding: 0.8rem 2.5rem;
+      border-radius: 60px;
+      margin-top: 1rem;
+      border: 1px solid #ffaa33;
+      letter-spacing: 2px;
+    }
+
+    /* ========== MODAL ========== */
     .modal {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(2, 6, 16, 0.85);
-      backdrop-filter: blur(14px);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(16px);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 1000;
     }
 
-    .modal-panel {
-      background: #1d2a37;
-      width: 700px;
+    .modal-content {
+      background: #142433;
+      width: 800px;
       max-width: 96%;
-      max-height: 85vh;
+      max-height: 90vh;
       overflow-y: auto;
-      border-radius: 50px;
-      padding: 2.2rem 2rem;
-      border: 1px solid #4d6f92;
-      box-shadow: 0 40px 60px #000000ee;
-      scrollbar-width: thin;
-      scrollbar-color: #4a6f8f #12212e;
+      border-radius: 70px;
+      padding: 2.5rem;
+      border: 2px solid #538ac7;
+      box-shadow: 0 40px 70px #000000, 0 0 0 2px #8bbaff inset;
     }
 
-    .modal-panel h3 {
-      font-size: 2.2rem;
-      font-weight: 500;
-      margin-bottom: 1.8rem;
-      background: linear-gradient(145deg, #f0fcff, #dbbaff);
+    .modal-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #b5e0ff, #dbb5ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* platform cards inside modal */
-    .platform-section {
-      background: #14232f;
-      border-radius: 36px;
-      padding: 1.4rem 1.8rem;
+    .platform-block {
+      background: #0e1e2e;
+      border-radius: 40px;
+      padding: 1.8rem;
       margin-bottom: 2rem;
-      border: 1px solid #2e5170;
-      box-shadow: inset 0 0 0 1px #3c6180;
+      border: 1px solid #4175a8;
     }
 
-    .platform-title {
+    .platform-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 1.4rem;
-      font-size: 1.4rem;
-    }
-
-    .platform-title input[type="number"] {
-      width: 80px;
-      background: #0b1a26;
-      border: 1px solid #4f789c;
-      border-radius: 60px;
-      padding: 0.5rem 0.8rem;
-      color: white;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
       font-weight: 600;
-      text-align: center;
-      margin-left: auto;
     }
 
-    /* dynamic problem list */
-    .problem-list {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .problem-item {
-      background: #0c1923;
-      border-radius: 26px;
-      padding: 1rem 1.4rem;
-      border: 1px solid #3f6180;
+    .problem-row {
+      background: #0b1b29;
+      border-radius: 30px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
       display: flex;
       flex-wrap: wrap;
+      gap: 1rem;
       align-items: center;
-      gap: 12px;
+      border: 1px solid #3b6d97;
     }
 
-    .problem-item input {
-      background: #0d1f2f;
-      border: 1.5px solid #2f5377;
-      border-radius: 30px;
-      padding: 10px 16px;
+    .problem-row input {
+      flex: 1 1 200px;
+      background: #0f2335;
+      border: 2px solid #2d5885;
+      border-radius: 40px;
+      padding: 1rem 1.5rem;
       color: white;
-      font-size: 0.9rem;
-      flex: 1 1 160px;
+      font-size: 0.95rem;
     }
 
-    .problem-item input:focus {
-      border-color: #4790df;
+    .problem-row input:focus {
+      border-color: #6aa9ff;
       outline: none;
+      box-shadow: 0 0 15px #1d6df0;
     }
 
-    .problem-item .item-index {
-      color: #aac5e2;
-      font-weight: 700;
-      min-width: 30px;
-    }
-
-    /* small button for add/remove */
-    .row-actions {
-      display: flex;
-      gap: 8px;
-      margin-left: auto;
-    }
-
-    .icon-btn {
-      background: #2d4b68;
+    .remove-btn {
+      background: #b13e3e;
       border: none;
       color: white;
-      width: 38px;
-      height: 38px;
+      width: 45px;
+      height: 45px;
       border-radius: 30px;
-      font-size: 1.2rem;
-      font-weight: bold;
+      font-size: 1.5rem;
       cursor: pointer;
-      border: 1px solid #5b8eb0;
+      border: 1px solid #ff8a8a;
     }
 
-    .icon-btn:hover {
-      background: #3f6792;
-    }
-
-    .btn-add {
-      background: #1c5a3f;
-      border-color: #37996b;
-      width: auto;
-      padding: 0 22px;
+    .add-btn {
+      background: #1b5e3f;
+      border: none;
+      color: white;
+      padding: 0.8rem 2rem;
       border-radius: 40px;
-      margin-top: 12px;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #5bc98b;
+      margin-top: 1rem;
     }
 
     .modal-actions {
       display: flex;
-      gap: 16px;
+      gap: 1rem;
       justify-content: flex-end;
-      margin-top: 32px;
+      margin-top: 2rem;
     }
 
-    .btn {
-      padding: 12px 34px;
-      border-radius: 60px;
+    .modal-btn {
+      padding: 1.2rem 3rem;
+      border-radius: 50px;
       border: none;
       font-weight: 600;
-      background: #253c51;
-      color: white;
-      border: 1px solid #537e9e;
+      font-size: 1.1rem;
       cursor: pointer;
     }
 
-    .btn-primary {
-      background: #26734a;
-      border-color: #45b67c;
-      box-shadow: 0 5px 0 #0b4129;
+    .save-btn {
+      background: #1d6df0;
+      color: white;
+      box-shadow: 0 7px 0 #0a2f66;
     }
 
-    .btn-primary:hover {
-      background: #2f9362;
-      transform: translateY(-2px);
-      box-shadow: 0 7px 0 #0b4129;
+    .cancel-btn {
+      background: #344f6b;
+      color: white;
+      box-shadow: 0 7px 0 #1e3140;
     }
 
-    .btn-secondary:hover {
-      background: #335f7a;
-    }
-
-    /* link preview (inside item, small) */
-    .link-hint {
-      font-size: 0.7rem;
-      color: #7f9fc7;
-      width: 100%;
-      margin-top: 4px;
-    }
-
-    hr {
-      border: 1px solid #26435b;
-      margin: 20px 0;
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 800px) {
+      .profile-container {
+        grid-template-columns: 1fr;
+      }
+      .nav-btn {
+        padding: 0.8rem 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <!-- header -->
-  <div class="brand-bar">
-    <div class="logo"><h1>⍟ 180·DSA | levels & languages</h1></div>
-    <div class="insight-badge">
-      <span>🔥 max streak <strong id="streakDisplay">0</strong></span>
-      <span>✅ active <strong id="activeDays">0</strong></span>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">⚡ 180·DSA TRACKER</div>
+    <div class="streak-badge">
+      <span>🔥 MAX STREAK <span id="maxStreak">0</span></span>
+      <span>📅 ACTIVE <span id="activeDays">0</span></span>
+      <span>⭐ TOTAL <span id="totalProblems">0</span></span>
     </div>
   </div>
 
-  <!-- stats cards -->
-  <div class="stats-row">
-    <div class="stat-card"><span class="stat-icon">📌</span><div class="stat-content"><h4>Total</h4><div class="value" id="total">0</div></div></div>
-    <div class="stat-card"><span class="stat-icon">⚡</span><div class="stat-content"><h4>LeetCode</h4><div class="value" id="lc">0</div></div></div>
-    <div class="stat-card"><span class="stat-icon">🍽️</span><div class="stat-content"><h4>CodeChef</h4><div class="value" id="cc">0</div></div></div>
-    <div class="stat-card"><span class="stat-icon">🎯</span><div class="stat-content"><h4>GFG</h4><div class="value" id="gfg">0</div></div></div>
+  <!-- NAVIGATION -->
+  <div class="nav-bar">
+    <button class="nav-btn active" onclick="switchSection('home')">🏠 HOME</button>
+    <button class="nav-btn" onclick="switchSection('progress')">📊 PROGRESS</button>
+    <button class="nav-btn" onclick="switchSection('profile')">👤 PROFILE</button>
   </div>
 
-  <!-- grid area with level indicator (missed section completely removed) -->
-  <div class="section-header">
-    <h2>📅 180 day grid <span class="level-tag">beginner · intermediate · advanced</span></h2>
-  </div>
-  <div class="grid" id="grid"></div>
+  <!-- HOME SECTION -->
+  <div id="homeSection" class="section active">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">📌</span>
+        <div class="stat-content">
+          <h4>Total Problems</h4>
+          <div class="stat-value" id="homeTotal">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">⚡</span>
+        <div class="stat-content">
+          <h4>LeetCode</h4>
+          <div class="stat-value" id="homeLc">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🍽️</span>
+        <div class="stat-content">
+          <h4>CodeChef</h4>
+          <div class="stat-value" id="homeCc">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🎯</span>
+        <div class="stat-content">
+          <h4>GFG</h4>
+          <div class="stat-value" id="homeGfg">0</div>
+        </div>
+      </div>
+    </div>
 
-  <!-- missed days section has been removed as requested -->
+    <div class="section-header">
+      <h2>📆 180 DAYS CHALLENGE <span class="badge">BEGINNER → ADVANCED</span></h2>
+    </div>
+
+    <div class="grid-container">
+      <div class="day-grid" id="homeGrid"></div>
+    </div>
+  </div>
+
+  <!-- PROGRESS SECTION -->
+  <div id="progressSection" class="section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">📊</span>
+        <div class="stat-content">
+          <h4>Completion</h4>
+          <div class="stat-value" id="progressPercent">0%</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔥</span>
+        <div class="stat-content">
+          <h4>Current Streak</h4>
+          <div class="stat-value" id="progressStreak">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📈</span>
+        <div class="stat-content">
+          <h4>Days Done</h4>
+          <div class="stat-value" id="progressDays">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🎯</span>
+        <div class="stat-content">
+          <h4>Remaining</h4>
+          <div class="stat-value" id="progressLeft">180</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2>📈 PROGRESS OVERVIEW</h2>
+    </div>
+
+    <div class="grid-container">
+      <div class="day-grid" id="progressGrid"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE SECTION -->
+  <div id="profileSection" class="section">
+    <div class="profile-container">
+      <div class="profile-info">
+        <div class="profile-header">
+          <div class="avatar">👨‍💻</div>
+          <div style="flex:1">
+            <h1 style="font-size:2.5rem;">DSA WARRIOR</h1>
+            <p style="color:#9ac4ff;">180 days · consistent · relentless</p>
+          </div>
+        </div>
+
+        <div class="profile-stats">
+          <div class="profile-stat-item">
+            <div style="color:#9ac4ff;">Days Active</div>
+            <div class="profile-stat-value" id="profileDays">0</div>
+          </div>
+          <div class="profile-stat-item">
+            <div style="color:#9ac4ff;">Problems Solved</div>
+            <div class="profile-stat-value" id="profileProblems">0</div>
+          </div>
+          <div class="profile-stat-item">
+            <div style="color:#9ac4ff;">LeetCode</div>
+            <div class="profile-stat-value" id="profileLc">0</div>
+          </div>
+          <div class="profile-stat-item">
+            <div style="color:#9ac4ff;">CodeChef</div>
+            <div class="profile-stat-value" id="profileCc">0</div>
+          </div>
+          <div class="profile-stat-item">
+            <div style="color:#9ac4ff;">GFG</div>
+            <div class="profile-stat-value" id="profileGfg">0</div>
+          </div>
+          <div class="profile-stat-item">
+            <div style="color:#9ac4ff;">Max Streak</div>
+            <div class="profile-stat-value" id="profileStreak">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STREAK ANIMATION SECTION -->
+      <div class="streak-animation-box">
+        <div class="flame-container">🔥</div>
+        <div class="streak-number-large" id="animatedStreakNum">0</div>
+        <div class="streak-label">DAY STREAK</div>
+        <div style="margin-top:2rem; color:#ffb870; font-size:1.2rem;" id="streakMessage">Keep going!</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- ========== DYNAMIC MODAL (multi‑problem per platform) ========== -->
-<div class="modal" id="modal">
-  <div class="modal-panel" id="modalPanel">
-    <h3 id="dayTitle">Day 1</h3>
-
-    <!-- LeetCode dynamic block -->
-    <div class="platform-section" id="lcPlatform">
-      <div class="platform-title">
+<!-- MODAL -->
+<div class="modal" id="dayModal">
+  <div class="modal-content">
+    <h2 id="modalDayTitle">DAY 1</h2>
+    
+    <!-- LeetCode -->
+    <div class="platform-block">
+      <div class="platform-header">
         <span>⚡ LEETCODE</span>
-        <input type="number" id="lcGlobalCount" min="0" value="1" placeholder="count">
+        <span id="lcCount">0</span>
       </div>
-      <div id="lcProblems" class="problem-list"><!-- filled by js --></div>
-      <button class="icon-btn btn-add" id="addLcBtn">➕ add problem</button>
+      <div id="lcProblems"></div>
+      <button class="add-btn" onclick="addProblem('lc')">+ ADD PROBLEM</button>
     </div>
 
-    <!-- CodeChef dynamic block -->
-    <div class="platform-section" id="ccPlatform">
-      <div class="platform-title">
+    <!-- CodeChef -->
+    <div class="platform-block">
+      <div class="platform-header">
         <span>🍽️ CODECHEF</span>
-        <input type="number" id="ccGlobalCount" min="0" value="1" placeholder="count">
+        <span id="ccCount">0</span>
       </div>
-      <div id="ccProblems" class="problem-list"></div>
-      <button class="icon-btn btn-add" id="addCcBtn">➕ add problem</button>
+      <div id="ccProblems"></div>
+      <button class="add-btn" onclick="addProblem('cc')">+ ADD PROBLEM</button>
     </div>
 
-    <!-- GFG dynamic block -->
-    <div class="platform-section" id="gfgPlatform">
-      <div class="platform-title">
+    <!-- GFG -->
+    <div class="platform-block">
+      <div class="platform-header">
         <span>🎯 GEEKSFORGEEKS</span>
-        <input type="number" id="gfgGlobalCount" min="0" value="1" placeholder="count">
+        <span id="gfgCount">0</span>
       </div>
-      <div id="gfgProblems" class="problem-list"></div>
-      <button class="icon-btn btn-add" id="addGfgBtn">➕ add problem</button>
+      <div id="gfgProblems"></div>
+      <button class="add-btn" onclick="addProblem('gfg')">+ ADD PROBLEM</button>
     </div>
 
-    <hr>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveMultiDay()">Save progress</button>
+      <button class="modal-btn cancel-btn" onclick="closeModal()">CANCEL</button>
+      <button class="modal-btn save-btn" onclick="saveDay()">SAVE PROGRESS</button>
     </div>
   </div>
 </div>
 
 <script>
-  (function() {
-    // Data structure: 
-    // data[day] = { lc: [ {name, link} ], cc: [ {name, link} ], gfg: [ {name, link} ] }
-    let data = JSON.parse(localStorage.getItem('dsaTracker_multi_v2')) || {};
+  // ========== DATA LAYER ==========
+  let trackerData = JSON.parse(localStorage.getItem('dsaUltimate')) || {};
+  
+  // Initialize empty structure for new days
+  function getEmptyDay() {
+    return { lc: [], cc: [], gfg: [] };
+  }
 
-    // ----- helpers -----
-    function computeStreak() {
-      let days = Object.keys(data).map(d => parseInt(d)).filter(d => !isNaN(d)).sort((a,b)=>a-b);
-      if (!days.length) return 0;
-      let streak = 1, maxStr = 1;
-      for (let i=1; i<days.length; i++) {
-        if (days[i] === days[i-1]+1) { streak++; maxStr = Math.max(maxStr, streak); }
-        else streak = 1;
+  // ========== STATS CALCULATIONS ==========
+  function calculateStats() {
+    let lcTotal = 0, ccTotal = 0, gfgTotal = 0;
+    let activeDays = 0;
+    
+    for (let day in trackerData) {
+      if (trackerData.hasOwnProperty(day)) {
+        const dayData = trackerData[day];
+        if (dayData.lc && dayData.lc.length) lcTotal += dayData.lc.length;
+        if (dayData.cc && dayData.cc.length) ccTotal += dayData.cc.length;
+        if (dayData.gfg && dayData.gfg.length) gfgTotal += dayData.gfg.length;
+        
+        if ((dayData.lc && dayData.lc.length) || 
+            (dayData.cc && dayData.cc.length) || 
+            (dayData.gfg && dayData.gfg.length)) {
+          activeDays++;
+        }
       }
-      return maxStr;
     }
+    
+    return {
+      total: lcTotal + ccTotal + gfgTotal,
+      lc: lcTotal,
+      cc: ccTotal,
+      gfg: gfgTotal,
+      activeDays: activeDays
+    };
+  }
 
-    // render main grid
-    function renderGrid() {
-      const gridEl = document.getElementById('grid');
-      gridEl.innerHTML = '';
-      for (let i=1; i<=180; i++) {
-        let div = document.createElement('div');
-        div.className = 'day' + (data[i] ? ' done' : '');
-        div.innerText = i;
-        div.onclick = () => openModal(i);
-        gridEl.appendChild(div);
+  function calculateStreak() {
+    const days = Object.keys(trackerData)
+      .map(d => parseInt(d))
+      .filter(d => !isNaN(d))
+      .sort((a, b) => a - b);
+    
+    if (days.length === 0) return 0;
+    
+    let maxStreak = 1;
+    let currentStreak = 1;
+    
+    for (let i = 1; i < days.length; i++) {
+      if (days[i] === days[i-1] + 1) {
+        currentStreak++;
+        maxStreak = Math.max(maxStreak, currentStreak);
+      } else {
+        currentStreak = 1;
       }
-      updateStatsMissed();
     }
+    
+    return maxStreak;
+  }
 
-    // update stats, streak (missed no longer shown)
-    function updateStatsMissed() {
-      let lcTot=0, ccTot=0, gfgTot=0;
-      for (let d in data) {
-        let entry = data[d];
-        if (entry.lc) lcTot += entry.lc.length;
-        if (entry.cc) ccTot += entry.cc.length;
-        if (entry.gfg) gfgTot += entry.gfg.length;
-      }
-      let total = lcTot+ccTot+gfgTot;
-      document.getElementById('total').innerText = total;
-      document.getElementById('lc').innerText = lcTot;
-      document.getElementById('cc').innerText = ccTot;
-      document.getElementById('gfg').innerText = gfgTot;
-      document.getElementById('streakDisplay').innerText = computeStreak();
-      let active = Object.keys(data).length;
-      document.getElementById('activeDays').innerText = active;
-
-      // missed days section removed – no need to update anything
+  // ========== RENDER GRIDS ==========
+  function renderAllGrids() {
+    const homeGrid = document.getElementById('homeGrid');
+    const progressGrid = document.getElementById('progressGrid');
+    
+    homeGrid.innerHTML = '';
+    progressGrid.innerHTML = '';
+    
+    for (let i = 1; i <= 180; i++) {
+      // Home grid cells
+      const homeCell = createDayCell(i);
+      homeGrid.appendChild(homeCell);
+      
+      // Progress grid cells
+      const progressCell = createDayCell(i);
+      progressGrid.appendChild(progressCell);
     }
+  }
 
-    // modal globals
-    let currentDay = null;
-    const modal = document.getElementById('modal');
-
-    // function to rebuild problem rows for a platform based on array + containerId + platform key
-    function renderProblemRows(containerId, problemsArray, platformKey, dayData) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = '';
-      if (!problemsArray || problemsArray.length===0) {
-        // if empty, show one empty row by default for better UX
-        if (platformKey === 'lc') problemsArray = [{name:'', link:''}];
-        else if (platformKey === 'cc') problemsArray = [{name:'', link:''}];
-        else if (platformKey === 'gfg') problemsArray = [{name:'', link:''}];
-        else problemsArray = [];
-      }
-      problemsArray.forEach((prob, idx) => {
-        let row = document.createElement('div');
-        row.className = 'problem-item';
-        row.innerHTML = `
-          <span class="item-index">#${idx+1}</span>
-          <input type="text" class="prob-name" placeholder="problem name" value="${escapeHtml(prob.name || '')}">
-          <input type="url" class="prob-link" placeholder="https://link" value="${escapeHtml(prob.link || '')}">
-          <div class="row-actions">
-            <button class="icon-btn" onclick="removeProblem('${platformKey}', ${idx})">−</button>
-          </div>
-          <div class="link-hint">🔗 paste link</div>
-        `;
-        container.appendChild(row);
-      });
+  function createDayCell(day) {
+    const cell = document.createElement('div');
+    cell.className = 'day-cell';
+    if (trackerData[day] && (
+        (trackerData[day].lc && trackerData[day].lc.length) ||
+        (trackerData[day].cc && trackerData[day].cc.length) ||
+        (trackerData[day].gfg && trackerData[day].gfg.length)
+    )) {
+      cell.classList.add('completed');
     }
+    cell.textContent = day;
+    cell.onclick = () => openModal(day);
+    return cell;
+  }
 
-    // simple escape
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  // ========== UPDATE ALL UI ==========
+  function updateAllUI() {
+    const stats = calculateStats();
+    const streak = calculateStreak();
+    const percent = Math.round((stats.activeDays / 180) * 100);
+    
+    // Update header
+    document.getElementById('maxStreak').textContent = streak;
+    document.getElementById('activeDays').textContent = stats.activeDays;
+    document.getElementById('totalProblems').textContent = stats.total;
+    
+    // Home section
+    document.getElementById('homeTotal').textContent = stats.total;
+    document.getElementById('homeLc').textContent = stats.lc;
+    document.getElementById('homeCc').textContent = stats.cc;
+    document.getElementById('homeGfg').textContent = stats.gfg;
+    
+    // Progress section
+    document.getElementById('progressPercent').textContent = percent + '%';
+    document.getElementById('progressStreak').textContent = streak;
+    document.getElementById('progressDays').textContent = stats.activeDays;
+    document.getElementById('progressLeft').textContent = 180 - stats.activeDays;
+    
+    // Profile section
+    document.getElementById('profileDays').textContent = stats.activeDays;
+    document.getElementById('profileProblems').textContent = stats.total;
+    document.getElementById('profileLc').textContent = stats.lc;
+    document.getElementById('profileCc').textContent = stats.cc;
+    document.getElementById('profileGfg').textContent = stats.gfg;
+    document.getElementById('profileStreak').textContent = streak;
+    
+    // Animated streak
+    document.getElementById('animatedStreakNum').textContent = streak;
+    
+    // Streak message
+    const msg = document.getElementById('streakMessage');
+    if (streak === 0) msg.textContent = '🔥 Start your journey!';
+    else if (streak < 7) msg.textContent = '🔥 Good start! Keep pushing!';
+    else if (streak < 30) msg.textContent = '⚡ On fire! You\'re consistent!';
+    else if (streak < 100) msg.textContent = '🌟 Unstoppable! Legend in making!';
+    else msg.textContent = '👑 DSA LEGEND! You\'re insane!';
+    
+    renderAllGrids();
+  }
+
+  // ========== MODAL FUNCTIONS ==========
+  let currentDay = null;
+
+  window.openModal = function(day) {
+    currentDay = day;
+    document.getElementById('modalDayTitle').textContent = `DAY ${day}`;
+    
+    if (!trackerData[day]) {
+      trackerData[day] = { lc: [], cc: [], gfg: [] };
     }
+    
+    renderModalProblems('lc', trackerData[day].lc || []);
+    renderModalProblems('cc', trackerData[day].cc || []);
+    renderModalProblems('gfg', trackerData[day].gfg || []);
+    
+    document.getElementById('lcCount').textContent = trackerData[day].lc?.length || 0;
+    document.getElementById('ccCount').textContent = trackerData[day].cc?.length || 0;
+    document.getElementById('gfgCount').textContent = trackerData[day].gfg?.length || 0;
+    
+    document.getElementById('dayModal').style.display = 'flex';
+  };
 
-    // attach global remove function
-    window.removeProblem = function(platform, idx) {
-      if (!currentDay) return;
-      let dayData = data[currentDay] || {lc:[], cc:[], gfg:[]};
-      if (platform === 'lc' && dayData.lc) dayData.lc.splice(idx,1);
-      if (platform === 'cc' && dayData.cc) dayData.cc.splice(idx,1);
-      if (platform === 'gfg' && dayData.gfg) dayData.gfg.splice(idx,1);
-      data[currentDay] = dayData;
-      // re-open modal to refresh
-      openModal(currentDay);
-    };
-
-    // add problem function
-    window.addProblem = function(platform) {
-      if (!currentDay) return;
-      let dayData = data[currentDay] || {lc:[], cc:[], gfg:[]};
-      if (!dayData[platform]) dayData[platform] = [];
-      dayData[platform].push({name:'', link:''});
-      data[currentDay] = dayData;
-      openModal(currentDay); // simple re-render
-    };
-
-    // open modal: populate based on day
-    window.openModal = function(day) {
-      currentDay = day;
-      modal.style.display = 'flex';
-      document.getElementById('dayTitle').innerText = 'Day ' + day;
-
-      let dayData = data[day] || {lc:[], cc:[], gfg:[]};
-      if (!dayData.lc) dayData.lc = [];
-      if (!dayData.cc) dayData.cc = [];
-      if (!dayData.gfg) dayData.gfg = [];
-
-      // set global count inputs to length (cosmetic)
-      document.getElementById('lcGlobalCount').value = dayData.lc.length || 1;
-      document.getElementById('ccGlobalCount').value = dayData.cc.length || 1;
-      document.getElementById('gfgGlobalCount').value = dayData.gfg.length || 1;
-
-      // render each problem list
-      renderProblemRows('lcProblems', dayData.lc, 'lc', dayData);
-      renderProblemRows('ccProblems', dayData.cc, 'cc', dayData);
-      renderProblemRows('gfgProblems', dayData.gfg, 'gfg', dayData);
-    };
-
-    // add listeners for + buttons (global)
-    document.getElementById('addLcBtn').onclick = () => addProblem('lc');
-    document.getElementById('addCcBtn').onclick = () => addProblem('cc');
-    document.getElementById('addGfgBtn').onclick = () => addProblem('gfg');
-
-    // save: read from all input fields inside modal
-    window.saveMultiDay = function() {
-      if (!currentDay) return;
-
-      function collectProblems(containerId) {
-        let items = [];
-        let container = document.getElementById(containerId);
-        if (!container) return items;
-        let rows = container.querySelectorAll('.problem-item');
-        rows.forEach(row => {
-          let nameInput = row.querySelector('.prob-name');
-          let linkInput = row.querySelector('.prob-link');
-          if (nameInput || linkInput) {
-            items.push({
-              name: nameInput ? nameInput.value.trim() : '',
-              link: linkInput ? linkInput.value.trim() : ''
-            });
-          }
-        });
-        return items;
-      }
-
-      let lcProblems = collectProblems('lcProblems');
-      let ccProblems = collectProblems('ccProblems');
-      let gfgProblems = collectProblems('gfgProblems');
-
-      // store even if empty arrays
-      data[currentDay] = {
-        lc: lcProblems,
-        cc: ccProblems,
-        gfg: gfgProblems
-      };
-
-      localStorage.setItem('dsaTracker_multi_v2', JSON.stringify(data));
-      closeModal();
-      renderGrid(); // refresh .done class
-    };
-
-    window.closeModal = function() {
-      modal.style.display = 'none';
-      currentDay = null;
-    };
-
-    // click outside to close
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
+  function renderModalProblems(platform, problems) {
+    const container = document.getElementById(platform + 'Problems');
+    container.innerHTML = '';
+    
+    if (problems.length === 0) {
+      // Show one empty row if no problems
+      problems = [{ name: '', link: '' }];
+    }
+    
+    problems.forEach((prob, index) => {
+      const row = document.createElement('div');
+      row.className = 'problem-row';
+      row.innerHTML = `
+        <input type="text" placeholder="Problem name" value="${escapeHtml(prob.name || '')}" 
+               onchange="updateProblem('${platform}', ${index}, 'name', this.value)">
+        <input type="url" placeholder="Link (optional)" value="${escapeHtml(prob.link || '')}"
+               onchange="updateProblem('${platform}', ${index}, 'link', this.value)">
+        <button class="remove-btn" onclick="removeProblem('${platform}', ${index})">−</button>
+      `;
+      container.appendChild(row);
     });
+  }
 
-    // initial render
-    renderGrid();
-  })();
+  window.updateProblem = function(platform, index, field, value) {
+    if (!trackerData[currentDay]) trackerData[currentDay] = { lc: [], cc: [], gfg: [] };
+    if (!trackerData[currentDay][platform]) trackerData[currentDay][platform] = [];
+    if (!trackerData[currentDay][platform][index]) {
+      trackerData[currentDay][platform][index] = { name: '', link: '' };
+    }
+    trackerData[currentDay][platform][index][field] = value;
+  };
+
+  window.addProblem = function(platform) {
+    if (!trackerData[currentDay]) trackerData[currentDay] = { lc: [], cc: [], gfg: [] };
+    if (!trackerData[currentDay][platform]) trackerData[currentDay][platform] = [];
+    trackerData[currentDay][platform].push({ name: '', link: '' });
+    
+    // Update count and re-render
+    document.getElementById(platform + 'Count').textContent = trackerData[currentDay][platform].length;
+    renderModalProblems(platform, trackerData[currentDay][platform]);
+  };
+
+  window.removeProblem = function(platform, index) {
+    if (!trackerData[currentDay]?.[platform]) return;
+    trackerData[currentDay][platform].splice(index, 1);
+    
+    // Update count
+    document.getElementById(platform + 'Count').textContent = trackerData[currentDay][platform].length;
+    renderModalProblems(platform, trackerData[currentDay][platform]);
+  };
+
+  window.saveDay = function() {
+    localStorage.setItem('dsaUltimate', JSON.stringify(trackerData));
+    closeModal();
+    updateAllUI();
+  };
+
+  window.closeModal = function() {
+    document.getElementById('dayModal').style.display = 'none';
+    currentDay = null;
+  };
+
+  // ========== SECTION SWITCHING ==========
+  window.switchSection = function(section) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(section + 'Section').classList.add('active');
+    event.target.classList.add('active');
+  };
+
+  // ========== HELPER ==========
+  function escapeHtml(unsafe) {
+    if (!unsafe) return '';
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // ========== INIT ==========
+  updateAllUI();
+
+  // Close modal when clicking outside
+  document.getElementById('dayModal').onclick = function(e) {
+    if (e.target === this) closeModal();
+  };
 </script>
-<!-- extra style for modal buttons -->
-<style>
-  .problem-item .row-actions .icon-btn { background: #964343; border-color: #c87878; }
-  .problem-item .row-actions .icon-btn:hover { background: #b15555; }
-  .btn-add { background: #1c5a3f; margin-left: 6px; }
-  .btn-add:hover { background: #247b53; }
-  .modal-panel::-webkit-scrollbar { width: 10px; background: #122633; }
-  .modal-panel::-webkit-scrollbar-thumb { background: #3e6182; border-radius: 20px; }
-</style>
 </body>
 </html>
