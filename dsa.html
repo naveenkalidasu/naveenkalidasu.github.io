@@ -3,991 +3,1092 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DSA 180 · ultimate tracker</title>
+  <title>DSA 180 · Ultimate Streak Tracker</title>
+  <!-- Modern Font: Poppins & JetBrains Mono for numbers -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- GSAP for advanced animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Confetti script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
+    :root {
+      --bg-dark: #07090E;
+      --glass-bg: rgba(18, 24, 38, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      
+      --accent-main: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.5);
+      
+      --lc-color: #ffa116;
+      --lc-glow: rgba(255, 161, 22, 0.4);
+      
+      --cc-color: #A05A2C;
+      --cc-glow: rgba(160, 90, 44, 0.4);
+      
+      --gfg-color: #2f8d46;
+      --gfg-glow: rgba(47, 141, 70, 0.4);
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     body {
-      background: #03060b;
-      background-image: 
-        radial-gradient(circle at 10% 20%, #1d3445 0%, transparent 30%),
-        radial-gradient(circle at 90% 80%, #1f4a3a 0%, transparent 35%);
-      color: #edf5ff;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    .container {
-      width: 1400px;
-      max-width: 100%;
-    }
-
-    /* ========== ANIMATIONS ========== */
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-      100% { transform: translateY(0px); }
-    }
-
-    @keyframes flameFlicker {
-      0% { opacity: 0.9; transform: scale(1); text-shadow: 0 0 10px #ff9900, 0 0 30px #ff5500; }
-      25% { opacity: 1; transform: scale(1.08); text-shadow: 0 0 20px #ffcc00, 0 0 40px #ff6600; }
-      50% { opacity: 0.95; transform: scale(1.05); text-shadow: 0 0 15px #ffaa00, 0 0 50px #ff3300; }
-      75% { opacity: 1; transform: scale(1.1); text-shadow: 0 0 25px #ffdd00, 0 0 35px #ff4400; }
-      100% { opacity: 0.9; transform: scale(1); text-shadow: 0 0 10px #ff9900, 0 0 30px #ff5500; }
-    }
-
-    @keyframes pulseGlow {
-      0% { filter: brightness(1); transform: scale(1); }
-      100% { filter: brightness(1.3); transform: scale(1.02); }
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* ========== HEADER ========== */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-      background: rgba(8, 18, 28, 0.8);
-      backdrop-filter: blur(15px);
-      padding: 1rem 2.2rem;
-      border-radius: 80px;
-      border: 1px solid #3f5b7a;
-      box-shadow: 0 20px 35px -10px #000000, 0 0 0 1px #2a4b70 inset;
-    }
-
-    .logo {
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #b0e0ff, #d9b8ff, #ffd7a5, #a5f0d1);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientFlow 6s ease infinite;
-    }
-
-    .streak-badge {
-      display: flex;
-      gap: 2.5rem;
-      background: #0f1e2c;
-      padding: 0.7rem 2.2rem;
-      border-radius: 50px;
-      border: 1px solid #4f7193;
-      font-weight: 500;
-    }
-
-    .streak-badge span {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* ========== NAVIGATION ========== */
-    .nav-bar {
-      display: flex;
-      gap: 0.8rem;
-      background: #0b1722;
-      padding: 0.6rem;
-      border-radius: 60px;
-      width: fit-content;
-      margin: 1.8rem 0 2.2rem;
-      border: 1px solid #365476;
-      box-shadow: 0 10px 20px -5px #00000080;
-    }
-
-    .nav-btn {
-      padding: 1rem 2.8rem;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      background: transparent;
-      color: #b4d0f0;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
+      overflow-x: hidden;
       position: relative;
-      overflow: hidden;
     }
 
-    .nav-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      transition: left 0.5s;
-    }
-
-    .nav-btn:hover::before {
-      left: 100%;
-    }
-
-    .nav-btn.active {
-      background: #1d6df0;
-      color: white;
-      box-shadow: 0 6px 0 #0a2f66, 0 0 15px #1d6df0;
-      transform: translateY(-2px);
-    }
-
-    /* ========== STATS CARDS ========== */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0 2.5rem;
-    }
-
-    .stat-card {
-      background: #121f2d;
-      border-radius: 30px;
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      border: 1px solid #3f6485;
-      box-shadow: 0 10px 0 #09131d, 0 0 0 1px #5f8bb9 inset;
-      transition: 0.2s;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 0 #09131d, 0 0 0 2px #7aafe6 inset;
-    }
-
-    .stat-icon {
-      font-size: 2.8rem;
-      filter: drop-shadow(0 4px 4px #00000060);
-    }
-
-    .stat-content h4 {
-      color: #9eb9d8;
-      font-weight: 400;
-      font-size: 0.95rem;
-    }
-
-    .stat-value {
-      font-size: 2.6rem;
-      font-weight: 700;
-      line-height: 1.1;
-      background: linear-gradient(135deg, #ffffff, #c5e0ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* ========== SECTIONS ========== */
-    .section {
-      display: none;
-      animation: slideIn 0.4s ease;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 2rem 0 1.5rem;
-    }
-
-    .section-header h2 {
-      font-size: 2rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .badge {
-      background: #1f4f8a;
-      padding: 0.3rem 1.5rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      border: 1px solid #6ca2e0;
-    }
-
-    /* ========== DAY GRID ========== */
-    .grid-container {
-      background: #0d1924;
-      border-radius: 50px;
-      padding: 2.2rem;
-      border: 1px solid #365c80;
-      box-shadow: inset 0 2px 5px #000000, 0 20px 30px -10px black;
-    }
-
-    .day-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-      gap: 12px;
-    }
-
-    .day-cell {
-      aspect-ratio: 1/1;
-      background: #1d3142;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      border: 1px solid #4c6f92;
-      box-shadow: 0 7px 0 #0c1a28;
-      transition: 0.1s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .day-cell::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-      opacity: 0;
-      transition: 0.3s;
-    }
-
-    .day-cell:hover::after {
-      opacity: 1;
-    }
-
-    .day-cell.completed {
-      background: linear-gradient(145deg, #2266c0, #153b7a);
-      border-color: #8bbaff;
-      box-shadow: 0 7px 0 #0b2350, 0 0 20px #1d6df0;
-      color: white;
-    }
-
-    .day-cell.missed {
-      background: #6d3333;
-      border-color: #c97a7a;
-      box-shadow: 0 7px 0 #3e1e1e;
-    }
-
-    /* ========== PROFILE SECTION ========== */
-    .profile-container {
-      display: grid;
-      grid-template-columns: 2fr 1.2fr;
-      gap: 2rem;
-      margin-top: 1.5rem;
-    }
-
-    .profile-info {
-      background: #10212e;
-      border-radius: 50px;
-      padding: 2.5rem;
-      border: 1px solid #4575a3;
-      box-shadow: 0 20px 30px -10px black;
-    }
-
-    .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .avatar {
-      width: 100px;
-      height: 100px;
-      background: linear-gradient(145deg, #1d6df0, #9f6ee7);
+    /* Animated Background Blob */
+    .bg-blob {
+      position: fixed;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3.5rem;
-      border: 3px solid #9ac4ff;
-      box-shadow: 0 0 30px #1d6df0;
+      filter: blur(120px);
+      z-index: -1;
+      opacity: 0.5;
+      animation: floatBg 20s infinite alternate ease-in-out;
+    }
+    .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: rgba(59, 130, 246, 0.3); }
+    .blob-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: rgba(139, 92, 246, 0.25); }
+    .blob-3 { top: 40%; left: 50%; transform: translateX(-50%); width: 800px; height: 400px; background: rgba(255, 161, 22, 0.15); }
+
+    @keyframes floatBg {
+      0% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.2) translate(5%, 10%); }
+      100% { transform: scale(0.9) translate(-5%, -5%); }
     }
 
-    .profile-stats {
+    .app-container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 2rem;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.8rem;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
     }
 
-    .profile-stat-item {
-      background: #07212e;
+    /* Glassmorphism Panel Base */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
       padding: 1.5rem;
-      border-radius: 30px;
-      border: 1px solid #3b6d95;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
-    .profile-stat-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #aad0ff;
-    }
-
-    /* ========== STREAK ANIMATION SECTION ========== */
-    .streak-animation-box {
-      background: #0a1e2c;
-      border-radius: 60px;
-      padding: 2.5rem 2rem;
-      border: 1px solid #5699d4;
-      box-shadow: 0 0 40px #1d6df060, inset 0 0 30px #1d6df030;
+    
+    /* Sidebar */
+    .sidebar {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
+      gap: 2rem;
+      height: calc(100vh - 4rem);
+      position: sticky;
+      top: 2rem;
     }
 
-    .streak-animation-box::before {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at center, #ffaa3350 0%, transparent 60%);
-      animation: pulseGlow 3s infinite alternate;
+    .brand {
+      text-align: center;
+      padding: 1rem 0;
     }
 
-    .flame-container {
-      font-size: 8rem;
-      line-height: 1;
-      animation: flameFlicker 1.5s infinite ease-in-out;
-      filter: drop-shadow(0 0 30px #ff9900);
-      margin-bottom: 1rem;
-    }
-
-    .streak-number-large {
-      font-size: 6rem;
+    .brand h1 {
+      font-size: 2.5rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #ffd966, #ffa64d, #ff7b2b);
+      background: linear-gradient(135deg, #fff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: pulseGlow 1.2s infinite alternate;
-      line-height: 1;
+      letter-spacing: -1px;
     }
-
-    .streak-label {
-      font-size: 1.4rem;
-      background: #1b3349;
-      padding: 0.8rem 2.5rem;
-      border-radius: 60px;
-      margin-top: 1rem;
-      border: 1px solid #ffaa33;
+    
+    .brand span {
+      font-size: 0.9rem;
+      color: var(--accent-main);
+      font-weight: 600;
+      text-transform: uppercase;
       letter-spacing: 2px;
     }
 
-    /* ========== MODAL ========== */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .user-rank {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+      border: 1px solid var(--glass-border);
+    }
+
+    .rank-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+    }
+
+    .rank-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #ffd700;
+      letter-spacing: 1px;
+    }
+
+    .rank-progress {
       width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .rank-fill {
       height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(16px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
+      background: linear-gradient(90deg, #f59e0b, #ffd700);
+      width: 0%;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .modal-content {
-      background: #142433;
-      width: 800px;
-      max-width: 96%;
-      max-height: 90vh;
-      overflow-y: auto;
-      border-radius: 70px;
-      padding: 2.5rem;
-      border: 2px solid #538ac7;
-      box-shadow: 0 40px 70px #000000, 0 0 0 2px #8bbaff inset;
+    /* Platform Stats */
+    .platform-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    .modal-content h2 {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      background: linear-gradient(135deg, #b5e0ff, #dbb5ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .platform-block {
-      background: #0e1e2e;
-      border-radius: 40px;
-      padding: 1.8rem;
-      margin-bottom: 2rem;
-      border: 1px solid #4175a8;
-    }
-
-    .platform-header {
+    .plat-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .plat-card:hover {
+      transform: translateX(5px);
+    }
+
+    .plat-card.lc { border-color: rgba(255, 161, 22, 0.2); }
+    .plat-card.lc:hover { box-shadow: 0 0 20px var(--lc-glow); }
+    .plat-card.cc { border-color: rgba(160, 90, 44, 0.2); }
+    .plat-card.cc:hover { box-shadow: 0 0 20px var(--cc-glow); }
+    .plat-card.gfg { border-color: rgba(47, 141, 70, 0.2); }
+    .plat-card.gfg:hover { box-shadow: 0 0 20px var(--gfg-glow); }
+
+    .plat-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .plat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+    }
+
+    .lc .plat-icon { background: var(--lc-color); }
+    .cc .plat-icon { background: var(--cc-color); }
+    .gfg .plat-icon { background: var(--gfg-color); }
+
+    .plat-name { font-weight: 600; font-size: 0.95rem; }
+    .plat-count { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 700; }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Top Dashboard Header */
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .greet h2 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .quote {
+      font-style: italic;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Big Streak Display */
+    .big-streak-display {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.05));
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 2rem;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .big-streak-display::before {
+      content: '🔥';
+      position: absolute;
+      font-size: 20rem;
+      right: -2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    .streak-info-main {
+      z-index: 1;
+    }
+
+    .streak-title {
+      font-size: 1.2rem;
+      color: #fca5a5;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .streak-count-wrapper {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .streak-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(to right, #ef4444, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.3));
+    }
+
+    .streak-days-text {
+      font-size: 1.5rem;
+      color: #fcd34d;
+      font-weight: 600;
+    }
+
+    /* 180 Days Grid (GitHub Style Heatmap variant) */
+    .grid-section {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .grid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .grid-header h3 {
       font-size: 1.5rem;
       font-weight: 600;
     }
 
-    .problem-row {
-      background: #0b1b29;
-      border-radius: 30px;
-      padding: 1.2rem;
-      margin-bottom: 1rem;
+    .grid-legend {
       display: flex;
-      flex-wrap: wrap;
       gap: 1rem;
       align-items: center;
-      border: 1px solid #3b6d97;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem;}
+    .legend-box { width: 14px; height: 14px; border-radius: 3px; }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 8px;
     }
 
-    .problem-row input {
-      flex: 1 1 200px;
-      background: #0f2335;
-      border: 2px solid #2d5885;
-      border-radius: 40px;
-      padding: 1rem 1.5rem;
-      color: white;
-      font-size: 0.95rem;
-    }
-
-    .problem-row input:focus {
-      border-color: #6aa9ff;
-      outline: none;
-      box-shadow: 0 0 15px #1d6df0;
-    }
-
-    .remove-btn {
-      background: #b13e3e;
-      border: none;
-      color: white;
-      width: 45px;
-      height: 45px;
-      border-radius: 30px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      border: 1px solid #ff8a8a;
-    }
-
-    .add-btn {
-      background: #1b5e3f;
-      border: none;
-      color: white;
-      padding: 0.8rem 2rem;
-      border-radius: 40px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid #5bc98b;
-      margin-top: 1rem;
-    }
-
-    .modal-actions {
+    .day-sq {
+      aspect-ratio: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
       display: flex;
-      gap: 1rem;
-      justify-content: flex-end;
-      margin-top: 2rem;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
     }
 
-    .modal-btn {
-      padding: 1.2rem 3rem;
-      border-radius: 50px;
+    .day-sq:hover {
+      transform: scale(1.15);
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 10;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    /* Day levels based on problem count */
+    .day-sq.level-1 { background: rgba(59, 130, 246, 0.3); color: #fff; border-color: rgba(59, 130, 246, 0.5); }
+    .day-sq.level-2 { background: rgba(59, 130, 246, 0.6); color: #fff; border-color: rgba(59, 130, 246, 0.8); box-shadow: 0 0 10px rgba(59,130,246,0.3); }
+    .day-sq.level-3 { background: rgba(59, 130, 246, 1); color: #fff; border-color: #fff; box-shadow: 0 0 15px rgba(59,130,246,0.6); }
+
+    /* Completed badge */
+    .day-sq.completed::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 10px;
+      height: 10px;
+      background: #f59e0b;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #f59e0b;
+    }
+
+    /* Tooltip */
+    .day-sq[data-tooltip]:hover::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 20;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Modal for Day Entry */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #0f172a;
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 1rem;
+    }
+    
+    .modal-title { font-size: 1.8rem; font-weight: 700; }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: color 0.2s; }
+    .modal-close:hover { color: white; }
+
+    .plat-section {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .plat-section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .inp-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .inp-row input {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    .inp-row input:focus { border-color: var(--accent-main); }
+    .inp-name { flex: 2; }
+    .inp-link { flex: 1; }
+
+    .btn-icon {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
       border: none;
+      width: 42px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-icon:hover { background: #ef4444; color: white; }
+
+    .btn-add {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-main);
+      border: 1px dashed rgba(255,255,255,0.2);
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      margin-top: 5px;
+    }
+    .btn-add:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
+
+    .modal-footer {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
       font-weight: 600;
       font-size: 1.1rem;
       cursor: pointer;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+      transition: all 0.3s;
+    }
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 25px rgba(37, 99, 235, 0.4);
     }
 
-    .save-btn {
-      background: #1d6df0;
-      color: white;
-      box-shadow: 0 7px 0 #0a2f66;
+    /* Epic Full Screen Animations Overlay */
+    .epic-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
     }
 
-    .cancel-btn {
-      background: #344f6b;
-      color: white;
-      box-shadow: 0 7px 0 #1e3140;
+    .anim-badge {
+      opacity: 0;
+      transform: scale(0.5) rotateX(45deg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      filter: drop-shadow(0 30px 50px rgba(0,0,0,0.8));
     }
 
-    /* ========== RESPONSIVE ========== */
-    @media (max-width: 800px) {
-      .profile-container {
-        grid-template-columns: 1fr;
-      }
-      .nav-btn {
-        padding: 0.8rem 1.5rem;
-      }
+    .anim-icon {
+      font-size: 8rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .anim-text {
+      font-size: 3rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .anim-sub {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* Custom Responsive */
+    @media (max-width: 1024px) {
+      .app-container { grid-template-columns: 1fr; }
+      .sidebar { height: auto; position: relative; top: 0; }
+      .big-streak-display { flex-direction: column; text-align: center; gap: 1rem; }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <!-- HEADER -->
-  <div class="header">
-    <div class="logo">⚡ 180·DSA TRACKER</div>
-    <div class="streak-badge">
-      <span>🔥 MAX STREAK <span id="maxStreak">0</span></span>
-      <span>📅 ACTIVE <span id="activeDays">0</span></span>
-      <span>⭐ TOTAL <span id="totalProblems">0</span></span>
+
+  <!-- Background Animated Blobs -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="glass-panel brand">
+        <h1>DSA<span>180</span></h1>
+        <p style="color:var(--text-muted); font-size:0.8rem; margin-top:5px;">Ultimate Streak Tracker</p>
+      </div>
+
+      <div class="glass-panel user-rank">
+        <div class="rank-icon" id="rankIcon">🥚</div>
+        <div class="rank-title" id="rankTitle">Novice</div>
+        <div class="rank-progress">
+          <div class="rank-fill" id="rankFill"></div>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;" id="rankHint">3 days to next rank</div>
+      </div>
+
+      <div class="glass-panel platform-stats">
+        <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--text-muted);">Problems Solved</h3>
+        <div class="plat-card lc">
+          <div class="plat-info">
+            <div class="plat-icon">LC</div>
+            <div class="plat-name">LeetCode</div>
+          </div>
+          <div class="plat-count" id="statLc">0</div>
+        </div>
+        
+        <div class="plat-card cc">
+          <div class="plat-info">
+            <div class="plat-icon">CC</div>
+            <div class="plat-name">CodeChef</div>
+          </div>
+          <div class="plat-count" id="statCc">0</div>
+        </div>
+
+        <div class="plat-card gfg">
+          <div class="plat-info">
+            <div class="plat-icon">GFG</div>
+            <div class="plat-name">GeeksForGeeks</div>
+          </div>
+          <div class="plat-count" id="statGfg">0</div>
+        </div>
+        
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 600; color:var(--text-muted);">Total Mastered</span>
+          <span class="plat-count" id="statTotal" style="color: #60a5fa;">0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <header class="dash-header glass-panel">
+        <div class="greet">
+          <h2 id="greeting">Welcome back, Warrior.</h2>
+          <div class="quote" id="dailyQuote">"Consistency is what transforms average into excellence."</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.9rem; color: var(--text-muted);">Progress</div>
+          <div style="font-size: 1.5rem; font-weight: 700; font-family: 'JetBrains Mono';" id="topProgress">0/180 Days</div>
+        </div>
+      </header>
+
+      <section class="big-streak-display">
+        <div class="streak-info-main">
+          <div class="streak-title">Current Active Streak</div>
+          <div class="streak-count-wrapper">
+            <span class="streak-count" id="mainStreak">0</span>
+            <span class="streak-days-text">Days</span>
+          </div>
+          <p style="margin-top: 0.5rem; color: #fca5a5; font-size: 1.1rem; max-width: 400px;" id="streakMessage">The hardest part is starting. Click on Day 1 to begin your journey.</p>
+        </div>
+      </section>
+
+      <section class="glass-panel grid-section">
+        <div class="grid-header">
+          <h3>Your 180-Day Journey</h3>
+          <div class="grid-legend">
+            <div class="legend-item"><div class="legend-box" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);"></div> Empty</div>
+            <div class="legend-item"><div class="legend-box" style="background: rgba(59, 130, 246, 0.3);"></div> 1-2 Probs</div>
+            <div class="legend-item"><div class="legend-box" style="background: rgba(59, 130, 246, 0.6);"></div> 3-4 Probs</div>
+            <div class="legend-item"><div class="legend-box" style="background: rgba(59, 130, 246, 1);"></div> 5+ Probs</div>
+            <div class="legend-item"><div class="legend-box" style="background:#f59e0b; border-radius:50%; width:10px; height:10px;"></div> Streak Active</div>
+          </div>
+        </div>
+        
+        <div class="days-grid" id="daysGrid">
+          <!-- JS will populate 180 squares here -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="dayModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modalDayTitle">Day 1</div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+
+      <div id="modalForms">
+        <!-- LeetCode -->
+        <div class="plat-section">
+          <div class="plat-section-header" style="color: var(--lc-color);">
+            <div style="background:var(--lc-color); width:20px; height:20px; border-radius:4px;"></div> LeetCode
+          </div>
+          <div id="formLc"></div>
+          <button class="btn-add" onclick="addProblemInput('lc')">+ Add LeetCode Problem</button>
+        </div>
+
+        <!-- CodeChef -->
+        <div class="plat-section">
+          <div class="plat-section-header" style="color: #d97706;">
+             <div style="background:#d97706; width:20px; height:20px; border-radius:4px;"></div> CodeChef
+          </div>
+          <div id="formCc"></div>
+          <button class="btn-add" onclick="addProblemInput('cc')">+ Add CodeChef Problem</button>
+        </div>
+
+        <!-- GFG -->
+        <div class="plat-section">
+          <div class="plat-section-header" style="color: var(--gfg-color);">
+             <div style="background:var(--gfg-color); width:20px; height:20px; border-radius:4px;"></div> GeeksForGeeks
+          </div>
+          <div id="formGfg"></div>
+          <button class="btn-add" onclick="addProblemInput('gfg')">+ Add GFG Problem</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-save" onclick="saveDay()">Commit Record 🚀</button>
+      </div>
     </div>
   </div>
 
-  <!-- NAVIGATION -->
-  <div class="nav-bar">
-    <button class="nav-btn active" onclick="switchSection('home')">🏠 HOME</button>
-    <button class="nav-btn" onclick="switchSection('progress')">📊 PROGRESS</button>
-    <button class="nav-btn" onclick="switchSection('profile')">👤 PROFILE</button>
-  </div>
-
-  <!-- HOME SECTION -->
-  <div id="homeSection" class="section active">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-icon">📌</span>
-        <div class="stat-content">
-          <h4>Total Problems</h4>
-          <div class="stat-value" id="homeTotal">0</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">⚡</span>
-        <div class="stat-content">
-          <h4>LeetCode</h4>
-          <div class="stat-value" id="homeLc">0</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">🍽️</span>
-        <div class="stat-content">
-          <h4>CodeChef</h4>
-          <div class="stat-value" id="homeCc">0</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">🎯</span>
-        <div class="stat-content">
-          <h4>GFG</h4>
-          <div class="stat-value" id="homeGfg">0</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-header">
-      <h2>📆 180 DAYS CHALLENGE <span class="badge">BEGINNER → ADVANCED</span></h2>
-    </div>
-
-    <div class="grid-container">
-      <div class="day-grid" id="homeGrid"></div>
+  <!-- Epic Animation Overlay -->
+  <div class="epic-overlay" id="epicOverlay">
+    <div class="anim-badge" id="animBadge">
+      <div class="anim-icon" id="animIcon">🔥</div>
+      <div class="anim-text" id="animText">ACCEPTED</div>
+      <div class="anim-sub" id="animSub">+1 Day Streak</div>
     </div>
   </div>
-
-  <!-- PROGRESS SECTION -->
-  <div id="progressSection" class="section">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-icon">📊</span>
-        <div class="stat-content">
-          <h4>Completion</h4>
-          <div class="stat-value" id="progressPercent">0%</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">🔥</span>
-        <div class="stat-content">
-          <h4>Current Streak</h4>
-          <div class="stat-value" id="progressStreak">0</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">📈</span>
-        <div class="stat-content">
-          <h4>Days Done</h4>
-          <div class="stat-value" id="progressDays">0</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">🎯</span>
-        <div class="stat-content">
-          <h4>Remaining</h4>
-          <div class="stat-value" id="progressLeft">180</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-header">
-      <h2>📈 PROGRESS OVERVIEW</h2>
-    </div>
-
-    <div class="grid-container">
-      <div class="day-grid" id="progressGrid"></div>
-    </div>
-  </div>
-
-  <!-- PROFILE SECTION -->
-  <div id="profileSection" class="section">
-    <div class="profile-container">
-      <div class="profile-info">
-        <div class="profile-header">
-          <div class="avatar">👨‍💻</div>
-          <div style="flex:1">
-            <h1 style="font-size:2.5rem;">DSA WARRIOR</h1>
-            <p style="color:#9ac4ff;">180 days · consistent · relentless</p>
-          </div>
-        </div>
-
-        <div class="profile-stats">
-          <div class="profile-stat-item">
-            <div style="color:#9ac4ff;">Days Active</div>
-            <div class="profile-stat-value" id="profileDays">0</div>
-          </div>
-          <div class="profile-stat-item">
-            <div style="color:#9ac4ff;">Problems Solved</div>
-            <div class="profile-stat-value" id="profileProblems">0</div>
-          </div>
-          <div class="profile-stat-item">
-            <div style="color:#9ac4ff;">LeetCode</div>
-            <div class="profile-stat-value" id="profileLc">0</div>
-          </div>
-          <div class="profile-stat-item">
-            <div style="color:#9ac4ff;">CodeChef</div>
-            <div class="profile-stat-value" id="profileCc">0</div>
-          </div>
-          <div class="profile-stat-item">
-            <div style="color:#9ac4ff;">GFG</div>
-            <div class="profile-stat-value" id="profileGfg">0</div>
-          </div>
-          <div class="profile-stat-item">
-            <div style="color:#9ac4ff;">Max Streak</div>
-            <div class="profile-stat-value" id="profileStreak">0</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STREAK ANIMATION SECTION -->
-      <div class="streak-animation-box">
-        <div class="flame-container">🔥</div>
-        <div class="streak-number-large" id="animatedStreakNum">0</div>
-        <div class="streak-label">DAY STREAK</div>
-        <div style="margin-top:2rem; color:#ffb870; font-size:1.2rem;" id="streakMessage">Keep going!</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="dayModal">
-  <div class="modal-content">
-    <h2 id="modalDayTitle">DAY 1</h2>
-    
-    <!-- LeetCode -->
-    <div class="platform-block">
-      <div class="platform-header">
-        <span>⚡ LEETCODE</span>
-        <span id="lcCount">0</span>
-      </div>
-      <div id="lcProblems"></div>
-      <button class="add-btn" onclick="addProblem('lc')">+ ADD PROBLEM</button>
-    </div>
-
-    <!-- CodeChef -->
-    <div class="platform-block">
-      <div class="platform-header">
-        <span>🍽️ CODECHEF</span>
-        <span id="ccCount">0</span>
-      </div>
-      <div id="ccProblems"></div>
-      <button class="add-btn" onclick="addProblem('cc')">+ ADD PROBLEM</button>
-    </div>
-
-    <!-- GFG -->
-    <div class="platform-block">
-      <div class="platform-header">
-        <span>🎯 GEEKSFORGEEKS</span>
-        <span id="gfgCount">0</span>
-      </div>
-      <div id="gfgProblems"></div>
-      <button class="add-btn" onclick="addProblem('gfg')">+ ADD PROBLEM</button>
-    </div>
-
-    <div class="modal-actions">
-      <button class="modal-btn cancel-btn" onclick="closeModal()">CANCEL</button>
-      <button class="modal-btn save-btn" onclick="saveDay()">SAVE PROGRESS</button>
-    </div>
-  </div>
-</div>
 
 <script>
-  // ========== DATA LAYER ==========
-  let trackerData = JSON.parse(localStorage.getItem('dsaUltimate')) || {};
-  
-  // Initialize empty structure for new days
-  function getEmptyDay() {
-    return { lc: [], cc: [], gfg: [] };
+  // Quotes Array
+  const quotes = [
+    '"Consistency is what transforms average into excellence."',
+    '"First solve the problem. Then, write the code." - John Johnson',
+    '"Talk is cheap. Show me the code." - Linus Torvalds',
+    '"The only way to learn a new programming language is by writing programs in it." - Dennis Ritchie',
+    '"Small disciplines repeated with consistency every day lead to great achievements." - John Maxwell'
+  ];
+  document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+  // Data State
+  let trackerData = JSON.parse(localStorage.getItem('dsaUltimateTracker')) || {};
+  let currentModalDay = null;
+  let previousStreak = 0;
+
+  // Initialize App
+  function initApp() {
+    renderDaysGrid();
+    updateDashboard();
+    previousStreak = calculateHighestActiveStreak();
   }
 
-  // ========== STATS CALCULATIONS ==========
-  function calculateStats() {
-    let lcTotal = 0, ccTotal = 0, gfgTotal = 0;
-    let activeDays = 0;
+  // Calculate functions
+  function getCompletedDays() {
+    const days = [];
+    for(let i=1; i<=180; i++) {
+      if(trackerData[i]) {
+        const hasLc = trackerData[i].lc && trackerData[i].lc.length > 0;
+        const hasCc = trackerData[i].cc && trackerData[i].cc.length > 0;
+        const hasGfg = trackerData[i].gfg && trackerData[i].gfg.length > 0;
+        if(hasLc || hasCc || hasGfg) days.push(i);
+      }
+    }
+    return days.sort((a,b) => a-b);
+  }
+
+  function calculateHighestActiveStreak() {
+    const days = getCompletedDays();
+    if(days.length === 0) return 0;
     
-    for (let day in trackerData) {
-      if (trackerData.hasOwnProperty(day)) {
-        const dayData = trackerData[day];
-        if (dayData.lc && dayData.lc.length) lcTotal += dayData.lc.length;
-        if (dayData.cc && dayData.cc.length) ccTotal += dayData.cc.length;
-        if (dayData.gfg && dayData.gfg.length) gfgTotal += dayData.gfg.length;
-        
-        if ((dayData.lc && dayData.lc.length) || 
-            (dayData.cc && dayData.cc.length) || 
-            (dayData.gfg && dayData.gfg.length)) {
-          activeDays++;
+    let max = 1, current = 1;
+    for(let i=1; i<days.length; i++) {
+        if(days[i] === days[i-1] + 1) {
+            current++;
+            max = Math.max(max, current);
+        } else {
+            current = 1;
         }
+    }
+    return max;
+  }
+
+  function getTotalProblems() {
+    let lc=0, cc=0, gfg=0;
+    for(let i=1; i<=180; i++) {
+      if(trackerData[i]) {
+        lc += (trackerData[i].lc || []).length;
+        cc += (trackerData[i].cc || []).length;
+        gfg += (trackerData[i].gfg || []).length;
       }
     }
-    
-    return {
-      total: lcTotal + ccTotal + gfgTotal,
-      lc: lcTotal,
-      cc: ccTotal,
-      gfg: gfgTotal,
-      activeDays: activeDays
-    };
+    return { lc, cc, gfg, total: lc+cc+gfg };
   }
 
-  function calculateStreak() {
-    const days = Object.keys(trackerData)
-      .map(d => parseInt(d))
-      .filter(d => !isNaN(d))
-      .sort((a, b) => a - b);
-    
-    if (days.length === 0) return 0;
-    
-    let maxStreak = 1;
-    let currentStreak = 1;
-    
-    for (let i = 1; i < days.length; i++) {
-      if (days[i] === days[i-1] + 1) {
-        currentStreak++;
-        maxStreak = Math.max(maxStreak, currentStreak);
-      } else {
-        currentStreak = 1;
+  // Ranks Logic
+  const ranks = [
+    { name: "Novice", icon: "🥚", min: 0, color: "#94a3b8" },
+    { name: "Pupil", icon: "🌱", min: 7, color: "#10b981" },
+    { name: "Specialist", icon: "⚔️", min: 21, color: "#3b82f6" },
+    { name: "Expert", icon: "🛡️", min: 50, color: "#8b5cf6" },
+    { name: "Candidate Master", icon: "💎", min: 100, color: "#ec4899" },
+    { name: "Grandmaster", icon: "👑", min: 150, color: "#f59e0b" },
+    { name: "Legend", icon: "✨", min: 180, color: "#ef4444" }
+  ];
+
+  function getRank(streak) {
+    let currentRank = ranks[0];
+    let nextRank = ranks[1];
+    for(let i=0; i<ranks.length; i++) {
+      if(streak >= ranks[i].min) {
+        currentRank = ranks[i];
+        nextRank = ranks[i+1] || null;
       }
     }
-    
-    return maxStreak;
+    return { currentRank, nextRank };
   }
 
-  // ========== RENDER GRIDS ==========
-  function renderAllGrids() {
-    const homeGrid = document.getElementById('homeGrid');
-    const progressGrid = document.getElementById('progressGrid');
-    
-    homeGrid.innerHTML = '';
-    progressGrid.innerHTML = '';
-    
-    for (let i = 1; i <= 180; i++) {
-      // Home grid cells
-      const homeCell = createDayCell(i);
-      homeGrid.appendChild(homeCell);
-      
-      // Progress grid cells
-      const progressCell = createDayCell(i);
-      progressGrid.appendChild(progressCell);
+  // Update UI Dashboard
+  function updateDashboard() {
+    const streak = calculateHighestActiveStreak();
+    const stats = getTotalProblems();
+    const activeCount = getCompletedDays().length;
+    const rankInfo = getRank(streak);
+
+    // Animate numbers
+    animateValue("statLc", parseInt(document.getElementById("statLc").innerText), stats.lc, 1000);
+    animateValue("statCc", parseInt(document.getElementById("statCc").innerText), stats.cc, 1000);
+    animateValue("statGfg", parseInt(document.getElementById("statGfg").innerText), stats.gfg, 1000);
+    animateValue("statTotal", parseInt(document.getElementById("statTotal").innerText), stats.total, 1000);
+    animateValue("mainStreak", parseInt(document.getElementById("mainStreak").innerText), streak, 1000);
+
+    document.getElementById("topProgress").innerText = `${activeCount}/180 Days`;
+
+    // Rank Update
+    document.getElementById("rankIcon").innerText = rankInfo.currentRank.icon;
+    document.getElementById("rankTitle").innerText = rankInfo.currentRank.name;
+    document.getElementById("rankTitle").style.color = rankInfo.currentRank.color;
+
+    if(rankInfo.nextRank) {
+      const needed = rankInfo.nextRank.min - streak;
+      const totalRange = rankInfo.nextRank.min - rankInfo.currentRank.min;
+      const progress = ((totalRange - needed) / totalRange) * 100;
+      document.getElementById("rankFill").style.width = `${progress}%`;
+      document.getElementById("rankHint").innerText = `${needed} days to ${rankInfo.nextRank.name}`;
+    } else {
+      document.getElementById("rankFill").style.width = `100%`;
+      document.getElementById("rankHint").innerText = `Maximum Rank Achieved!`;
     }
-  }
 
-  function createDayCell(day) {
-    const cell = document.createElement('div');
-    cell.className = 'day-cell';
-    if (trackerData[day] && (
-        (trackerData[day].lc && trackerData[day].lc.length) ||
-        (trackerData[day].cc && trackerData[day].cc.length) ||
-        (trackerData[day].gfg && trackerData[day].gfg.length)
-    )) {
-      cell.classList.add('completed');
-    }
-    cell.textContent = day;
-    cell.onclick = () => openModal(day);
-    return cell;
-  }
-
-  // ========== UPDATE ALL UI ==========
-  function updateAllUI() {
-    const stats = calculateStats();
-    const streak = calculateStreak();
-    const percent = Math.round((stats.activeDays / 180) * 100);
-    
-    // Update header
-    document.getElementById('maxStreak').textContent = streak;
-    document.getElementById('activeDays').textContent = stats.activeDays;
-    document.getElementById('totalProblems').textContent = stats.total;
-    
-    // Home section
-    document.getElementById('homeTotal').textContent = stats.total;
-    document.getElementById('homeLc').textContent = stats.lc;
-    document.getElementById('homeCc').textContent = stats.cc;
-    document.getElementById('homeGfg').textContent = stats.gfg;
-    
-    // Progress section
-    document.getElementById('progressPercent').textContent = percent + '%';
-    document.getElementById('progressStreak').textContent = streak;
-    document.getElementById('progressDays').textContent = stats.activeDays;
-    document.getElementById('progressLeft').textContent = 180 - stats.activeDays;
-    
-    // Profile section
-    document.getElementById('profileDays').textContent = stats.activeDays;
-    document.getElementById('profileProblems').textContent = stats.total;
-    document.getElementById('profileLc').textContent = stats.lc;
-    document.getElementById('profileCc').textContent = stats.cc;
-    document.getElementById('profileGfg').textContent = stats.gfg;
-    document.getElementById('profileStreak').textContent = streak;
-    
-    // Animated streak
-    document.getElementById('animatedStreakNum').textContent = streak;
-    
     // Streak message
-    const msg = document.getElementById('streakMessage');
-    if (streak === 0) msg.textContent = '🔥 Start your journey!';
-    else if (streak < 7) msg.textContent = '🔥 Good start! Keep pushing!';
-    else if (streak < 30) msg.textContent = '⚡ On fire! You\'re consistent!';
-    else if (streak < 100) msg.textContent = '🌟 Unstoppable! Legend in making!';
-    else msg.textContent = '👑 DSA LEGEND! You\'re insane!';
-    
-    renderAllGrids();
+    const stMsg = document.getElementById("streakMessage");
+    if(streak === 0) stMsg.innerText = "The hardest part is starting. Click on Day 1 to begin.";
+    else if(streak < 7) stMsg.innerText = "Great start! Keep the momentum going to reach Pupil rank.";
+    else if(streak < 21) stMsg.innerText = "You're building a solid habit. Don't break the chain now!";
+    else if(streak < 50) stMsg.innerText = "Incredible consistency! You are dominating these algorithms.";
+    else stMsg.innerText = "Absolute Legend. Your dedication is unreal.";
   }
 
-  // ========== MODAL FUNCTIONS ==========
-  let currentDay = null;
+  function animateValue(id, start, end, duration) {
+    if (start === end) return;
+    const obj = document.getElementById(id);
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      obj.innerHTML = Math.floor(progress * (end - start) + start);
+      if (progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+  }
 
-  window.openModal = function(day) {
-    currentDay = day;
-    document.getElementById('modalDayTitle').textContent = `DAY ${day}`;
-    
-    if (!trackerData[day]) {
-      trackerData[day] = { lc: [], cc: [], gfg: [] };
-    }
-    
-    renderModalProblems('lc', trackerData[day].lc || []);
-    renderModalProblems('cc', trackerData[day].cc || []);
-    renderModalProblems('gfg', trackerData[day].gfg || []);
-    
-    document.getElementById('lcCount').textContent = trackerData[day].lc?.length || 0;
-    document.getElementById('ccCount').textContent = trackerData[day].cc?.length || 0;
-    document.getElementById('gfgCount').textContent = trackerData[day].gfg?.length || 0;
-    
-    document.getElementById('dayModal').style.display = 'flex';
-  };
+  // Render Grid
+  function renderDaysGrid() {
+    const grid = document.getElementById("daysGrid");
+    grid.innerHTML = "";
+    const activeDays = getCompletedDays();
 
-  function renderModalProblems(platform, problems) {
-    const container = document.getElementById(platform + 'Problems');
-    container.innerHTML = '';
-    
-    if (problems.length === 0) {
-      // Show one empty row if no problems
-      problems = [{ name: '', link: '' }];
+    // To optimize tooltip data creation
+    for(let i=1; i<=180; i++) {
+        const sq = document.createElement("div");
+        sq.className = "day-sq";
+        sq.innerText = i;
+        sq.onclick = () => openDayModal(i);
+
+        if(trackerData[i]) {
+            const lcCount = (trackerData[i].lc || []).length;
+            const ccCount = (trackerData[i].cc || []).length;
+            const gfgCount = (trackerData[i].gfg || []).length;
+            const total = lcCount + ccCount + gfgCount;
+
+            if(total > 0) {
+                // Check if streak part
+                if(activeDays.includes(i)) sq.classList.add("completed");
+
+                // Assign Level
+                if(total >= 5) sq.classList.add("level-3");
+                else if(total >= 3) sq.classList.add("level-2");
+                else sq.classList.add("level-1");
+
+                // Tooltip
+                sq.setAttribute("data-tooltip", `Day ${i}: ${total} problems (${lcCount} LC, ${ccCount} CC, ${gfgCount} GFG)`);
+            } else {
+                sq.setAttribute("data-tooltip", `Day ${i}: Not started`);
+            }
+        } else {
+            sq.setAttribute("data-tooltip", `Day ${i}: Not started`);
+        }
+
+        grid.appendChild(sq);
     }
+  }
+
+  // Modal Logic
+  function openDayModal(day) {
+    currentModalDay = day;
+    document.getElementById("modalDayTitle").innerText = `Day ${day} Mission`;
     
-    problems.forEach((prob, index) => {
-      const row = document.createElement('div');
-      row.className = 'problem-row';
-      row.innerHTML = `
-        <input type="text" placeholder="Problem name" value="${escapeHtml(prob.name || '')}" 
-               onchange="updateProblem('${platform}', ${index}, 'name', this.value)">
-        <input type="url" placeholder="Link (optional)" value="${escapeHtml(prob.link || '')}"
-               onchange="updateProblem('${platform}', ${index}, 'link', this.value)">
-        <button class="remove-btn" onclick="removeProblem('${platform}', ${index})">−</button>
-      `;
-      container.appendChild(row);
+    // Auto-init empty arrays if null
+    if(!trackerData[day]) trackerData[day] = { lc: [], cc: [], gfg: [] };
+    
+    // Ensure properties exist
+    if(!trackerData[day].lc) trackerData[day].lc = [];
+    if(!trackerData[day].cc) trackerData[day].cc = [];
+    if(!trackerData[day].gfg) trackerData[day].gfg = [];
+
+    renderFormList('lc', trackerData[day].lc);
+    renderFormList('cc', trackerData[day].cc);
+    renderFormList('gfg', trackerData[day].gfg);
+
+    document.getElementById("dayModal").classList.add("active");
+  }
+
+  function closeModal() {
+    document.getElementById("dayModal").classList.remove("active");
+  }
+
+  function renderFormList(platform, list) {
+    const container = document.getElementById(`form${platform.charAt(0).toUpperCase() + platform.slice(1)}`);
+    container.innerHTML = "";
+    
+    if(list.length === 0) list.push({name:"", link:""});
+
+    list.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "inp-row";
+        row.innerHTML = `
+          <input type="text" class="inp-name" placeholder="Problem Name" value="${item.name.replace(/"/g, '&quot;')}" onchange="updateRowData('${platform}', ${index}, 'name', this.value)">
+          <input type="text" class="inp-link" placeholder="URL (Optional)" value="${item.link.replace(/"/g, '&quot;')}" onchange="updateRowData('${platform}', ${index}, 'link', this.value)">
+          <button class="btn-icon" onclick="removeRow('${platform}', ${index})">×</button>
+        `;
+        container.appendChild(row);
     });
   }
 
-  window.updateProblem = function(platform, index, field, value) {
-    if (!trackerData[currentDay]) trackerData[currentDay] = { lc: [], cc: [], gfg: [] };
-    if (!trackerData[currentDay][platform]) trackerData[currentDay][platform] = [];
-    if (!trackerData[currentDay][platform][index]) {
-      trackerData[currentDay][platform][index] = { name: '', link: '' };
-    }
-    trackerData[currentDay][platform][index][field] = value;
-  };
-
-  window.addProblem = function(platform) {
-    if (!trackerData[currentDay]) trackerData[currentDay] = { lc: [], cc: [], gfg: [] };
-    if (!trackerData[currentDay][platform]) trackerData[currentDay][platform] = [];
-    trackerData[currentDay][platform].push({ name: '', link: '' });
-    
-    // Update count and re-render
-    document.getElementById(platform + 'Count').textContent = trackerData[currentDay][platform].length;
-    renderModalProblems(platform, trackerData[currentDay][platform]);
-  };
-
-  window.removeProblem = function(platform, index) {
-    if (!trackerData[currentDay]?.[platform]) return;
-    trackerData[currentDay][platform].splice(index, 1);
-    
-    // Update count
-    document.getElementById(platform + 'Count').textContent = trackerData[currentDay][platform].length;
-    renderModalProblems(platform, trackerData[currentDay][platform]);
-  };
-
-  window.saveDay = function() {
-    localStorage.setItem('dsaUltimate', JSON.stringify(trackerData));
-    closeModal();
-    updateAllUI();
-  };
-
-  window.closeModal = function() {
-    document.getElementById('dayModal').style.display = 'none';
-    currentDay = null;
-  };
-
-  // ========== SECTION SWITCHING ==========
-  window.switchSection = function(section) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    
-    document.getElementById(section + 'Section').classList.add('active');
-    event.target.classList.add('active');
-  };
-
-  // ========== HELPER ==========
-  function escapeHtml(unsafe) {
-    if (!unsafe) return '';
-    return unsafe
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+  window.updateRowData = function(platform, index, field, value) {
+      trackerData[currentModalDay][platform][index][field] = value;
   }
 
-  // ========== INIT ==========
-  updateAllUI();
+  window.addProblemInput = function(platform) {
+      trackerData[currentModalDay][platform].push({name:"", link:""});
+      renderFormList(platform, trackerData[currentModalDay][platform]);
+  }
 
-  // Close modal when clicking outside
-  document.getElementById('dayModal').onclick = function(e) {
-    if (e.target === this) closeModal();
-  };
+  window.removeRow = function(platform, index) {
+      trackerData[currentModalDay][platform].splice(index, 1);
+      renderFormList(platform, trackerData[currentModalDay][platform]);
+  }
+
+  window.saveDay = function() {
+      // Clean up empty rows
+      ['lc','cc','gfg'].forEach(p => {
+          trackerData[currentModalDay][p] = trackerData[currentModalDay][p].filter(item => item.name.trim() !== "");
+      });
+
+      // Find which platforms were solved today just now to trigger specific animations
+      const solvedLc = trackerData[currentModalDay].lc.length > 0;
+      const solvedCc = trackerData[currentModalDay].cc.length > 0;
+      const solvedGfg = trackerData[currentModalDay].gfg.length > 0;
+
+      localStorage.setItem('dsaUltimateTracker', JSON.stringify(trackerData));
+      closeModal();
+      
+      const newStreak = calculateHighestActiveStreak();
+      
+      // Determine what epic animation to show
+      if(newStreak > previousStreak) {
+          triggerStreakUpAnimation(newStreak);
+      } else if (solvedLc || solvedCc || solvedGfg) {
+          // Trigger platform specific animation
+          if(solvedLc) triggerPlatformAnim('LeetCode', 'var(--lc-color)', '⚡', 'ACCEPTED');
+          else if(solvedCc) triggerPlatformAnim('CodeChef', '#d97706', '👨‍🍳', 'CORRECT ANSWER');
+          else if(solvedGfg) triggerPlatformAnim('GeeksForGeeks', 'var(--gfg-color)', '🎯', 'SOLVED');
+      }
+
+      previousStreak = newStreak;
+      renderDaysGrid();
+      updateDashboard();
+  }
+
+  // Epic Animations System
+  function triggerStreakUpAnimation(streakCount) {
+      triggerConfetti();
+      playEpicTextAnim('🔥', `STREAK INCREASED`, `${streakCount} DAYS UNLOCKED`, 'linear-gradient(135deg, #ef4444, #f59e0b)');
+  }
+
+  function triggerPlatformAnim(platform, color, icon, text) {
+      playEpicTextAnim(icon, text, platform, color);
+      triggerSideConfetti(color);
+  }
+
+  function playEpicTextAnim(icon, mainText, subText, colorStr) {
+      const overlay = document.getElementById("epicOverlay");
+      const badge = document.getElementById("animBadge");
+      
+      document.getElementById("animIcon").innerText = icon;
+      document.getElementById("animText").innerText = mainText;
+      document.getElementById("animSub").innerText = subText;
+      
+      document.getElementById("animText").style.color = colorStr.includes('gradient') ? 'transparent' : colorStr;
+      if(colorStr.includes('gradient')) {
+          document.getElementById("animText").style.background = colorStr;
+          document.getElementById("animText").style.webkitBackgroundClip = "text";
+      } else {
+          document.getElementById("animText").style.background = "none";
+          document.getElementById("animText").style.textShadow = `0 0 20px ${colorStr}`;
+      }
+      
+      document.getElementById("animSub").style.color = colorStr.includes('gradient') ? '#fff' : colorStr;
+
+      // GSAP Animation Sequence
+      gsap.killTweensOf(badge);
+      gsap.set(badge, { opacity: 0, scale: 0.1, rotationX: 80, y: 100 });
+      
+      gsap.to(badge, {
+          opacity: 1, scale: 1.2, rotationX: -10, y: -20, duration: 0.6, ease: "back.out(1.7)"
+      });
+      gsap.to(badge, {
+          scale: 1, rotationX: 0, y: 0, duration: 0.4, delay: 0.6, ease: "power2.out"
+      });
+      gsap.to(badge, {
+          opacity: 0, scale: 1.5, y: -100, filter: "blur(20px)", duration: 0.5, delay: 2.5, ease: "power2.in"
+      });
+  }
+
+  function triggerConfetti() {
+      const duration = 3000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        // launch a few confetti from the left edge
+        confetti({
+          particleCount: 7,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#ef4444', '#f59e0b', '#3b82f6']
+        });
+        // and launch a few from the right edge
+        confetti({
+          particleCount: 7,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#ef4444', '#f59e0b', '#3b82f6']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+  }
+
+  function triggerSideConfetti(colorStr) {
+      colorStr = colorStr.replace('var(--lc-color)', '#ffa116')
+                         .replace('var(--gfg-color)', '#2f8d46');
+      
+      confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: [colorStr, '#ffffff']
+      });
+  }
+
+  // Final init
+  initApp();
+
 </script>
 </body>
 </html>
