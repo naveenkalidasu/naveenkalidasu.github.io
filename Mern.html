@@ -1,1 +1,290 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MERN ARCHITECT · 210 DAYS</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #030303;
+            --surface: #0a0a0a;
+            --border: #1a1a1a;
+            --mern-green: #00ED64; 
+            --mern-blue: #61DBFB;  
+            --accent: #ffffff;
+            --text-dim: #666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--accent); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100vh;
+        }
+
+        .sidebar {
+            border-right: 1px solid var(--border);
+            padding: 40px 20px;
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stat-box {
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .stat-val { font-size: 2rem; font-weight: 700; font-family: 'JetBrains Mono'; color: var(--mern-green); }
+
+        .main-view { padding: 40px; overflow-y: auto; }
+        .grid-header { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-auto-flow: dense;
+            gap: 10px;
+        }
+
+        .day-box {
+            height: 80px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .day-box:hover { border-color: var(--mern-blue); background: rgba(97, 219, 251, 0.05); }
+
+        .merged {
+            background: var(--mern-green) !important;
+            color: black !important;
+            border: none !important;
+            font-weight: 700;
+            text-align: center;
+            padding: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 40px;
+            width: 450px;
+            border: 1px solid var(--border);
+        }
+
+        input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono';
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .btn-save { background: var(--mern-green); color: black; }
+        .btn-cancel { background: transparent; color: var(--text-dim); margin-top: 10px; }
+
+        #impact {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            font-weight: 900;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2000;
+            color: var(--mern-green);
+        }
+    </style>
+</head>
+<body>
+
+<div id="impact">DEPLOYED</div>
+
+<div class="app-grid">
+    <aside class="sidebar">
+        <h2>MERN<br>ARCHITECT</h2>
+        <div class="stat-box">
+            <div style="font-size: 0.7rem; color: var(--text-dim);">PROJECTS COMPLETED</div>
+            <div class="stat-val" id="total-projects">0</div>
+        </div>
+        <div class="stat-box">
+            <div style="font-size: 0.7rem; color: var(--text-dim);">LONGEST STREAK</div>
+            <div class="stat-val" id="streak">0</div>
+        </div>
+        <button class="btn" style="border: 1px solid #333; color: #666;" onclick="if(confirm('Reset Stack?')) { localStorage.clear(); location.reload(); }">Reset Stack</button>
+    </aside>
+
+    <main class="main-view">
+        <div class="grid-header">
+            <h1>210-DAY PRODUCTION TIMELINE</h1>
+            <p style="color: var(--text-dim)">Click a day to log a project. Merged days represent sprints.</p>
+        </div>
+        <div class="timeline" id="timeline"></div>
+    </main>
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h2 id="modal-title" style="margin-bottom: 20px;">START SPRINT</h2>
+        
+        <label style="font-size: 0.8rem; color: var(--text-dim);">Project Name</label>
+        <input type="text" id="p-name" placeholder="e.g. Auth System">
+
+        <label style="font-size: 0.8rem; color: var(--text-dim);">GitHub/Live Link</label>
+        <input type="text" id="p-link" placeholder="https://github.com/...">
+
+        <label style="font-size: 0.8rem; color: var(--text-dim);">Days Consumed?</label>
+        <input type="number" id="p-days" value="1" min="1" max="210">
+
+        <button class="btn btn-save" onclick="handleSave()">Commit to Stack</button>
+        <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
+<script>
+    let mernData = JSON.parse(localStorage.getItem('mern_210')) || {};
+    let activeStartDay = null;
+
+    function init() {
+        const timeline = document.getElementById('timeline');
+        timeline.innerHTML = '';
+        let occupied = new Set();
+
+        for (let i = 1; i <= 210; i++) {
+            if (occupied.has(i)) continue;
+
+            const entry = mernData[i];
+            const box = document.createElement('div');
+            box.className = 'day-box';
+            
+            if (entry) {
+                const duration = parseInt(entry.duration);
+                box.classList.add('merged');
+                box.style.gridColumn = `span ${duration}`;
+                
+                // FIXED LOGIC: duration > 1 ? 'Days' : 'Day'
+                const dayLabel = duration === 1 ? 'Day' : 'Days';
+                box.innerHTML = `<span style="font-size: 10px">${duration} ${dayLabel}</span><br>${entry.name}`;
+                
+                box.onclick = () => {
+                    if(confirm(`Remove "${entry.name}"?`)) {
+                        delete mernData[i];
+                        localStorage.setItem('mern_210', JSON.stringify(mernData));
+                        init();
+                    }
+                };
+
+                for(let j = i; j < i + duration; j++) occupied.add(j);
+            } else {
+                box.innerText = `DAY ${i}`;
+                box.onclick = () => openModal(i);
+            }
+            timeline.appendChild(box);
+        }
+        updateStats();
+    }
+
+    function openModal(day) {
+        activeStartDay = day;
+        document.getElementById('modal-title').innerText = `START SPRINT FROM DAY ${day}`;
+        document.getElementById('modal').style.display = 'flex';
+        gsap.from(".modal-content", { scale: 0.9, opacity: 0, duration: 0.3 });
+    }
+
+    function handleSave() {
+        const name = document.getElementById('p-name').value;
+        const link = document.getElementById('p-link').value;
+        const duration = parseInt(document.getElementById('p-days').value);
+
+        if (!name || !link) return alert("Fields required!");
+        if (activeStartDay + duration - 1 > 210) return alert("Exceeds timeline!");
+
+        mernData[activeStartDay] = { name, link, duration };
+        localStorage.setItem('mern_210', JSON.stringify(mernData));
+        
+        triggerImpact();
+        closeModal();
+        init();
+    }
+
+    function triggerImpact() {
+        const txt = document.getElementById('impact');
+        gsap.fromTo(txt, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1.2, duration: 0.5, ease: "back.out" });
+        gsap.to(txt, { opacity: 0, scale: 2, duration: 0.5, delay: 0.8 });
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('p-name').value = '';
+        document.getElementById('p-link').value = '';
+        document.getElementById('p-days').value = '1';
+    }
+
+    function updateStats() {
+        const projects = Object.keys(mernData).length;
+        document.getElementById('total-projects').innerText = projects;
+        
+        let coveredDays = [];
+        for (let start in mernData) {
+            for(let i=0; i<parseInt(mernData[start].duration); i++) {
+                coveredDays.push(parseInt(start) + i);
+            }
+        }
+        
+        let maxStreak = 0;
+        let sorted = Array.from(new Set(coveredDays)).sort((a,b) => a-b);
+        if(sorted.length > 0) {
+            let current = 1; maxStreak = 1;
+            for(let i=0; i < sorted.length - 1; i++) {
+                if(sorted[i+1] === sorted[i] + 1) current++;
+                else { maxStreak = Math.max(maxStreak, current); current = 1; }
+            }
+            maxStreak = Math.max(maxStreak, current);
+        }
+        document.getElementById('streak').innerText = maxStreak;
+    }
+
+    init();
+</script>
+</body>
+</html>
