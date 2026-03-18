@@ -1,0 +1,50 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit-Converter</title>
+    <style>
+        input,button{
+            width: 30%;
+            margin:10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid black;
+            border-radius:16px;
+        }
+        button{
+            background-color: black;
+            color: white;
+        }
+        .merge{
+            margin-left: 25%;
+        }
+        #result{
+            margin-left: 30%;
+            color: green;
+        }
+     </style>
+ </head>
+ <body>
+   
+    <h1 align="center">Unit Converter</h1>
+    <div class="merge">
+    <input type="number" placeholder="Enter mts" id="user" >
+    <button onclick="Conert()">Conert KM</button>
+    </div>
+    <h2 id="result"></h2>
+ 
+    <script>
+        function Conert()
+        {
+            let user=document.getElementById('user').value;
+            let mts=user/1000;
+            document.getElementById('result').innerText="Result:"+mts+" "+"KM";
+
+        }
+    </script>
+
+
+ </body>
+ </html>
