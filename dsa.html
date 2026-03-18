@@ -1,875 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DSA 180 · ULTIMATE STREAK</title>
-  <!-- Fonts & Libraries -->
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <style>
-    /* ----- GLOBAL / RESET / VARIABLES ----- */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --bg-dark: #05070d;
-      --glass-bg: rgba(14, 20, 36, 0.55);
-      --glass-border: rgba(255, 255, 255, 0.06);
-      --accent: #6366f1;
-      --accent-glow: rgba(99, 102, 241, 0.4);
-      --lc-color: #ffa116;
-      --lc-glow: rgba(255, 161, 22, 0.35);
-      --cc-color: #c4733b;
-      --cc-glow: rgba(196, 115, 59, 0.35);
-      --gfg-color: #2f8d46;
-      --gfg-glow: rgba(47, 141, 70, 0.35);
-      --fire: #ef4444;
-      --gold: #f59e0b;
-      --text: #f1f5f9;
-      --text-muted: #64748b;
-      --radius: 20px;
-    }
-    body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-    /* particle canvas */
-    #particleBg { position: fixed; inset: 0; z-index: -2; }
-    /* background blobs */
-    .bg-blob { position: fixed; border-radius: 50%; filter: blur(140px); z-index: -1; opacity: .4; animation: blobFloat 25s infinite alternate ease-in-out; }
-    .blob-1 { top: -15%; left: -10%; width: 550px; height: 550px; background: rgba(99,102,241,.25); }
-    .blob-2 { bottom: -15%; right: -10%; width: 650px; height: 650px; background: rgba(236,72,153,.18); }
-    .blob-3 { top: 35%; left: 45%; width: 700px; height: 350px; background: rgba(245,158,11,.12); }
-    @keyframes blobFloat { 0%{transform:scale(1) translate(0,0)} 50%{transform:scale(1.15) translate(4%,8%)} 100%{transform:scale(.92) translate(-4%,-4%)} }
-    /* layout */
-    .app-container { max-width: 1520px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 290px 1fr; gap: 1.5rem; }
-    /* glass panels */
-    .glass-panel { background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,.35); transition: transform .3s, box-shadow .3s; }
-    /* sidebar */
-    .sidebar { display: flex; flex-direction: column; gap: 1.25rem; height: calc(100vh - 3rem); position: sticky; top: 1.5rem; overflow-y: auto; scrollbar-width: none; }
-    .sidebar::-webkit-scrollbar { display: none; }
-    .brand { text-align: center; padding: 1.25rem .5rem; position: relative; overflow: hidden; }
-    .brand-logo { font-size: 2.5rem; margin-bottom: .25rem; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
-    .brand h1 { font-size: 2.8rem; font-weight: 900; background: linear-gradient(135deg,#fff 30%,#6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -2px; line-height: 1; }
-    .brand-num { font-family: 'JetBrains Mono', monospace; }
-    .brand-sub { font-size: .72rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 3px; margin-top: .35rem; }
-    /* rank panel */
-    .user-rank { text-align: center; padding: 1.25rem; }
-    .rank-icon { font-size: 3.5rem; margin-bottom: .35rem; filter: drop-shadow(0 0 18px rgba(255,215,0,.45)); animation: floatY 3s ease-in-out infinite; }
-    @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-    .rank-title { font-weight: 800; font-size: 1.15rem; color: #ffd700; letter-spacing: 1px; }
-    .rank-subtitle { font-size: .7rem; color: var(--text-muted); margin-top: .25rem; }
-    .rank-progress { width: 100%; height: 5px; background: rgba(255,255,255,.08); border-radius: 4px; margin-top: .75rem; overflow: hidden; }
-    .rank-fill { height: 100%; background: linear-gradient(90deg,#f59e0b,#fbbf24,#fcd34d); width: 0%; border-radius: 4px; transition: width 1.2s cubic-bezier(.4,0,.2,1); box-shadow: 0 0 12px rgba(251,191,36,.5); }
-    /* platform stats */
-    .stats-title { font-size: .85rem; color: var(--text-muted); margin-bottom: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
-    .plat-card { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1rem; border-radius: 14px; background: rgba(0,0,0,.25); border: 1px solid transparent; transition: all .3s; cursor: default; margin-bottom: .5rem; }
-    .plat-card:hover { transform: translateX(4px); }
-    .plat-card.lc { border-color: rgba(255,161,22,.15); }
-    .plat-card.lc:hover { box-shadow: 0 0 25px var(--lc-glow), inset 0 0 15px rgba(255,161,22,.05); }
-    .plat-card.cc { border-color: rgba(196,115,59,.15); }
-    .plat-card.cc:hover { box-shadow: 0 0 25px var(--cc-glow), inset 0 0 15px rgba(196,115,59,.05); }
-    .plat-card.gfg { border-color: rgba(47,141,70,.15); }
-    .plat-card.gfg:hover { box-shadow: 0 0 25px var(--gfg-glow), inset 0 0 15px rgba(47,141,70,.05); }
-    .plat-info { display: flex; align-items: center; gap: 10px; }
-    .plat-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: .75rem; }
-    .lc .plat-icon { background: var(--lc-color); }
-    .cc .plat-icon { background: var(--cc-color); }
-    .gfg .plat-icon { background: var(--gfg-color); }
-    .plat-name { font-weight: 600; font-size: .88rem; }
-    .plat-count { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; font-weight: 700; }
-    .stats-total { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid rgba(255,255,255,.06); display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--text-muted); }
-    .total-num { color: var(--accent); font-size: 1.3rem; }
-    /* quick actions */
-    .quick-actions { display: flex; flex-direction: column; gap: .5rem; }
-    .action-btn { background: rgba(255,255,255,.04); color: var(--text); border: 1px solid rgba(255,255,255,.08); padding: .7rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 500; font-size: .82rem; text-align: left; transition: all .25s; font-family: inherit; }
-    .action-btn:hover { background: rgba(255,255,255,.1); transform: translateX(3px); }
-    .action-btn.danger { color: #f87171; }
-    .action-btn.danger:hover { background: rgba(239,68,68,.15); border-color: rgba(239,68,68,.3); }
-    /* main content */
-    .main-content { display: flex; flex-direction: column; gap: 1.25rem; }
-    /* dash header */
-    .dash-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-    .greet h2 { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg,#fff,#94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .quote { font-style: italic; color: var(--text-muted); font-size: .85rem; margin-top: .2rem; }
-    .header-stats { display: flex; gap: 1.5rem; }
-    .header-stat { text-align: center; }
-    .hs-label { display: block; font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: .15rem; }
-    .hs-value { font-family: 'JetBrains Mono', monospace; font-size: 1.15rem; font-weight: 700; color: var(--accent); }
-    /* streak cards */
-    .streak-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
-    .streak-card { border-radius: var(--radius); padding: 1.5rem; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.06); min-height: 140px; display: flex; align-items: center; justify-content: space-between; }
-    .sc-bg-icon { position: absolute; right: -10px; bottom: -10px; font-size: 6rem; opacity: .06; pointer-events: none; }
-    .sc-content { z-index: 1; }
-    .sc-label { font-size: .78rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: .5rem; }
-    .sc-value { display: flex; align-items: baseline; gap: .4rem; }
-    .sc-value span { font-family: 'JetBrains Mono', monospace; font-size: 2.8rem; font-weight: 800; line-height: 1; }
-    .sc-value small { font-size: .85rem; font-weight: 500; opacity: .7; }
-    .fire-card { background: linear-gradient(135deg,rgba(239,68,68,.12),rgba(245,158,11,.08)); border-color: rgba(239,68,68,.2); }
-    .fire-card .sc-label { color: #fca5a5; }
-    .fire-card .sc-value span { background: linear-gradient(135deg,#ef4444,#f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(245,158,11,.3)); }
-    .lc-streak-card { background: linear-gradient(135deg,rgba(255,161,22,.1),rgba(255,161,22,.03)); border-color: rgba(255,161,22,.2); }
-    .lc-streak-card .sc-label { color: var(--lc-color); }
-    .lc-streak-card .sc-value span { color: var(--lc-color); }
-    .cc-streak-card { background: linear-gradient(135deg,rgba(196,115,59,.1),rgba(196,115,59,.03)); border-color: rgba(196,115,59,.2); }
-    .cc-streak-card .sc-label { color: var(--cc-color); }
-    .cc-streak-card .sc-value span { color: var(--cc-color); }
-    .gfg-streak-card { background: linear-gradient(135deg,rgba(47,141,70,.1),rgba(47,141,70,.03)); border-color: rgba(47,141,70,.2); }
-    .gfg-streak-card .sc-label { color: var(--gfg-color); }
-    .gfg-streak-card .sc-value span { color: var(--gfg-color); }
-    /* streak ring svg */
-    .sc-ring { width: 70px; height: 70px; z-index: 1; }
-    .sc-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-    .ring-bg { fill: none; stroke: rgba(255,255,255,.06); stroke-width: 6; }
-    .ring-fill { fill: none; stroke: url(#streakGrad); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 326.73; stroke-dashoffset: 326.73; transition: stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
-    .sc-badge { font-size: 2rem; z-index: 1; filter: drop-shadow(0 0 10px rgba(0,0,0,.3)); }
-    /* motivation bar */
-    .motivation-bar { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: linear-gradient(135deg,rgba(99,102,241,.08),rgba(236,72,153,.05)); border-color: rgba(99,102,241,.15); }
-    .motiv-icon { font-size: 1.5rem; }
-    .motivation-bar p { font-size: .9rem; color: var(--text-muted); font-weight: 500; }
-    /* grid section */
-    .grid-section { padding: 1.5rem; }
-    .grid-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
-    .grid-header h3 { font-size: 1.3rem; font-weight: 700; }
-    .grid-legend { display: flex; gap: .85rem; align-items: center; font-size: .75rem; color: var(--text-muted); }
-    .legend-item { display: flex; align-items: center; gap: .35rem; }
-    .legend-box { width: 14px; height: 14px; border-radius: 4px; }
-    .l0 { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
-    .l1 { background: rgba(99,102,241,.3); }
-    .l2 { background: rgba(99,102,241,.6); }
-    .l3 { background: rgba(99,102,241,.95); box-shadow: 0 0 8px rgba(99,102,241,.4); }
-    .days-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 6px; }
-    .day-sq { aspect-ratio: 1; background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.04); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--text-muted); cursor: pointer; position: relative; transition: all .2s; }
-    .day-sq:hover { transform: scale(1.2); background: rgba(255,255,255,.1); z-index: 10; box-shadow: 0 8px 24px rgba(0,0,0,.5); }
-    .day-sq.level-1 { background: rgba(99,102,241,.25); color: #fff; border-color: rgba(99,102,241,.4); }
-    .day-sq.level-2 { background: rgba(99,102,241,.5); color: #fff; border-color: rgba(99,102,241,.7); box-shadow: 0 0 10px rgba(99,102,241,.25); }
-    .day-sq.level-3 { background: rgba(99,102,241,.85); color: #fff; border-color: rgba(139,92,246,.8); box-shadow: 0 0 18px rgba(99,102,241,.5); }
-    .day-sq.completed::after { content: ''; position: absolute; top: -3px; right: -3px; width: 9px; height: 9px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 8px var(--gold); }
-    .day-sq[data-tooltip]:hover::before { content: attr(data-tooltip); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #f8fafc; padding: .45rem .75rem; border-radius: 8px; font-size: .7rem; white-space: nowrap; pointer-events: none; z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.08); }
-    /* achievements */
-    .achievements-section { padding: 1.5rem; }
-    .achievements-section h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; }
-    .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
-    .ach-card { background: rgba(0,0,0,.2); border: 1px solid rgba(255,255,255,.05); border-radius: 14px; padding: 1rem; text-align: center; transition: all .3s; opacity: .4; }
-    .ach-card.unlocked { opacity: 1; border-color: rgba(251,191,36,.25); }
-    .ach-card.unlocked:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,.4); }
-    .ach-icon { font-size: 2rem; margin-bottom: .35rem; }
-    .ach-name { font-size: .8rem; font-weight: 700; margin-bottom: .15rem; }
-    .ach-desc { font-size: .65rem; color: var(--text-muted); }
-    /* modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .3s; }
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-content { background: linear-gradient(180deg,#0f172a,#0c1222); border: 1px solid var(--glass-border); border-radius: 24px; width: 92%; max-width: 620px; max-height: 88vh; overflow-y: auto; padding: 2rem; transform: translateY(24px) scale(.95); transition: all .35s cubic-bezier(.4,0,.2,1); box-shadow: 0 30px 60px rgba(0,0,0,.8); }
-    .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
-    .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,.05); padding-bottom: 1rem; }
-    .modal-title { font-size: 1.5rem; font-weight: 800; }
-    .modal-subtitle { font-size: .78rem; color: var(--text-muted); margin-top: .15rem; }
-    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: color .2s; line-height: 1; }
-    .modal-close:hover { color: #fff; }
-    .plat-section { background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.05); border-radius: 14px; padding: 1.25rem; margin-bottom: 1rem; }
-    .plat-section-header { display: flex; align-items: center; gap: 8px; margin-bottom: .85rem; font-weight: 700; font-size: 1rem; }
-    .ps-dot { width: 14px; height: 14px; border-radius: 4px; }
-    .lc-dot { background: var(--lc-color); }
-    .cc-dot { background: var(--cc-color); }
-    .gfg-dot { background: var(--gfg-color); }
-    .inp-row { display: flex; gap: 8px; margin-bottom: 8px; }
-    .inp-row input { background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.08); color: #fff; padding: .7rem .85rem; border-radius: 8px; outline: none; font-size: .85rem; transition: border-color .2s; font-family: inherit; }
-    .inp-row input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
-    .inp-name { flex: 2; }
-    .inp-link { flex: 1; }
-    .btn-del { background: rgba(239,68,68,.15); color: #ef4444; border: none; width: 40px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: all .2s; display: flex; align-items: center; justify-content: center; }
-    .btn-del:hover { background: #ef4444; color: #fff; }
-    .btn-add { background: rgba(255,255,255,.03); color: var(--text-muted); border: 1px dashed rgba(255,255,255,.12); width: 100%; padding: .65rem; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: .82rem; transition: all .2s; font-family: inherit; margin-top: 4px; }
-    .btn-add:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.25); color: var(--text); }
-    .modal-footer { margin-top: 1.5rem; display: flex; justify-content: flex-end; }
-    .btn-save { background: linear-gradient(135deg,#6366f1,#4f46e5); color: #fff; border: none; padding: .9rem 2.2rem; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 8px 24px rgba(99,102,241,.35); transition: all .3s; display: flex; align-items: center; gap: .5rem; font-family: inherit; }
-    .btn-save:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(99,102,241,.5); }
-    .btn-icon-right { font-size: 1.1rem; }
-    /* epic overlay (main streak) */
-    .epic-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; display: flex; align-items: center; justify-content: center; perspective: 1000px; }
-    .anim-badge { opacity: 0; transform: scale(.5) rotateX(45deg); display: flex; flex-direction: column; align-items: center; text-align: center; filter: drop-shadow(0 30px 50px rgba(0,0,0,.8)); }
-    .anim-icon { font-size: 7rem; line-height: 1; margin-bottom: .75rem; }
-    .anim-text { font-size: 2.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; }
-    .anim-sub { font-size: 1.3rem; font-weight: 700; margin-top: .4rem; }
-    /* platform streak animation (clean separate) */
-    .platform-anim-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9998; display: flex; align-items: center; justify-content: center; }
-    .platform-anim-card { opacity: 0; transform: scale(.4) translateY(60px); background: rgba(10,15,30,.95); backdrop-filter: blur(30px); border: 2px solid rgba(255,255,255,.1); border-radius: 28px; padding: 2.5rem 3.5rem; text-align: center; position: relative; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,.8); }
-    .pac-particles { position: absolute; inset: 0; pointer-events: none; }
-    .pac-icon { font-size: 4rem; margin-bottom: .5rem; }
-    .pac-streak-num { font-family: 'JetBrains Mono', monospace; font-size: 5rem; font-weight: 900; line-height: 1; }
-    .pac-text { font-size: 1.3rem; font-weight: 700; margin-top: .25rem; letter-spacing: 2px; text-transform: uppercase; }
-    .pac-platform { font-size: .9rem; font-weight: 600; margin-top: .5rem; letter-spacing: 3px; text-transform: uppercase; opacity: .7; }
-    .pac-fire-bar { height: 4px; background: linear-gradient(90deg,transparent,currentColor,transparent); margin-top: 1.25rem; border-radius: 4px; opacity: 0; }
-    /* screen shake (clean) */
-    @keyframes screenShake { 0%,100%{transform:translate(0)} 20%{transform:translate(-3px,2px)} 40%{transform:translate(3px,-2px)} 60%{transform:translate(-2px,3px)} 80%{transform:translate(2px,-1px)} }
-    /* responsive */
-    @media(max-width:1100px) {
-      .app-container { grid-template-columns: 1fr; }
-      .sidebar { height: auto; position: relative; top: 0; flex-direction: row; flex-wrap: wrap; }
-      .sidebar .glass-panel { flex: 1; min-width: 240px; }
-      .streak-cards { grid-template-columns: repeat(2,1fr); }
-    }
-    @media(max-width:640px) {
-      .streak-cards { grid-template-columns: 1fr; }
-      .header-stats { gap: .75rem; }
-      .dash-header { flex-direction: column; text-align: center; }
-      .achievements-grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA 210 · THE BLACK ARCHIVE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --border: #1a1a1a;
+            --accent: #ffffff;
+            --accent-dim: #666666;
+            --gold: #d4af37;
+            --red: #ff3333;
+            --green: #00ff66;
+            --font-main: 'Space+Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: var(--bg);
+            color: var(--accent);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- BACKGROUND MESH --- */
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle at var(--x, 50%) var(--y, 50%), black, transparent 80%);
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* --- LAYOUT --- */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 40px;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .logo { font-size: 2.5rem; font-weight: 700; letter-spacing: -2px; }
+        .logo span { color: var(--accent-dim); }
+
+        /* --- SIDEBAR CARDS --- */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        .card:hover { border-color: var(--accent-dim); }
+        .card-label { font-size: 0.7rem; color: var(--accent-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
+        
+        .rank-value { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
+        .xp-bar-bg { height: 2px; background: var(--border); width: 100%; position: relative; }
+        .xp-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1s; }
+
+        /* --- THE GRID --- */
+        .grid-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+            gap: 8px;
+        }
+        .day {
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--accent-dim);
+        }
+        .day:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .day.filled { background: var(--accent); color: var(--bg); border: none; font-weight: bold; }
+        .day.milestone { border: 1px solid var(--gold); color: var(--gold); }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+        .modal-inner {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            position: relative;
+        }
+        .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--accent-dim); cursor: pointer; font-size: 1.2rem; }
+        
+        .entry-row { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        input, select {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            padding: 12px;
+            width: 100%;
+            margin-top: 8px;
+            font-family: var(--font-mono);
+            border-radius: 0;
+        }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        .btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 15px 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-add { background: transparent; border: 1px solid var(--accent-dim); color: var(--accent); font-size: 0.8rem; margin-top: 0; }
+        
+        /* --- FLASH ANIMATION --- */
+        #flash-overlay {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .impact-msg {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8rem;
+            font-weight: 900;
+            z-index: 1001;
+            pointer-events: none;
+            opacity: 0;
+            letter-spacing: -10px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-  <canvas id="particleBg"></canvas>
-  <div class="bg-blob blob-1"></div>
-  <div class="bg-blob blob-2"></div>
-  <div class="bg-blob blob-3"></div>
 
-  <div class="app-container">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="glass-panel brand">
-        <div class="brand-logo">⚡</div>
-        <h1>DSA<span class="brand-num">180</span></h1>
-        <p class="brand-sub">Ultimate Streak Tracker</p>
-      </div>
+<div class="bg-mesh" id="mesh"></div>
+<div id="flash-overlay"></div>
+<div class="impact-msg" id="impact-text">DAY COMPLETE</div>
 
-      <div class="glass-panel user-rank">
-        <div class="rank-icon" id="rankIcon">🥚</div>
-        <div class="rank-title" id="rankTitle">Novice</div>
-        <div class="rank-subtitle" id="rankHint">Solve 7 days to rank up</div>
-        <div class="rank-progress"><div class="rank-fill" id="rankFill"></div></div>
-      </div>
+<div class="dashboard">
+    <header>
+        <div class="logo">EgoHurt<span>210</span></div>
+        <div id="real-time" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-dim);">00:00:00</div>
+    </header>
 
-      <div class="glass-panel platform-stats">
-        <h3 class="stats-title">Platform Breakdown</h3>
-        <div class="plat-card lc">
-          <div class="plat-info"><div class="plat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16.1 13.3l-1.45-1.45a3.5 3.5 0 0 0 0-1.7L16.1 8.7a5.5 5.5 0 0 1 0 4.6zM12 17.5A5.5 5.5 0 0 1 6.5 12a5.5 5.5 0 0 1 11 0A5.5 5.5 0 0 1 12 17.5z" fill="currentColor"/></svg></div><div class="plat-name">LeetCode</div></div>
-          <div class="plat-count" id="statLc">0</div>
+    <aside>
+        <div class="card">
+            <span class="card-label">Current Phase</span>
+            <div class="rank-value" id="rank-name">PHASE 0</div>
+            <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-fill"></div></div>
+            <p id="rank-hint" style="font-size: 0.7rem; color: var(--accent-dim); margin-top: 10px;">0 DAYS REMAINING</p>
         </div>
-        <div class="plat-card cc">
-          <div class="plat-info"><div class="plat-icon">CC</div><div class="plat-name">CodeChef</div></div>
-          <div class="plat-count" id="statCc">0</div>
-        </div>
-        <div class="plat-card gfg">
-          <div class="plat-info"><div class="plat-icon">G</div><div class="plat-name">GeeksForGeeks</div></div>
-          <div class="plat-count" id="statGfg">0</div>
-        </div>
-        <div class="stats-total">
-          <span>Total Solved</span>
-          <span class="plat-count total-num" id="statTotal">0</span>
-        </div>
-      </div>
 
-      <div class="glass-panel quick-actions">
-        <h3 class="stats-title">Quick Actions</h3>
-        <button class="action-btn" onclick="exportData()">📦 Export Data</button>
-        <button class="action-btn" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-        <button class="action-btn danger" onclick="resetData()">🗑️ Reset All</button>
-      </div>
+        <div class="card">
+            <span class="card-label">Total Volume</span>
+            <div class="rank-value" id="total-solved">0</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.8rem;">
+                <span>LC: <b id="lc-count">0</b></span>
+                <span>CC: <b id="cc-count">0</b></span>
+                <span>GFG: <b id="gfg-count">0</b></span>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="card-label">Current Streak</span>
+            <div class="rank-value" id="streak-val">0</div>
+        </div>
+
+        <button class="btn" style="background: transparent; border: 1px solid var(--red); color: var(--red); font-size: 0.7rem;" onclick="resetTimeline()">Wipe Timeline</button>
+        <button class="btn" style="background: transparent; border: 1px solid var(--accent-dim); color: var(--accent-dim); font-size: 0.7rem; margin-top: 10px;" onclick="exportData()">Export Save</button>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-      <header class="dash-header glass-panel">
-        <div class="greet">
-          <h2 id="greeting">Welcome back, Warrior.</h2>
-          <div class="quote" id="dailyQuote">"Consistency transforms average into excellence."</div>
-        </div>
-        <div class="header-stats">
-          <div class="header-stat">
-            <span class="hs-label">Progress</span>
-            <span class="hs-value" id="topProgress">0/180</span>
-          </div>
-          <div class="header-stat">
-            <span class="hs-label">Best Streak</span>
-            <span class="hs-value" id="bestStreak">0</span>
-          </div>
-          <div class="header-stat">
-            <span class="hs-label">Today</span>
-            <span class="hs-value" id="todayDate">--</span>
-          </div>
-        </div>
-      </header>
-
-      <!-- Streak Cards Row -->
-      <div class="streak-cards">
-        <div class="streak-card fire-card">
-          <div class="sc-bg-icon">🔥</div>
-          <div class="sc-content">
-            <div class="sc-label">Current Streak</div>
-            <div class="sc-value"><span id="mainStreak">0</span><small>days</small></div>
-          </div>
-          <div class="sc-ring" id="streakRing"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="ring-bg"/><circle cx="60" cy="60" r="52" class="ring-fill" id="streakRingFill"/></svg></div>
-        </div>
-        <div class="streak-card lc-streak-card">
-          <div class="sc-bg-icon">⚡</div>
-          <div class="sc-content">
-            <div class="sc-label">LeetCode Streak</div>
-            <div class="sc-value"><span id="lcStreak">0</span><small>days</small></div>
-          </div>
-          <div class="sc-badge lc-badge" id="lcBadge">🟠</div>
-        </div>
-        <div class="streak-card cc-streak-card">
-          <div class="sc-bg-icon">🍳</div>
-          <div class="sc-content">
-            <div class="sc-label">CodeChef Streak</div>
-            <div class="sc-value"><span id="ccStreak">0</span><small>days</small></div>
-          </div>
-          <div class="sc-badge cc-badge" id="ccBadge">🟤</div>
-        </div>
-        <div class="streak-card gfg-streak-card">
-          <div class="sc-bg-icon">🎯</div>
-          <div class="sc-content">
-            <div class="sc-label">GFG Streak</div>
-            <div class="sc-value"><span id="gfgStreak">0</span><small>days</small></div>
-          </div>
-          <div class="sc-badge gfg-badge" id="gfgBadge">🟢</div>
-        </div>
-      </div>
-
-      <!-- Motivational Message -->
-      <div class="glass-panel motivation-bar">
-        <span class="motiv-icon">💬</span>
-        <p id="streakMessage">The hardest part is starting. Click Day 1 to begin your journey!</p>
-      </div>
-
-      <!-- 180 Day Grid -->
-      <section class="glass-panel grid-section">
+    <main>
         <div class="grid-header">
-          <h3>Your 180-Day Journey</h3>
-          <div class="grid-legend">
-            <div class="legend-item"><div class="legend-box l0"></div>Empty</div>
-            <div class="legend-item"><div class="legend-box l1"></div>1-2</div>
-            <div class="legend-item"><div class="legend-box l2"></div>3-4</div>
-            <div class="legend-item"><div class="legend-box l3"></div>5+</div>
-          </div>
+            <h3>210 DAY PROGRESSION</h3>
+            <div id="pct-complete" style="font-family: var(--font-mono); color: var(--accent-dim);">0%</div>
         </div>
-        <div class="days-grid" id="daysGrid"></div>
-      </section>
-
-      <!-- Achievement Section -->
-      <section class="glass-panel achievements-section">
-        <h3>🏆 Achievements</h3>
-        <div class="achievements-grid" id="achievementsGrid"></div>
-      </section>
+        <div class="days-grid" id="grid"></div>
     </main>
-  </div>
+</div>
 
-  <!-- Modal -->
-  <div class="modal-overlay" id="dayModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title" id="modalDayTitle">Day 1</div>
-          <div class="modal-subtitle">Log your solved problems</div>
-        </div>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
-      <div id="modalForms">
-        <div class="plat-section lc-section">
-          <div class="plat-section-header"><div class="ps-dot lc-dot"></div>LeetCode</div>
-          <div id="formLc"></div>
-          <button class="btn-add" onclick="addProblemInput('lc')">+ Add Problem</button>
-        </div>
-        <div class="plat-section cc-section">
-          <div class="plat-section-header"><div class="ps-dot cc-dot"></div>CodeChef</div>
-          <div id="formCc"></div>
-          <button class="btn-add" onclick="addProblemInput('cc')">+ Add Problem</button>
-        </div>
-        <div class="plat-section gfg-section">
-          <div class="plat-section-header"><div class="ps-dot gfg-dot"></div>GeeksForGeeks</div>
-          <div id="formGfg"></div>
-          <button class="btn-add" onclick="addProblemInput('gfg')">+ Add Problem</button>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-save" onclick="saveDay()">
-          <span>Commit Record</span>
-          <span class="btn-icon-right">🚀</span>
-        </button>
-      </div>
+<div class="modal" id="modal">
+    <div class="modal-inner">
+        <button class="close-btn" onclick="closeModal()">✕</button>
+        <h2 id="modal-title" style="margin-bottom: 30px; letter-spacing: -1px;">LOG DAY 0</h2>
+        
+        <div id="entry-container"></div>
+        
+        <button class="btn btn-add" onclick="createRow()">+ Add Problem</button>
+        <button class="btn" onclick="saveData()">Update Record</button>
     </div>
-  </div>
+</div>
 
-  <!-- Epic Overlay (main streak / rank up) -->
-  <div class="epic-overlay" id="epicOverlay">
-    <div class="anim-badge" id="animBadge">
-      <div class="anim-icon" id="animIcon">🔥</div>
-      <div class="anim-text" id="animText">ACCEPTED</div>
-      <div class="anim-sub" id="animSub">+1 Day Streak</div>
-    </div>
-  </div>
+<script>
+    // State
+    let db = JSON.parse(localStorage.getItem('odyssey_210')) || {};
+    let activeDay = null;
 
-  <!-- Platform Streak Animation Overlay (clean separate) -->
-  <div class="platform-anim-overlay" id="platformAnimOverlay">
-    <div class="platform-anim-card" id="platformAnimCard">
-      <div class="pac-particles" id="pacParticles"></div>
-      <div class="pac-icon" id="pacIcon">⚡</div>
-      <div class="pac-streak-num" id="pacStreakNum">7</div>
-      <div class="pac-text" id="pacText">Day Streak!</div>
-      <div class="pac-platform" id="pacPlatform">LeetCode</div>
-      <div class="pac-fire-bar" id="pacFireBar"></div>
-    </div>
-  </div>
+    const PHASES = [
+        { min: 0, name: "Phase 0: Void", limit: 1 },
+        { min: 1, name: "Phase I: Genesis", limit: 7 },
+        { min: 7, name: "Phase II: Kinetic", limit: 21 },
+        { min: 21, name: "Phase III: Elite", limit: 50 },
+        { min: 50, name: "Phase IV: Master", limit: 100 },
+        { min: 100, name: "Phase V: Legend", limit: 210 }
+    ];
 
-  <script>
-    // ========== PARTICLE BACKGROUND ==========
-    (function initParticles() {
-      const cvs = document.getElementById('particleBg');
-      const ctx = cvs.getContext('2d');
-      let W, H, particles = [];
-      function resize() { W = cvs.width = window.innerWidth; H = cvs.height = window.innerHeight; }
-      resize(); window.addEventListener('resize', resize);
-      for (let i = 0; i < 60; i++) particles.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.5+.5, dx: (Math.random()-.5)*.3, dy: (Math.random()-.5)*.3, o: Math.random()*.4+.1 });
-      function draw() {
-        ctx.clearRect(0,0,W,H);
-        particles.forEach(p => {
-          ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=`rgba(99,102,241,${p.o})`; ctx.fill();
-          p.x += p.dx; p.y += p.dy;
-          if(p.x<0||p.x>W) p.dx*=-1; if(p.y<0||p.y>H) p.dy*=-1;
+    // Mouse mesh effect
+    window.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.getElementById('mesh').style.setProperty('--x', `${x}%`);
+        document.getElementById('mesh').style.setProperty('--y', `${y}%`);
+    });
+
+    // Time
+    setInterval(() => {
+        document.getElementById('real-time').innerText = new Date().toLocaleTimeString();
+    }, 1000);
+
+    // Initialize
+    function init() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 210; i++) {
+            const div = document.createElement('div');
+            div.className = 'day' + (db[i] ? ' filled' : '') + (i % 30 === 0 ? ' milestone' : '');
+            div.innerText = i;
+            div.onclick = () => openModal(i);
+            grid.appendChild(div);
+        }
+        updateDashboard();
+    }
+
+    function openModal(day) {
+        activeDay = day;
+        document.getElementById('modal-title').innerText = `LOG DAY ${day}`;
+        document.getElementById('entry-container').innerHTML = '';
+        
+        const existing = db[day] || [];
+        if (existing.length === 0) createRow();
+        else existing.forEach(p => createRow(p.platform, p.name, p.link));
+        
+        document.getElementById('modal').style.display = 'flex';
+        gsap.from(".modal-inner", { y: 20, opacity: 0, duration: 0.4 });
+    }
+
+    function createRow(plt = 'LeetCode', nm = '', ln = '') {
+        const div = document.createElement('div');
+        div.className = 'entry-row';
+        div.innerHTML = `
+            <select class="p-plt">
+                <option ${plt==='LeetCode'?'selected':''}>LeetCode</option>
+                <option ${plt==='CodeChef'?'selected':''}>CodeChef</option>
+                <option ${plt==='GFG'?'selected':''}>GFG</option>
+            </select>
+            <input type="text" placeholder="Problem Name" class="p-nm" value="${nm}">
+            <input type="text" placeholder="Mandatory URL" class="p-ln" value="${ln}">
+        `;
+        document.getElementById('entry-container').appendChild(div);
+    }
+
+    function saveData() {
+        const rows = document.querySelectorAll('.entry-row');
+        let data = [];
+        let valid = true;
+
+        rows.forEach(row => {
+            const name = row.querySelector('.p-nm').value;
+            const link = row.querySelector('.p-ln').value;
+            if (name && !link) {
+                alert("Links are mandatory for every problem!");
+                valid = false;
+            } else if (name && link) {
+                data.push({
+                    platform: row.querySelector('.p-plt').value,
+                    name: name,
+                    link: link
+                });
+            }
         });
-        requestAnimationFrame(draw);
-      }
-      draw();
-    })();
 
-    // ========== QUOTES ==========
-    const quotes = [
-      '"Consistency transforms average into excellence."',
-      '"First solve the problem. Then, write the code." — John Johnson',
-      '"Talk is cheap. Show me the code." — Linus Torvalds',
-      '"The only way to learn is by writing programs." — Dennis Ritchie',
-      '"Small daily improvements lead to staggering long-term results."',
-      '"Don\'t watch the clock; do what it does. Keep going." — Sam Levenson',
-      '"Success is the sum of small efforts, repeated day in and day out."',
-      '"Code is like humor. When you have to explain it, it\'s bad." — Cory House'
-    ];
-    document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        if (!valid) return;
 
-    // ========== DATE & GREETING ==========
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const now = new Date();
-    document.getElementById('todayDate').textContent = `${months[now.getMonth()]} ${now.getDate()}`;
-    const hour = now.getHours();
-    const greetText = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
-    document.getElementById('greeting').textContent = `${greetText}, Warrior ⚔️`;
+        const isNew = !db[activeDay] && data.length > 0;
+        if (data.length > 0) db[activeDay] = data;
+        else delete db[activeDay];
 
-    // ========== DATA STATE ==========
-    let trackerData = JSON.parse(localStorage.getItem('dsaUltimateTracker')) || {};
-    let currentModalDay = null;
-    let previousStreak = 0;
-
-    // ========== ACHIEVEMENTS ==========
-    const achievementsDef = [
-      { id:'first_step', name:'First Step', icon:'👣', desc:'Complete Day 1', check: d => getCompletedDays().length >= 1 },
-      { id:'week_warrior', name:'Week Warrior', icon:'⚔️', desc:'7-day streak', check: d => calculateStreak() >= 7 },
-      { id:'triple_threat', name:'Triple Threat', icon:'🎯', desc:'Solve on all 3 platforms in 1 day', check: () => {
-        for(let i=1;i<=180;i++) { const d=trackerData[i]; if(d&&d.lc?.length&&d.cc?.length&&d.gfg?.length) return true; } return false;
-      }},
-      { id:'problem_50', name:'Half Century', icon:'🏏', desc:'Solve 50 problems total', check: () => getTotalProblems().total >= 50 },
-      { id:'month_master', name:'Month Master', icon:'📅', desc:'30-day streak', check: () => calculateStreak() >= 30 },
-      { id:'century', name:'Century', icon:'💯', desc:'Solve 100 problems', check: () => getTotalProblems().total >= 100 },
-      { id:'lc_king', name:'LC Grinder', icon:'⚡', desc:'50 LeetCode problems', check: () => getTotalProblems().lc >= 50 },
-      { id:'consistency', name:'Iron Will', icon:'🔩', desc:'50-day streak', check: () => calculateStreak() >= 50 },
-      { id:'halfway', name:'Halfway Hero', icon:'🏔️', desc:'Complete 90 days', check: () => getCompletedDays().length >= 90 },
-      { id:'gfg_lover', name:'GFG Lover', icon:'💚', desc:'30 GFG problems', check: () => getTotalProblems().gfg >= 30 },
-      { id:'cc_chef', name:'Master Chef', icon:'👨‍🍳', desc:'30 CodeChef problems', check: () => getTotalProblems().cc >= 30 },
-      { id:'legend', name:'LEGEND', icon:'✨', desc:'Complete all 180 days', check: () => getCompletedDays().length >= 180 },
-    ];
-
-    // ========== CORE FUNCTIONS ==========
-    function getCompletedDays() {
-      const days = [];
-      for (let i = 1; i <= 180; i++) {
-        if (trackerData[i]) {
-          const t = (trackerData[i].lc||[]).length + (trackerData[i].cc||[]).length + (trackerData[i].gfg||[]).length;
-          if (t > 0) days.push(i);
-        }
-      }
-      return days.sort((a, b) => a - b);
-    }
-    function calculateStreak() {
-      const days = getCompletedDays();
-      if (days.length === 0) return 0;
-      let max = 1, cur = 1;
-      for (let i = 1; i < days.length; i++) {
-        if (days[i] === days[i-1]+1) { cur++; max = Math.max(max, cur); }
-        else cur = 1;
-      }
-      return max;
-    }
-    function calculatePlatformStreak(platform) {
-      const days = [];
-      for (let i = 1; i <= 180; i++) {
-        if (trackerData[i] && trackerData[i][platform] && trackerData[i][platform].length > 0) days.push(i);
-      }
-      days.sort((a,b) => a-b);
-      if (days.length === 0) return 0;
-      let max = 1, cur = 1;
-      for (let i = 1; i < days.length; i++) {
-        if (days[i] === days[i-1]+1) { cur++; max = Math.max(max, cur); }
-        else cur = 1;
-      }
-      return max;
-    }
-    function getTotalProblems() {
-      let lc=0, cc=0, gfg=0;
-      for (let i = 1; i <= 180; i++) {
-        if (trackerData[i]) {
-          lc += (trackerData[i].lc||[]).length;
-          cc += (trackerData[i].cc||[]).length;
-          gfg += (trackerData[i].gfg||[]).length;
-        }
-      }
-      return { lc, cc, gfg, total: lc+cc+gfg };
+        localStorage.setItem('odyssey_210', JSON.stringify(db));
+        if (isNew) triggerSupernova();
+        
+        closeModal();
+        init();
     }
 
-    // ========== RANKS ==========
-    const ranks = [
-      { name:"Novice", icon:"🥚", min:0, color:"#94a3b8" },
-      { name:"Pupil", icon:"🌱", min:7, color:"#10b981" },
-      { name:"Specialist", icon:"⚔️", min:21, color:"#6366f1" },
-      { name:"Expert", icon:"🛡️", min:50, color:"#8b5cf6" },
-      { name:"Candidate Master", icon:"💎", min:100, color:"#ec4899" },
-      { name:"Grandmaster", icon:"👑", min:150, color:"#f59e0b" },
-      { name:"LEGEND", icon:"✨", min:180, color:"#ef4444" }
-    ];
-    function getRank(streak) {
-      let cur = ranks[0], nxt = ranks[1];
-      for (let i = 0; i < ranks.length; i++) {
-        if (streak >= ranks[i].min) { cur = ranks[i]; nxt = ranks[i+1] || null; }
-      }
-      return { cur, nxt };
-    }
-
-    // ========== ANIMATE NUMBER ==========
-    function animVal(id, start, end, dur) {
-      if (start === end) return;
-      const el = document.getElementById(id);
-      let st = null;
-      const step = ts => {
-        if (!st) st = ts;
-        const p = Math.min((ts - st) / dur, 1);
-        el.textContent = Math.floor(p * (end - start) + start);
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }
-
-    // ========== UPDATE DASHBOARD ==========
-    function updateDashboard() {
-      const streak = calculateStreak();
-      const stats = getTotalProblems();
-      const active = getCompletedDays().length;
-      const ri = getRank(streak);
-      const lcS = calculatePlatformStreak('lc');
-      const ccS = calculatePlatformStreak('cc');
-      const gfgS = calculatePlatformStreak('gfg');
-
-      animVal("statLc", parseInt(document.getElementById("statLc").textContent)||0, stats.lc, 800);
-      animVal("statCc", parseInt(document.getElementById("statCc").textContent)||0, stats.cc, 800);
-      animVal("statGfg", parseInt(document.getElementById("statGfg").textContent)||0, stats.gfg, 800);
-      animVal("statTotal", parseInt(document.getElementById("statTotal").textContent)||0, stats.total, 800);
-      animVal("mainStreak", parseInt(document.getElementById("mainStreak").textContent)||0, streak, 1000);
-      animVal("lcStreak", parseInt(document.getElementById("lcStreak").textContent)||0, lcS, 800);
-      animVal("ccStreak", parseInt(document.getElementById("ccStreak").textContent)||0, ccS, 800);
-      animVal("gfgStreak", parseInt(document.getElementById("gfgStreak").textContent)||0, gfgS, 800);
-
-      document.getElementById("topProgress").textContent = `${active}/180`;
-      document.getElementById("bestStreak").textContent = streak;
-
-      document.getElementById("rankIcon").textContent = ri.cur.icon;
-      document.getElementById("rankTitle").textContent = ri.cur.name;
-      document.getElementById("rankTitle").style.color = ri.cur.color;
-      if (ri.nxt) {
-        const need = ri.nxt.min - streak;
-        const range = ri.nxt.min - ri.cur.min;
-        const pct = ((range - need) / range) * 100;
-        document.getElementById("rankFill").style.width = `${pct}%`;
-        document.getElementById("rankHint").textContent = `${need} days to ${ri.nxt.name}`;
-      } else {
-        document.getElementById("rankFill").style.width = '100%';
-        document.getElementById("rankHint").textContent = 'Maximum Rank Achieved! 🏆';
-      }
-
-      const ringPct = Math.min(streak / 180, 1);
-      const circumference = 2 * Math.PI * 52;
-      const offset = circumference * (1 - ringPct);
-      document.getElementById("streakRingFill").style.strokeDashoffset = offset;
-
-      const sm = document.getElementById("streakMessage");
-      if (streak === 0) sm.textContent = "The hardest part is starting. Click Day 1 to begin your journey!";
-      else if (streak < 7) sm.textContent = "Great start! Keep the fire burning 🔥 to reach Pupil rank.";
-      else if (streak < 21) sm.textContent = "You're building an unstoppable habit. Don't break the chain! ⛓️";
-      else if (streak < 50) sm.textContent = "Incredible consistency! You're dominating algorithms like a pro 💪";
-      else if (streak < 100) sm.textContent = "Iron will detected. You're in the top tier of dedication! 🛡️";
-      else sm.textContent = "Absolute Legend. Your commitment is unmatched. 👑✨";
-
-      renderAchievements();
-    }
-
-    function renderAchievements() {
-      const grid = document.getElementById('achievementsGrid');
-      grid.innerHTML = '';
-      achievementsDef.forEach(a => {
-        const unlocked = a.check();
-        const card = document.createElement('div');
-        card.className = `ach-card${unlocked ? ' unlocked' : ''}`;
-        card.innerHTML = `<div class="ach-icon">${a.icon}</div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div>`;
-        grid.appendChild(card);
-      });
-    }
-
-    // ========== RENDER GRID ==========
-    function renderDaysGrid() {
-      const grid = document.getElementById("daysGrid");
-      grid.innerHTML = "";
-      const active = getCompletedDays();
-
-      if (!document.getElementById('streakGradDef')) {
-        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-        svg.setAttribute('width','0'); svg.setAttribute('height','0'); svg.id = 'streakGradDef';
-        svg.innerHTML = '<defs><linearGradient id="streakGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs>';
-        document.body.appendChild(svg);
-      }
-
-      for (let i = 1; i <= 180; i++) {
-        const sq = document.createElement("div");
-        sq.className = "day-sq";
-        sq.textContent = i;
-        sq.onclick = () => openDayModal(i);
-
-        if (trackerData[i]) {
-          const lc = (trackerData[i].lc||[]).length;
-          const cc = (trackerData[i].cc||[]).length;
-          const gfg = (trackerData[i].gfg||[]).length;
-          const total = lc + cc + gfg;
-          if (total > 0) {
-            if (active.includes(i)) sq.classList.add("completed");
-            if (total >= 5) sq.classList.add("level-3");
-            else if (total >= 3) sq.classList.add("level-2");
-            else sq.classList.add("level-1");
-            sq.setAttribute("data-tooltip", `Day ${i}: ${total} solved (${lc} LC, ${cc} CC, ${gfg} GFG)`);
-          } else {
-            sq.setAttribute("data-tooltip", `Day ${i}: Not started`);
-          }
-        } else {
-          sq.setAttribute("data-tooltip", `Day ${i}: Not started`);
-        }
-        grid.appendChild(sq);
-      }
-    }
-
-    // ========== MODAL ==========
-    function openDayModal(day) {
-      currentModalDay = day;
-      document.getElementById("modalDayTitle").textContent = `Day ${day} — Mission Log`;
-      if (!trackerData[day]) trackerData[day] = { lc:[], cc:[], gfg:[] };
-      if (!trackerData[day].lc) trackerData[day].lc = [];
-      if (!trackerData[day].cc) trackerData[day].cc = [];
-      if (!trackerData[day].gfg) trackerData[day].gfg = [];
-
-      renderFormList('lc', trackerData[day].lc);
-      renderFormList('cc', trackerData[day].cc);
-      renderFormList('gfg', trackerData[day].gfg);
-      document.getElementById("dayModal").classList.add("active");
-    }
     function closeModal() {
-      document.getElementById("dayModal").classList.remove("active");
+        document.getElementById('modal').style.display = 'none';
     }
-    function renderFormList(platform, list) {
-      const key = platform.charAt(0).toUpperCase() + platform.slice(1);
-      const container = document.getElementById(`form${key}`);
-      container.innerHTML = "";
-      if (list.length === 0) list.push({ name:"", link:"" });
 
-      list.forEach((item, idx) => {
-        const row = document.createElement("div");
-        row.className = "inp-row";
-        row.innerHTML = `
-          <input type="text" class="inp-name" placeholder="Problem Name" value="${item.name.replace(/"/g,'&quot;')}" onchange="updateRowData('${platform}',${idx},'name',this.value)">
-          <input type="text" class="inp-link" placeholder="URL (Optional)" value="${item.link.replace(/"/g,'&quot;')}" onchange="updateRowData('${platform}',${idx},'link',this.value)">
-          <button class="btn-del" onclick="removeRow('${platform}',${idx})">×</button>`;
-        container.appendChild(row);
-      });
+    function triggerSupernova() {
+        const flash = document.getElementById('flash-overlay');
+        const text = document.getElementById('impact-text');
+        
+        const tl = gsap.timeline();
+        tl.to(flash, { opacity: 1, duration: 0.1 })
+          .to(flash, { opacity: 0, duration: 0.8 })
+          .fromTo(text, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.4, ease: "expo.out" }, "-=0.6")
+          .to(text, { opacity: 0, scale: 1.5, duration: 0.4, ease: "expo.in" });
+
+        confetti({
+            particleCount: 100,
+            spread: 160,
+            colors: ['#ffffff', '#333333'],
+            origin: { y: 0.5 }
+        });
     }
-    window.updateRowData = (p, i, f, v) => { trackerData[currentModalDay][p][i][f] = v; };
-    window.addProblemInput = p => { trackerData[currentModalDay][p].push({name:"",link:""}); renderFormList(p, trackerData[currentModalDay][p]); };
-    window.removeRow = (p, i) => { trackerData[currentModalDay][p].splice(i,1); renderFormList(p, trackerData[currentModalDay][p]); };
 
-    // ========== SAVE DAY + CLEAN ANIMATIONS ==========
-    window.saveDay = function() {
-      ['lc','cc','gfg'].forEach(p => {
-        trackerData[currentModalDay][p] = trackerData[currentModalDay][p].filter(it => it.name.trim() !== "");
-      });
+    function updateDashboard() {
+        const keys = Object.keys(db).map(Number).sort((a,b)=>a-b);
+        const allProblems = Object.values(db).flat();
+        
+        document.getElementById('total-solved').innerText = allProblems.length;
+        document.getElementById('lc-count').innerText = allProblems.filter(p=>p.platform==='LeetCode').length;
+        document.getElementById('cc-count').innerText = allProblems.filter(p=>p.platform==='CodeChef').length;
+        document.getElementById('gfg-count').innerText = allProblems.filter(p=>p.platform==='GFG').length;
+        document.getElementById('pct-complete').innerText = Math.round((keys.length/210)*100) + '%';
 
-      const hadLc = trackerData[currentModalDay].lc.length > 0;
-      const hadCc = trackerData[currentModalDay].cc.length > 0;
-      const hadGfg = trackerData[currentModalDay].gfg.length > 0;
-
-      localStorage.setItem('dsaUltimateTracker', JSON.stringify(trackerData));
-      closeModal();
-
-      const newStreak = calculateStreak();
-      const newLcS = calculatePlatformStreak('lc');
-      const newCcS = calculatePlatformStreak('cc');
-      const newGfgS = calculatePlatformStreak('gfg');
-
-      // ---- main streak up animation (if increased) ----
-      if (newStreak > previousStreak) {
-        triggerStreakUpAnimation(newStreak);
-      }
-      // ---- platform streak animations (separate, no blur/overlap) ----
-      else {
-        // only trigger platform specific if no main streak increase
-        if (hadLc && newLcS > 1) triggerPlatformStreakAnim('LeetCode', newLcS, '#ffa116', '⚡');
-        else if (hadCc && newCcS > 1) triggerPlatformStreakAnim('CodeChef', newCcS, '#c4733b', '🍳');
-        else if (hadGfg && newGfgS > 1) triggerPlatformStreakAnim('GFG', newGfgS, '#2f8d46', '🎯');
-        else if (hadLc || hadCc || hadGfg) {
-          // simple accepted animation (no blur)
-          if (hadLc) playEpicTextAnim('⚡','ACCEPTED','LeetCode','#ffa116');
-          else if (hadCc) playEpicTextAnim('✅','CORRECT ANSWER','CodeChef','#c4733b');
-          else playEpicTextAnim('🎯','SOLVED','GeeksForGeeks','#2f8d46');
-          triggerSideConfetti();
+        // Streak
+        let streak = 0;
+        if(keys.length > 0) {
+            let cur = 1;
+            for(let i=0; i<keys.length; i++) {
+                if(keys[i+1] === keys[i]+1) cur++;
+                else { streak = Math.max(streak, cur); cur = 1; }
+            }
+            streak = Math.max(streak, cur);
         }
-      }
+        document.getElementById('streak-val').innerText = streak;
 
-      previousStreak = newStreak;
-      renderDaysGrid();
-      updateDashboard();
-    };
-
-    // ========== ANIMATION FUNCTIONS (NO BLUR / CLEAN) ==========
-    function triggerStreakUpAnimation(count) {
-      triggerFullConfetti();
-      playEpicTextAnim('🔥', `${count} DAY STREAK`, 'UNSTOPPABLE! 🚀', 'gradient');
-      // gentle screen shake
-      document.body.style.animation = 'none';
-      setTimeout(() => { document.body.style.animation = 'screenShake .4s ease'; }, 10);
+        // Phases
+        let curPhase = PHASES[0];
+        let nxtPhase = PHASES[1];
+        for(let p of PHASES) {
+            if(streak >= p.min) {
+                curPhase = p;
+                nxtPhase = PHASES[PHASES.indexOf(p)+1] || p;
+            }
+        }
+        document.getElementById('rank-name').innerText = curPhase.name;
+        const progress = ((streak - curPhase.min) / (nxtPhase.limit - curPhase.min || 1)) * 100;
+        document.getElementById('xp-fill').style.width = Math.min(progress, 100) + '%';
+        document.getElementById('rank-hint').innerText = `${nxtPhase.limit - streak} DAYS TO NEXT PHASE`;
     }
 
-    function triggerPlatformStreakAnim(platform, count, color, icon) {
-      const card = document.getElementById('platformAnimCard');
-      const overlay = document.getElementById('platformAnimOverlay');
-      document.getElementById('pacIcon').textContent = icon;
-      document.getElementById('pacStreakNum').textContent = count;
-      document.getElementById('pacStreakNum').style.color = color;
-      document.getElementById('pacText').textContent = 'Day Streak!';
-      document.getElementById('pacText').style.color = color;
-      document.getElementById('pacPlatform').textContent = platform;
-      card.style.borderColor = color + '40';
-
-      const fb = document.getElementById('pacFireBar');
-      fb.style.color = color;
-
-      const pc = document.getElementById('pacParticles');
-      pc.innerHTML = '';
-      for (let i = 0; i < 20; i++) {
-        const p = document.createElement('div');
-        p.style.cssText = `position:absolute;width:${Math.random()*6+3}px;height:${Math.random()*6+3}px;background:${color};border-radius:50%;opacity:0;left:${Math.random()*100}%;top:${Math.random()*100}%;`;
-        pc.appendChild(p);
-        gsap.to(p, { opacity:.8, scale:Math.random()*2+1, duration:.4, delay:Math.random()*.5 });
-        gsap.to(p, { opacity:0, y:-(Math.random()*60+20), x:(Math.random()-0.5)*40, duration:.8, delay:.6+Math.random()*.3 });
-      }
-
-      gsap.killTweensOf(card);
-      gsap.set(card, { opacity:0, scale:.4, y:60, rotationX:20 });
-      gsap.to(card, { opacity:1, scale:1, y:0, rotationX:0, duration:.7, ease:'back.out(1.5)' });
-      gsap.to(fb, { opacity:1, duration:.3, delay:.5 });
-      gsap.to(fb, { opacity:0, duration:.3, delay:2 });
-      gsap.to(card, { opacity:0, scale:.8, y:-40, duration:.5, delay:2.5, ease:'power2.in' });
-
-      setTimeout(() => {
-        confetti({ particleCount:80, spread:60, origin:{y:.6}, colors:[color,'#ffffff','#6366f1'] });
-      }, 300);
+    function resetTimeline() {
+        if(confirm("Are you sure you want to wipe all records?")) {
+            db = {};
+            localStorage.clear();
+            init();
+        }
     }
 
-    function playEpicTextAnim(icon, mainText, subText, colorStr) {
-      const badge = document.getElementById("animBadge");
-      document.getElementById("animIcon").textContent = icon;
-      document.getElementById("animText").textContent = mainText;
-      document.getElementById("animSub").textContent = subText;
-
-      const at = document.getElementById("animText");
-      const as = document.getElementById("animSub");
-
-      if (colorStr === 'gradient') {
-        at.style.background = 'linear-gradient(135deg,#ef4444,#f59e0b,#fbbf24)';
-        at.style.webkitBackgroundClip = 'text';
-        at.style.webkitTextFillColor = 'transparent';
-        at.style.textShadow = 'none';
-        as.style.color = '#fcd34d';
-      } else {
-        at.style.background = 'none';
-        at.style.webkitBackgroundClip = 'unset';
-        at.style.webkitTextFillColor = colorStr;
-        at.style.textShadow = `0 0 30px ${colorStr}`;
-        as.style.color = colorStr;
-      }
-
-      gsap.killTweensOf(badge);
-      gsap.set(badge, { opacity:0, scale:.1, rotationX:80, y:100 });
-      gsap.to(badge, { opacity:1, scale:1.15, rotationX:-10, y:-20, duration:.6, ease:'back.out(1.7)' });
-      gsap.to(badge, { scale:1, rotationX:0, y:0, duration:.35, delay:.6, ease:'power2.out' });
-      gsap.to(badge, { opacity:0, scale:1.5, y:-80, duration:.5, delay:2.2, ease:'power2.in' });
+    function exportData() {
+        const blob = new Blob([JSON.stringify(db)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'DSA_ODYSSEY_SAVE.json';
+        a.click();
     }
 
-    function triggerFullConfetti() {
-      const end = Date.now() + 2500;
-      (function frame() {
-        confetti({ particleCount:6, angle:60, spread:55, origin:{x:0}, colors:['#ef4444','#f59e0b','#6366f1','#ec4899'] });
-        confetti({ particleCount:6, angle:120, spread:55, origin:{x:1}, colors:['#ef4444','#f59e0b','#6366f1','#ec4899'] });
-        if (Date.now() < end) requestAnimationFrame(frame);
-      })();
-    }
-    function triggerSideConfetti() {
-      confetti({ particleCount:70, spread:60, origin:{y:.6}, colors:['#6366f1','#ffffff','#f59e0b'] });
-    }
-
-    // ========== EXPORT / IMPORT / RESET ==========
-    window.exportData = function() {
-      const blob = new Blob([JSON.stringify(trackerData, null, 2)], { type:'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `dsa180_backup_${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
-    };
-    window.importData = function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        try {
-          trackerData = JSON.parse(ev.target.result);
-          localStorage.setItem('dsaUltimateTracker', JSON.stringify(trackerData));
-          renderDaysGrid(); updateDashboard();
-          playEpicTextAnim('📦','DATA IMPORTED','Successfully restored!','#10b981');
-          triggerSideConfetti();
-        } catch(err) { alert('Invalid JSON file'); }
-      };
-      reader.readAsText(file);
-    };
-    window.resetData = function() {
-      if (confirm('⚠️ This will permanently delete ALL your progress. Are you sure?')) {
-        trackerData = {};
-        localStorage.removeItem('dsaUltimateTracker');
-        renderDaysGrid(); updateDashboard();
-      }
-    };
-
-    // ========== INIT ==========
-    function initApp() {
-      renderDaysGrid();
-      updateDashboard();
-      previousStreak = calculateStreak();
-
-      gsap.from('.brand', { opacity:0, y:-30, duration:.8, delay:.2 });
-      gsap.from('.user-rank', { opacity:0, y:-20, duration:.6, delay:.4 });
-      gsap.from('.platform-stats', { opacity:0, x:-30, duration:.6, delay:.5 });
-      gsap.from('.dash-header', { opacity:0, y:-20, duration:.6, delay:.3 });
-      gsap.from('.streak-card', { opacity:0, y:30, duration:.5, stagger:.1, delay:.5 });
-      gsap.from('.grid-section', { opacity:0, y:30, duration:.6, delay:.8 });
-      gsap.from('.achievements-section', { opacity:0, y:30, duration:.6, delay:1 });
-    }
-    initApp();
-  </script>
+    init();
+</script>
 </body>
 </html>
