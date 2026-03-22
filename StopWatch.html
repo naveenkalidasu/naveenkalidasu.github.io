@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practise</title>
+    <style>
+        body{
+            background-color: black;
+        }
+        .main{
+            border: 2px solid white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 400px;
+            margin:250px;
+            color: white;
+            margin-left:500px;
+            border-radius: 16px;
+            padding-bottom: 20px;
+        }
+        mark{
+            font-size: 15px;
+            border-radius: 9px;
+        }
+        .buttons{
+            padding-top: 20px;
+            
+        }
+        button{
+            width: 65px;
+            border-radius: 9px;
+            border:2px solid white;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Stop -Watch</h1>
+        <div id="display">00:00:00</div>
+        <div class="buttons">
+            <button onclick="Start()">Start</button>
+            <button onclick="Pause()">Pause</button>
+            <button onclick="Reset()">Reset</button>
+            <button onclick="lap()">Lap</button>
+        </div>
+        <ul id="print"></ul>
+    </div>
+    <script>
+        let minutes=0;
+        let hours=0;
+        let seconds=0;
+        let timer=null;
+        let lapCount=1;
+        function updateDisplay(){
+            let h=hours<10?"0"+hours:hours;
+            let m=minutes<10?"0"+minutes:minutes;
+            let s=seconds<10?"0"+seconds:seconds;
+            document.getElementById('display').innerText=h+":"+m+":"+s;
+        }
+        function Start(){
+            if(timer!==null) return;
+            timer=setInterval(()=>{
+                seconds++;
+                if(seconds==60)
+            {
+                seconds=0;
+                minutes++;
+            }
+            if(minutes==60)
+            {
+                minutes=0;
+                hours++;
+            }
+            updateDisplay();
+            },1000);
+        }
+        function Pause(){
+            clearInterval(timer);
+            timer=null;
+        }
+        function Reset(){
+            hours=0;
+            seconds=0;
+            minutes=0;
+            clearInterval(timer);
+            timer=null;
+            updateDisplay()
+        }
+        function lap(){
+            let time=document.getElementById('display').innerText;
+            let list=document.createElement("li");
+            document.getElementById('print').appendChild(list);
+            list.innerText="Lap"+lapCount+":"+time;
+            lapCount++;
+        }
+
+
+    </script>
+</body>
+</html>
