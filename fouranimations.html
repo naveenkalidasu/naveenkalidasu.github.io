@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animations</title>
+    <style>
+        body{
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+        }
+        .main{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding-left: 10px;
+            gap:50px;
+        }
+        .box1{
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            border-radius: 10px;
+            box-shadow: 0 0 20px white;
+        }
+        .box1:hover{
+            background-color: blue;
+            transition: 0.4s;
+            transform:scale(1.2) ;
+        }
+        .box2:hover{
+            
+            transition: 0.4s;
+            box-shadow: 0 0 20px white
+            ,0 0 40px white,0 0 60px white;
+
+        }
+        @keyframes colorChange{
+            0%{background-color:red};
+            25%{background-color:blue};
+            50%{background-color: green;}
+            75%{background-color: white;}
+            100%{background-color: purple;}
+        }
+        
+        .box2{
+            width: 200px;
+            height: 200px;
+            background-color:red;
+            border-radius: 10px;
+            
+
+            
+
+        }
+        .box3{
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px white;
+            animation: colorChange 5s infinite;
+
+        }
+        .wheel{
+            font-size: 100px;
+            animation:wheelrotate 1s infinite;
+        }
+        @keyframes wheelrotate{
+            from{
+                transform: rotate(0deg);
+            }
+            to{
+                transform: rotate(360deg);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="box1" align="center">Tap to big</div>
+        <div class="box2" align="center">Tap to glow</div>
+        <div class="box3" align="center">Infinity Glow</div>
+        <div class="wheel">🛞</div>
+    </div>
+</body>
+</html>
