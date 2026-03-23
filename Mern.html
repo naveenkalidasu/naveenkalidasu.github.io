@@ -4,611 +4,213 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MERN · 210 Days Production Tracker</title>
-<meta name="description" content="Track your 210-day MERN stack journey with project sprints, GitHub links, and productivity insights.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 :root{--bg:#06060a;--surface:#0c0c14;--surface2:#12121e;--border:#1e1e2e;--border2:#2a2a3e;--green:#00ed64;--blue:#61dbfb;--red:#ff4757;--amber:#ffb84d;--purple:#a78bfa;--text:#f0f0f5;--text2:#8888aa;--text3:#555570;--radius:10px;--shadow:0 8px 32px rgba(0,0,0,0.4)}
 [data-theme="light"]{--bg:#f4f4f8;--surface:#ffffff;--surface2:#eeeef2;--border:#dddde4;--border2:#ccccdd;--text:#111118;--text2:#555570;--text3:#8888aa;--shadow:0 8px 32px rgba(0,0,0,0.08)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;transition:background .3s,color .3s}
-::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 .app{display:grid;grid-template-columns:280px 1fr;height:100vh}
-@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}.sidebar.open{display:flex;position:fixed;inset:0;z-index:900;width:100%}}
-.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;transition:background .3s}
-.logo{font-size:1.4rem;font-weight:800;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-0.5px}
 .logo span{color:var(--green)}
-.logo-sub{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-top:-8px}
 .progress-wrap{background:var(--surface2);border-radius:var(--radius);padding:16px;border:1px solid var(--border)}
 .progress-label{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text2);margin-bottom:8px}
 .progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:4px;transition:width .6s ease;width:0}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));width:0;transition:width .6s ease}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;transition:border-color .2s}
-.stat-card:hover{border-color:var(--green)}
-.stat-card.full{grid-column:span 2}
-.stat-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
-.stat-val{font-size:1.5rem;font-weight:800;font-family:'JetBrains Mono';color:var(--green)}
-.stat-val.blue{color:var(--blue)}.stat-val.amber{color:var(--amber)}.stat-val.purple{color:var(--purple)}.stat-val.red{color:var(--red)}
-.sidebar-actions{margin-top:auto;display:flex;flex-direction:column;gap:6px}
-.sbtn{padding:10px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.75rem;font-weight:600;cursor:pointer;border-radius:var(--radius);transition:all .2s;text-align:center;font-family:'Inter'}
-.sbtn:hover{border-color:var(--green);color:var(--text)}
-.sbtn.danger:hover{border-color:var(--red);color:var(--red)}
+.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px}
+.stat-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.stat-val{font-size:1.3rem;font-weight:800;font-family:'JetBrains Mono';color:var(--green)}
+.stat-val.blue{color:var(--blue)}.stat-val.amber{color:var(--amber)}.stat-val.purple{color:var(--purple)}
 .main{padding:28px;overflow-y:auto}
-.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:10px}
-.top-bar h1{font-size:1.3rem;font-weight:800;letter-spacing:-0.5px}
-.top-actions{display:flex;gap:8px;align-items:center}
-.icon-btn{width:36px;height:36px;border:1px solid var(--border);background:var(--surface);color:var(--text2);border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s}
-.icon-btn:hover{border-color:var(--green);color:var(--text)}
-.banner{background:linear-gradient(135deg,rgba(0,237,100,.08),rgba(97,219,251,.08));border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--text2);display:flex;align-items:center;gap:10px}
-.banner .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-.banner.warn{background:linear-gradient(135deg,rgba(255,71,87,.08),rgba(255,184,77,.08))}
-.banner.warn .dot{background:var(--amber)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.sub-info{font-size:.72rem;color:var(--text3);margin-bottom:20px}
 .timeline{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;grid-auto-flow:dense}
-.day-box{height:72px;border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.65rem;color:var(--text3);cursor:pointer;transition:all .25s;position:relative;background:var(--surface)}
-.day-box:hover{border-color:var(--blue);background:rgba(97,219,251,.04);transform:translateY(-1px)}
-.day-box.today{border-color:var(--green);box-shadow:0 0 12px rgba(0,237,100,.15)}
-.day-box.today::after{content:'TODAY';position:absolute;top:3px;right:4px;font-size:.45rem;background:var(--green);color:#000;padding:1px 4px;border-radius:3px;font-weight:700}
-.merged{border:none!important;font-weight:600;text-align:center;padding:6px;overflow:hidden;text-overflow:ellipsis;cursor:pointer;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .25s}
-.merged:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.day-box{height:72px;border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.65rem;color:var(--text3);cursor:pointer;transition:all .2s;background:var(--surface);position:relative}
+.day-box:hover{border-color:var(--blue);background:rgba(97,219,251,0.05)}
+.merged{border:none!important;font-weight:600;text-align:center;padding:6px;overflow:hidden;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .merged.status-completed{background:linear-gradient(135deg,#00ed64,#00c853);color:#000}
 .merged.status-inprogress{background:linear-gradient(135deg,#61dbfb,#2196f3);color:#000}
 .merged.status-failed{background:linear-gradient(135deg,#ff4757,#e91e63);color:#fff}
-.merged .proj-name{font-size:.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.merged .proj-days{font-size:.55rem;opacity:.7}
-.merged .proj-link{position:absolute;top:4px;right:5px;font-size:.65rem;opacity:.5;text-decoration:none;color:inherit}
-.merged .proj-link:hover{opacity:1}
-.tooltip{position:fixed;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:14px;font-size:.72rem;color:var(--text);z-index:800;pointer-events:none;opacity:0;transition:opacity .15s;max-width:260px;box-shadow:var(--shadow)}
-.tooltip .tt-name{font-weight:700;font-size:.82rem;margin-bottom:6px}
-.tooltip .tt-row{color:var(--text2);margin-bottom:3px;display:flex;gap:6px}
-.tooltip .tt-row span{color:var(--text)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(4px)}
+.proj-name{font-size:.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
+.proj-days{font-size:.55rem;opacity:.7}
+.proj-link-btn{position:absolute;top:4px;right:4px;font-size:10px;cursor:pointer;opacity:0.5}
+.proj-link-btn:hover{opacity:1}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(4px)}
 .modal-overlay.active{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:420px;max-width:92vw;box-shadow:var(--shadow)}
-.modal h2{font-size:1rem;font-weight:700;margin-bottom:18px;color:var(--text)}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:400px;box-shadow:var(--shadow)}
 .field{margin-bottom:14px}
-.field label{display:block;font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
-.field input,.field select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:6px;font-family:'JetBrains Mono';font-size:.82rem;outline:none;transition:border-color .2s}
-.field input:focus,.field select:focus{border-color:var(--green)}
-.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.field label{display:block;font-size:.65rem;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.field input, .field select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:6px;outline:none;font-family:'JetBrains Mono'}
 .modal-actions{display:flex;gap:8px;margin-top:18px}
-.mbtn{flex:1;padding:12px;border:none;border-radius:6px;font-weight:700;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:'Inter'}
-.mbtn.primary{background:var(--green);color:#000}.mbtn.primary:hover{filter:brightness(1.1)}
-.mbtn.secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}.mbtn.secondary:hover{border-color:var(--text2)}
-.mbtn.danger{background:var(--red);color:#fff}.mbtn.danger:hover{filter:brightness(1.1)}
-.delete-modal .del-info{background:var(--surface2);border-radius:6px;padding:12px;margin:12px 0;font-size:.75rem}
-.del-info div{margin-bottom:4px;color:var(--text2)}.del-info span{color:var(--text);font-weight:600}
-.stats-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px}
-.stats-panel h3{font-size:.8rem;font-weight:700;margin-bottom:12px}
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
-.stats-item{background:var(--surface2);border-radius:6px;padding:10px;text-align:center}
-.stats-item .si-val{font-size:1.1rem;font-weight:800;font-family:'JetBrains Mono';color:var(--green)}
-.stats-item .si-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.mob-toggle{display:none;position:fixed;bottom:20px;right:20px;z-index:950;width:48px;height:48px;border-radius:50%;background:var(--green);color:#000;border:none;font-size:1.3rem;cursor:pointer;box-shadow:var(--shadow)}
-@media(max-width:900px){.mob-toggle{display:flex;align-items:center;justify-content:center}}
-.kbd{display:inline-block;padding:2px 6px;border:1px solid var(--border);border-radius:3px;font-size:.6rem;color:var(--text3);font-family:'JetBrains Mono';background:var(--surface2)}
-#impact{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:4rem;font-weight:900;opacity:0;pointer-events:none;z-index:2000;color:var(--green);text-shadow:0 0 40px rgba(0,237,100,.3)}
-.hidden-input{position:absolute;width:0;height:0;opacity:0;overflow:hidden}
+.mbtn{flex:1;padding:12px;border-radius:6px;font-weight:700;cursor:pointer;border:none}
+.mbtn.primary{background:var(--green);color:#000}.mbtn.secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}.mbtn.danger{background:var(--red);color:#fff}
+#impact{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:4rem;font-weight:900;opacity:0;pointer-events:none;z-index:2000;color:var(--green)}
+.sbtn{padding:10px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.75rem;font-weight:600;cursor:pointer;border-radius:var(--radius);text-align:center;margin-top:5px}
+.sbtn:hover{border-color:var(--green);color:var(--text)}
 </style>
 </head>
 <body>
 <div id="impact">DEPLOYED 🚀</div>
-<div id="tooltip" class="tooltip"></div>
-
-<button class="mob-toggle" onclick="toggleSidebar()" id="mob-toggle">☰</button>
-
 <div class="app">
-<aside class="sidebar" id="sidebar">
-  <div class="logo">⚡ <span>Ego</span>Hurt</div>
-  <div class="logo-sub">Production Timeline</div>
+    <aside class="sidebar">
+        <div class="logo">⚡ <span>Ego</span>Hurt</div>
+        <div class="progress-wrap">
+            <div class="progress-label"><span>COMPLETION</span><span id="st-pct">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="st-fill"></div></div>
+        </div>
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-label">Projects</div><div class="stat-val" id="st-count">0</div></div>
+            <div class="stat-card"><div class="stat-label">Avg Days</div><div class="stat-val blue" id="st-avg">0</div></div>
+            <div class="stat-card"><div class="stat-label">Score</div><div class="stat-val amber" id="st-score">0</div></div>
+            <div class="stat-card"><div class="stat-label">Target</div><div class="stat-val purple">210</div></div>
+        </div>
+        <div style="margin-top:auto; display:flex; flex-direction:column; gap:5px">
+            <button class="sbtn" onclick="exportJSON()">📤 Export JSON</button>
+            <button class="sbtn" onclick="toggleTheme()">🌓 Toggle Theme</button>
+            <button class="sbtn" style="color:var(--red)" onclick="resetAll()">🗑 Reset All</button>
+        </div>
+    </aside>
+    <main class="main">
+        <h1 style="font-size:1.3rem; margin-bottom:20px">210-Day Production Timeline</h1>
+        <div class="timeline" id="timeline"></div>
+    </main>
+</div>
 
-  <div class="progress-wrap">
-    <div class="progress-label"><span>COMPLETION</span><span id="progress-pct">0%</span></div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-  </div>
-
-  <div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">Projects</div><div class="stat-val" id="st-projects">0</div></div>
-    <div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val blue" id="st-streak">0</div></div>
-    <div class="stat-card"><div class="stat-label">Consistency</div><div class="stat-val amber" id="st-consistency">0%</div></div>
-    <div class="stat-card"><div class="stat-label">Avg Duration</div><div class="stat-val purple" id="st-avg">0d</div></div>
-    <div class="stat-card full"><div class="stat-label">Productivity Score</div><div class="stat-val" id="st-score">0</div></div>
-    <div class="stat-card"><div class="stat-label">Longest Break</div><div class="stat-val red" id="st-break">0d</div></div>
-    <div class="stat-card"><div class="stat-label">Days Filled</div><div class="stat-val blue" id="st-filled">0</div></div>
-  </div>
-
-  <div class="sidebar-actions">
-    <button class="sbtn" onclick="suggestNext()">💡 Suggest Next</button>
-    <button class="sbtn" onclick="exportJSON()">📤 Export JSON</button>
-    <button class="sbtn" onclick="exportPDF()">📄 Export PDF</button>
-    <button class="sbtn" onclick="document.getElementById('import-file').click()">📥 Import JSON</button>
-    <input type="file" id="import-file" class="hidden-input" accept=".json" onchange="importJSON(event)">
-    <button class="sbtn" onclick="undoLast()">↩ Undo (History)</button>
-    <button class="sbtn danger" onclick="confirmReset()">🗑 Reset All</button>
-  </div>
-</aside>
-
-<main class="main" id="main-view">
-  <div class="top-bar">
-    <h1>210-Day Production Timeline</h1>
-    <div class="top-actions">
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">🌓</button>
-      <button class="icon-btn" onclick="showShortcuts()" title="Keyboard shortcuts">⌨</button>
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+        <h2 id="m-title" style="font-size:1rem; margin-bottom:15px">Commit Sprint</h2>
+        <div class="field"><label>Project Name</label><input type="text" id="f-name"></div>
+        <div class="field"><label>Link</label><input type="text" id="f-link"></div>
+        <div class="field"><label>Days</label><input type="number" id="f-days" min="1"></div>
+        <div class="field"><label>Status</label><select id="f-status"><option value="completed">Completed</option><option value="inprogress">In Progress</option><option value="failed">Failed</option></select></div>
+        <div class="modal-actions">
+            <button class="mbtn secondary" onclick="closeModal()">Cancel</button>
+            <button class="mbtn danger" id="btn-del" onclick="deleteItem()">Delete</button>
+            <button class="mbtn primary" onclick="saveItem()">Commit</button>
+        </div>
     </div>
-  </div>
-  <div class="sub-info">Click a day to add a sprint. Click a project to edit or delete. <span class="kbd">Esc</span> close · <span class="kbd">Enter</span> save</div>
-  <div id="banner-area"></div>
-  <div id="stats-panel-area"></div>
-  <div class="timeline" id="timeline"></div>
-</main>
-</div>
-
-<!-- Add/Edit Modal -->
-<div class="modal-overlay" id="modal-add">
-<div class="modal">
-  <h2 id="modal-title">Add Sprint</h2>
-  <div class="field"><label>Project Name</label><input type="text" id="f-name" placeholder="e.g. Auth System"></div>
-  <div class="field"><label>GitHub / Live Link</label><input type="text" id="f-link" placeholder="https://github.com/..."></div>
-  <div class="field"><label>Days Consumed</label><input type="number" id="f-days" value="1" min="1" max="210"></div>
-  <div class="field"><label>Status</label>
-    <select id="f-status"><option value="completed">✅ Completed</option><option value="inprogress">🔄 In Progress</option><option value="failed">❌ Failed</option></select>
-  </div>
-  <div class="modal-actions">
-    <button class="mbtn secondary" onclick="closeModals()">Cancel</button>
-    <button class="mbtn primary" onclick="handleSave()" id="btn-save">Commit Sprint</button>
-  </div>
-</div>
-</div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal-overlay" id="modal-delete">
-<div class="modal delete-modal">
-  <h2>⚠ Confirm Delete</h2>
-  <p style="font-size:.8rem;color:var(--text2)">Are you sure you want to remove this project?</p>
-  <div class="del-info" id="del-info"></div>
-  <div class="modal-actions">
-    <button class="mbtn secondary" onclick="closeModals()">Cancel</button>
-    <button class="mbtn danger" onclick="confirmDelete()">Delete Project</button>
-  </div>
-</div>
-</div>
-
-<!-- Shortcuts Modal -->
-<div class="modal-overlay" id="modal-shortcuts">
-<div class="modal">
-  <h2>⌨ Keyboard Shortcuts</h2>
-  <div style="font-size:.78rem;color:var(--text2);line-height:2">
-    <div><span class="kbd">Esc</span> Close any modal</div>
-    <div><span class="kbd">Enter</span> Save / Confirm action</div>
-    <div><span class="kbd">Ctrl+Z</span> Undo last change</div>
-    <div><span class="kbd">Ctrl+E</span> Export JSON</div>
-    <div><span class="kbd">Ctrl+D</span> Toggle dark/light mode</div>
-    <div><span class="kbd">Ctrl+N</span> Suggest next project slot</div>
-  </div>
-  <div class="modal-actions" style="margin-top:14px"><button class="mbtn secondary" onclick="closeModals()">Close</button></div>
-</div>
 </div>
 
 <script>
-const TOTAL=210, MAX_HISTORY=10;
-let data=JSON.parse(localStorage.getItem('mern_210'))||{};
-let history=JSON.parse(localStorage.getItem('mern_history'))||[];
-let theme=localStorage.getItem('mern_theme')||'dark';
-let editDay=null, deleteDay=null, startDate=null;
+let data = JSON.parse(localStorage.getItem('mern_ego_210')) || {};
+let currentDay = null;
 
-// Calculate "today's" day number relative to when the user started
-function getTodayNum(){
-  startDate=localStorage.getItem('mern_start');
-  if(!startDate){
-    const keys=Object.keys(data).map(Number).sort((a,b)=>a-b);
-    if(keys.length===0) return 1;
-    // estimate start: assume day 1 started (keys[0]-1) days ago from first entry creation
-    return Math.min(keys[keys.length-1]+1, TOTAL);
-  }
-  const diff=Math.floor((Date.now()-new Date(startDate).getTime())/(864e5));
-  return Math.min(Math.max(diff+1,1),TOTAL);
-}
+function render(){
+    const tl = document.getElementById('timeline');
+    tl.innerHTML = '';
+    const occupied = new Set();
+    
+    // Track multi-day spans
+    Object.keys(data).forEach(start => {
+        let d = parseInt(start);
+        let len = parseInt(data[start].duration);
+        for(let i=1; i<len; i++) occupied.add(d + i);
+    });
 
-function setStartDate(){
-  if(!localStorage.getItem('mern_start')&&Object.keys(data).length>0){
-    localStorage.setItem('mern_start',new Date().toISOString());
-  }
-}
+    for(let i=1; i<=210; i++){
+        if(occupied.has(i)) continue; 
 
-function saveData(){
-  pushHistory();
-  localStorage.setItem('mern_210',JSON.stringify(data));
-}
-
-function pushHistory(){
-  history.push(JSON.stringify(data));
-  if(history.length>MAX_HISTORY) history.shift();
-  localStorage.setItem('mern_history',JSON.stringify(history));
-}
-
-function undoLast(){
-  if(history.length===0) return showBanner('No history available','warn');
-  data=JSON.parse(history.pop());
-  localStorage.setItem('mern_210',JSON.stringify(data));
-  localStorage.setItem('mern_history',JSON.stringify(history));
-  init();
-  showBanner('Reverted to previous state');
-}
-
-// Build occupied days map
-function getOccupied(excludeDay){
-  const occ=new Set();
-  for(let k in data){
-    const d=parseInt(k);
-    if(d===excludeDay) continue;
-    for(let j=0;j<parseInt(data[k].duration);j++) occ.add(d+j);
-  }
-  return occ;
-}
-
-function checkOverlap(start,duration,excludeDay){
-  const occ=getOccupied(excludeDay);
-  for(let i=0;i<duration;i++){
-    if(occ.has(start+i)) return true;
-  }
-  return false;
-}
-
-// --- RENDER ---
-function init(){
-  const tl=document.getElementById('timeline');
-  tl.innerHTML='';
-  const occ=new Set();
-  const today=getTodayNum();
-  const boxes=[];
-
-  for(let i=1;i<=TOTAL;i++){
-    if(occ.has(i)) continue;
-    const entry=data[i];
-    const box=document.createElement('div');
-    box.className='day-box';
-    if(entry){
-      const dur=parseInt(entry.duration);
-      const st=entry.status||'completed';
-      box.classList.add('merged','status-'+st);
-      box.style.gridColumn='span '+dur;
-      box.innerHTML=`<span class="proj-days">${dur} Day${dur>1?'s':''}</span><span class="proj-name">${esc(entry.name)}</span>`;
-      if(entry.link){
-        const a=document.createElement('a');
-        a.className='proj-link';a.href=entry.link;a.target='_blank';a.innerHTML='🔗';
-        a.onclick=e=>e.stopPropagation();
-        box.appendChild(a);
-      }
-      box.onclick=()=>openEditOrDelete(i);
-      box.onmouseenter=e=>showTooltip(e,entry,i,dur);
-      box.onmouseleave=hideTooltip;
-      for(let j=i;j<i+dur;j++) occ.add(j);
-    } else {
-      if(i===today) box.classList.add('today');
-      box.innerText='DAY '+i;
-      box.onclick=()=>openAdd(i);
-    }
-    boxes.push(box);
-    tl.appendChild(box);
-  }
-
-  gsap.from(boxes,{opacity:0,y:10,duration:.3,stagger:.005,ease:'power2.out'});
-  updateStats();
-  renderBanners();
-  renderStatsPanel();
-}
-
-function esc(s){return s.replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-// --- TOOLTIP ---
-function showTooltip(e,entry,day,dur){
-  const t=document.getElementById('tooltip');
-  const st=entry.status||'completed';
-  const statusLabels={completed:'✅ Completed',inprogress:'🔄 In Progress',failed:'❌ Failed'};
-  t.innerHTML=`<div class="tt-name">${esc(entry.name)}</div>
-    <div class="tt-row">Days: <span>${day} → ${day+dur-1} (${dur}d)</span></div>
-    <div class="tt-row">Status: <span>${statusLabels[st]||st}</span></div>
-    ${entry.link?`<div class="tt-row">Link: <span style="word-break:break-all">${esc(entry.link)}</span></div>`:''}`;
-  t.style.opacity='1';
-  const r=t.getBoundingClientRect();
-  t.style.left=Math.min(e.clientX+12,window.innerWidth-r.width-20)+'px';
-  t.style.top=Math.min(e.clientY+12,window.innerHeight-r.height-20)+'px';
-}
-function hideTooltip(){document.getElementById('tooltip').style.opacity='0';}
-
-// --- MODALS ---
-function openAdd(day){
-  editDay=day;deleteDay=null;
-  document.getElementById('modal-title').textContent='Sprint from Day '+day;
-  document.getElementById('f-name').value='';
-  document.getElementById('f-link').value='';
-  document.getElementById('f-days').value='1';
-  document.getElementById('f-status').value='completed';
-  document.getElementById('btn-save').textContent='Commit Sprint';
-  openModal('modal-add');
-  setTimeout(()=>document.getElementById('f-name').focus(),100);
-}
-
-function openEditOrDelete(day){
-  const entry=data[day];if(!entry) return;
-  editDay=day;
-  document.getElementById('modal-title').textContent='Edit Sprint — Day '+day;
-  document.getElementById('f-name').value=entry.name;
-  document.getElementById('f-link').value=entry.link||'';
-  document.getElementById('f-days').value=entry.duration;
-  document.getElementById('f-status').value=entry.status||'completed';
-  document.getElementById('btn-save').textContent='Save Changes';
-  // Add delete button dynamically
-  openModal('modal-add');
-  setTimeout(()=>document.getElementById('f-name').focus(),100);
-}
-
-function handleSave(){
-  const name=document.getElementById('f-name').value.trim();
-  const link=document.getElementById('f-link').value.trim();
-  const dur=parseInt(document.getElementById('f-days').value)||1;
-  const status=document.getElementById('f-status').value;
-
-  if(!name) return showBanner('Project name is required!','warn');
-  if(editDay+dur-1>TOTAL) return showBanner('Exceeds 210-day timeline!','warn');
-  if(checkOverlap(editDay,dur,data[editDay]?editDay:null)) return showBanner('Days overlap with existing project!','warn');
-
-  data[editDay]={name,link,duration:dur,status,updated:Date.now()};
-  setStartDate();
-  saveData();
-  triggerImpact();
-  closeModals();
-  init();
-}
-
-function openDeleteConfirm(day){
-  const entry=data[day];if(!entry) return;
-  deleteDay=day;
-  const dur=parseInt(entry.duration);
-  const statusLabels={completed:'Completed',inprogress:'In Progress',failed:'Failed'};
-  document.getElementById('del-info').innerHTML=`
-    <div>Name: <span>${esc(entry.name)}</span></div>
-    <div>Days: <span>${day} → ${day+dur-1} (${dur} day${dur>1?'s':''})</span></div>
-    <div>Status: <span>${statusLabels[entry.status||'completed']}</span></div>
-    ${entry.link?`<div>Link: <span>${esc(entry.link)}</span></div>`:''}`;
-  closeModals();
-  openModal('modal-delete');
-}
-
-function confirmDelete(){
-  if(deleteDay&&data[deleteDay]){
-    delete data[deleteDay];
-    saveData();
-    closeModals();
-    init();
-    showBanner('Project removed');
-  }
-}
-
-function openModal(id){document.getElementById(id).classList.add('active');gsap.from('#'+id+' .modal',{scale:.95,opacity:0,duration:.2});}
-function closeModals(){document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('active'));editDay=null;deleteDay=null;}
-function showShortcuts(){openModal('modal-shortcuts');}
-
-// Also add delete button in edit modal context
-document.getElementById('btn-save').insertAdjacentHTML('afterend','');
-// We'll use right-click or a separate trigger: Let's add a delete link in the edit modal
-const editModalActions=document.querySelector('#modal-add .modal-actions');
-const delBtn=document.createElement('button');
-delBtn.className='mbtn danger';delBtn.textContent='Delete';delBtn.id='btn-del-edit';
-delBtn.onclick=()=>{if(editDay&&data[editDay])openDeleteConfirm(editDay);};
-editModalActions.appendChild(delBtn);
-
-// --- BANNERS ---
-function renderBanners(){
-  const area=document.getElementById('banner-area');
-  area.innerHTML='';
-  const today=getTodayNum();
-  const occ=getOccupied();
-  let missed=0;
-  for(let i=1;i<today;i++) if(!occ.has(i)) missed++;
-  if(missed>0&&Object.keys(data).length>0){
-    area.innerHTML=`<div class="banner warn"><div class="dot"></div>${missed} day${missed>1?'s':''} missed before today (Day ${today}). Fill the gaps to boost your streak!</div>`;
-  } else if(Object.keys(data).length>0){
-    area.innerHTML=`<div class="banner"><div class="dot"></div>All days covered up to Day ${today}. Keep the momentum! 🔥</div>`;
-  }
-}
-
-function showBanner(msg,type){
-  const area=document.getElementById('banner-area');
-  const cls=type==='warn'?'banner warn':'banner';
-  area.innerHTML=`<div class="${cls}"><div class="dot"></div>${msg}</div>`;
-  setTimeout(()=>renderBanners(),3000);
-}
-
-// --- STATS ---
-function updateStats(){
-  const keys=Object.keys(data);
-  const projects=keys.length;
-  document.getElementById('st-projects').textContent=projects;
-
-  let filled=[];
-  let totalDur=0;
-  for(let k in data){
-    const dur=parseInt(data[k].duration);
-    totalDur+=dur;
-    for(let i=0;i<dur;i++) filled.push(parseInt(k)+i);
-  }
-  filled=[...new Set(filled)].sort((a,b)=>a-b);
-  const filledCount=filled.length;
-
-  // Progress
-  const pct=Math.round((filledCount/TOTAL)*100);
-  document.getElementById('progress-pct').textContent=pct+'%';
-  document.getElementById('progress-fill').style.width=pct+'%';
-  document.getElementById('st-filled').textContent=filledCount;
-
-  // Streak
-  let maxStreak=0,curStreak=0;
-  if(filled.length>0){curStreak=1;maxStreak=1;for(let i=1;i<filled.length;i++){if(filled[i]===filled[i-1]+1){curStreak++;maxStreak=Math.max(maxStreak,curStreak);}else{curStreak=1;}}maxStreak=Math.max(maxStreak,curStreak);}
-  document.getElementById('st-streak').textContent=maxStreak;
-
-  // Avg duration
-  const avg=projects>0?(totalDur/projects).toFixed(1):'0';
-  document.getElementById('st-avg').textContent=avg+'d';
-
-  // Consistency
-  const today=getTodayNum();
-  const elapsed=Math.max(today-1,1);
-  const cons=filledCount>0?Math.round((filledCount/Math.min(elapsed,TOTAL))*100):0;
-  document.getElementById('st-consistency').textContent=Math.min(cons,100)+'%';
-
-  // Longest break
-  let maxBreak=0;
-  if(filled.length>1){for(let i=1;i<filled.length;i++){const gap=filled[i]-filled[i-1]-1;maxBreak=Math.max(maxBreak,gap);}}
-  document.getElementById('st-break').textContent=maxBreak+'d';
-
-  // Productivity score (weight: consistency 40%, streak 30%, project count 30%)
-  const streakScore=Math.min(maxStreak/30,1)*30;
-  const consScore=Math.min(cons/100,1)*40;
-  const projScore=Math.min(projects/20,1)*30;
-  const score=Math.round(streakScore+consScore+projScore);
-  document.getElementById('st-score').textContent=score+'/100';
-}
-
-function renderStatsPanel(){
-  const area=document.getElementById('stats-panel-area');
-  if(Object.keys(data).length===0){area.innerHTML='';return;}
-  // Weekly stats
-  let weekProjects=Array(30).fill(0);
-  for(let k in data){
-    const day=parseInt(k);
-    const week=Math.floor((day-1)/7);
-    if(week<30) weekProjects[week]++;
-  }
-  const activeWeeks=weekProjects.filter(w=>w>0).length;
-  // Monthly stats
-  let monthDays=[0,0,0,0,0,0,0];
-  for(let k in data){
-    const day=parseInt(k);
-    const dur=parseInt(data[k].duration);
-    const month=Math.floor((day-1)/30);
-    if(month<7) monthDays[month]+=dur;
-  }
-  // Completed / In Progress / Failed counts
-  let counts={completed:0,inprogress:0,failed:0};
-  for(let k in data){counts[data[k].status||'completed']++;}
-
-  area.innerHTML=`<div class="stats-panel"><h3>📊 Breakdown</h3><div class="stats-row">
-    <div class="stats-item"><div class="si-val" style="color:var(--green)">${counts.completed}</div><div class="si-label">Completed</div></div>
-    <div class="stats-item"><div class="si-val" style="color:var(--blue)">${counts.inprogress}</div><div class="si-label">In Progress</div></div>
-    <div class="stats-item"><div class="si-val" style="color:var(--red)">${counts.failed}</div><div class="si-label">Failed</div></div>
-    <div class="stats-item"><div class="si-val" style="color:var(--amber)">${activeWeeks}</div><div class="si-label">Active Weeks</div></div>
-  </div></div>`;
-}
-
-// --- IMPACT ---
-function triggerImpact(){
-  const t=document.getElementById('impact');
-  gsap.fromTo(t,{opacity:0,scale:.5},{opacity:1,scale:1.1,duration:.4,ease:'back.out'});
-  gsap.to(t,{opacity:0,scale:1.8,duration:.4,delay:.7});
-}
-
-// --- SUGGEST NEXT ---
-function suggestNext(){
-  const occ=getOccupied();
-  for(let i=1;i<=TOTAL;i++){
-    if(!occ.has(i)){
-      showBanner(`💡 Next available slot: <strong>Day ${i}</strong>. Click it to start a sprint!`);
-      // Scroll to that day
-      const boxes=document.querySelectorAll('.day-box');
-      for(const b of boxes){
-        if(b.textContent.trim()==='DAY '+i){
-          b.scrollIntoView({behavior:'smooth',block:'center'});
-          gsap.fromTo(b,{boxShadow:'0 0 0 rgba(0,237,100,0)'},{boxShadow:'0 0 20px rgba(0,237,100,.5)',duration:.5,yoyo:true,repeat:3});
-          break;
+        const box = document.createElement('div');
+        box.className = 'day-box';
+        
+        if(data[i]){
+            const item = data[i];
+            const dur = parseInt(item.duration);
+            box.classList.add('merged', 'status-' + item.status);
+            box.style.gridColumn = `span ${Math.min(dur, 6)}`; 
+            box.innerHTML = `<span class="proj-days">${dur} Days</span><span class="proj-name">${item.name}</span>`;
+            if(item.link) {
+                const l = document.createElement('span'); l.className='proj-link-btn'; l.innerText='🔗';
+                l.onclick=(e)=>{ e.stopPropagation(); window.open(item.link,'_blank'); };
+                box.appendChild(l);
+            }
+            box.onclick = () => openEdit(i);
+        } else {
+            box.innerText = 'DAY ' + i;
+            box.onclick = () => openAdd(i);
         }
-      }
-      return;
+        tl.appendChild(box);
     }
-  }
-  showBanner('🎉 All 210 days are filled! Incredible work!');
+    updateStats();
 }
 
-// --- EXPORT ---
+function openAdd(day){
+    currentDay = day;
+    document.getElementById('m-title').innerText = 'Add Sprint: Day ' + day;
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-link').value = '';
+    document.getElementById('f-days').value = 1;
+    document.getElementById('btn-del').style.display = 'none';
+    document.getElementById('modal').classList.add('active');
+}
+
+function openEdit(day){
+    currentDay = day;
+    const item = data[day];
+    document.getElementById('m-title').innerText = 'Edit Sprint: Day ' + day;
+    document.getElementById('f-name').value = item.name;
+    document.getElementById('f-link').value = item.link;
+    document.getElementById('f-days').value = item.duration;
+    document.getElementById('f-status').value = item.status;
+    document.getElementById('btn-del').style.display = 'block';
+    document.getElementById('modal').classList.add('active');
+}
+
+function saveItem(){
+    const name = document.getElementById('f-name').value;
+    const dur = parseInt(document.getElementById('f-days').value) || 1;
+    if(!name) return;
+    
+    data[currentDay] = {
+        name, link: document.getElementById('f-link').value,
+        duration: dur, status: document.getElementById('f-status').value
+    };
+    
+    if(data[currentDay].status === 'completed') {
+        confetti({particleCount:150, spread:70, origin:{y:0.6}, colors:['#00ed64','#61dbfb','#ffffff']});
+        gsap.fromTo("#impact", {opacity:0, scale:0.5}, {opacity:1, scale:1, duration:0.4, onComplete:()=>gsap.to("#impact",{opacity:0, scale:1.5, delay:0.5})});
+    }
+
+    localStorage.setItem('mern_ego_210', JSON.stringify(data));
+    closeModal(); render();
+}
+
+function deleteItem(){
+    if(confirm('Remove this project?')) {
+        delete data[currentDay];
+        localStorage.setItem('mern_ego_210', JSON.stringify(data));
+        closeModal(); render();
+    }
+}
+
+function updateStats(){
+    const keys = Object.keys(data);
+    let totalDays = 0;
+    keys.forEach(k => totalDays += parseInt(data[k].duration));
+    const pct = Math.round((totalDays/210)*100);
+    document.getElementById('st-pct').innerText = pct + '%';
+    document.getElementById('st-fill').style.width = pct + '%';
+    document.getElementById('st-count').innerText = keys.length;
+    document.getElementById('st-avg').innerText = keys.length ? (totalDays/keys.length).toFixed(1) : 0;
+    document.getElementById('st-score').innerText = Math.min(100, (keys.length*5) + Math.round(pct/2));
+}
+
+function closeModal(){ document.getElementById('modal').classList.remove('active'); }
+function toggleTheme(){ 
+    const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+}
 function exportJSON(){
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mern210_backup.json';a.click();
-  showBanner('JSON exported successfully!');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], {type:'application/json'}));
+    a.download='mern_210_data.json'; a.click();
 }
+function resetAll(){ if(confirm('Delete all progress?')) { data={}; localStorage.clear(); render(); } }
 
-function exportPDF(){
-  const keys=Object.keys(data).sort((a,b)=>a-b);
-  if(keys.length===0) return showBanner('No data to export','warn');
-  let html='<html><head><style>body{font-family:Arial;padding:40px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:13px}th{background:#00ed64;color:#000}.h{font-size:24px;font-weight:bold;margin-bottom:20px}</style></head><body>';
-  html+='<div class="h">MERN 210 — Project Report</div>';
-  html+='<table><tr><th>Day</th><th>Project</th><th>Duration</th><th>Status</th><th>Link</th></tr>';
-  keys.forEach(k=>{
-    const e=data[k];
-    html+=`<tr><td>${k}</td><td>${e.name}</td><td>${e.duration}d</td><td>${e.status||'completed'}</td><td>${e.link||'-'}</td></tr>`;
-  });
-  html+='</table></body></html>';
-  const w=window.open();w.document.write(html);w.document.close();w.print();
-}
-
-function importJSON(e){
-  const file=e.target.files[0];if(!file) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    try{
-      const imported=JSON.parse(ev.target.result);
-      if(typeof imported!=='object') throw new Error();
-      pushHistory();
-      data=imported;
-      localStorage.setItem('mern_210',JSON.stringify(data));
-      init();
-      showBanner('Data imported successfully!');
-    }catch(err){showBanner('Invalid JSON file','warn');}
-  };
-  reader.readAsText(file);
-  e.target.value='';
-}
-
-// --- RESET ---
-function confirmReset(){
-  if(confirm('⚠ This will permanently delete all your data. Are you sure?')){
-    pushHistory();
-    data={};
-    localStorage.setItem('mern_210','{}');
-    init();
-    showBanner('All data cleared. Use Undo to revert.');
-  }
-}
-
-// --- THEME ---
-function applyTheme(){document.documentElement.setAttribute('data-theme',theme);}
-function toggleTheme(){theme=theme==='dark'?'light':'dark';localStorage.setItem('mern_theme',theme);applyTheme();}
-applyTheme();
-
-// --- SIDEBAR ---
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
-
-// --- KEYBOARD ---
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeModals();
-  if(e.key==='Enter'&&document.querySelector('.modal-overlay.active')){
-    if(document.getElementById('modal-add').classList.contains('active')) handleSave();
-    if(document.getElementById('modal-delete').classList.contains('active')) confirmDelete();
-  }
-  if(e.ctrlKey&&e.key==='z'){e.preventDefault();undoLast();}
-  if(e.ctrlKey&&e.key==='e'){e.preventDefault();exportJSON();}
-  if(e.ctrlKey&&e.key==='d'){e.preventDefault();toggleTheme();}
-  if(e.ctrlKey&&e.key==='n'){e.preventDefault();suggestNext();}
-});
-
-// Close sidebar on mobile when clicking outside
-document.getElementById('main-view').addEventListener('click',()=>{
-  if(window.innerWidth<=900) document.getElementById('sidebar').classList.remove('open');
-});
-
-// --- INIT ---
-init();
+render();
 </script>
 </body>
 </html>
