@@ -3,98 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MERN · 210 Days EgoHurt</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>⚡ EgoHurt · 210 Days MERN Sprint</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --bg: #06060a; --surface: #0c0c14; --surface2: #12121e; --border: #1e1e2e;
-            --green: #00ed64; --blue: #61dbfb; --red: #ff4757; --amber: #ffb84d;
-            --text: #f0f0f5; --text2: #8888aa; --radius: 12px;
+            --bg: #030305;
+            --surface: rgba(20, 20, 25, 0.6);
+            --surface-hover: rgba(35, 35, 45, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --green: #00ff66;
+            --green-glow: #00ff66aa;
+            --blue: #00f0ff;
+            --text-main: #ffffff;
+            --text-muted: #8a8a9e;
+            --radius-lg: 20px;
+            --radius-md: 12px;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow: hidden; }
         
-        .app { display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
-        .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; gap: 20px; }
-        .main { padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, #12121e, #06060a); }
-        
-        .logo { font-size: 1.6rem; font-weight: 900; letter-spacing: -1.5px; font-family: 'JetBrains Mono'; }
-        .logo span { color: var(--green); }
-        
-        .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-        .stat-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .stat-val { font-size: 2rem; font-weight: 900; font-family: 'JetBrains Mono'; color: var(--green); }
-        
-        .timeline { display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 8px; grid-auto-flow: dense; }
-        .day-box { height: 85px; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-family: 'JetBrains Mono'; color: var(--text2); cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: var(--surface); text-align: center; padding: 5px; }
-        .day-box:hover { border-color: var(--green); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,237,100,0.1); }
-        .day-box.completed { background: linear-gradient(135deg, var(--green), #00c853); color: #000; font-weight: 800; border: none; }
+        body { 
+            background: var(--bg); 
+            color: var(--text-main); 
+            font-family: 'Outfit', sans-serif; 
+            overflow: hidden; 
+            position: relative;
+        }
 
-        #impact, #streak-fire { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; pointer-events: none; z-index: 2000; text-align: center; }
-        #impact { font-size: 5rem; font-weight: 900; color: var(--green); text-shadow: 0 0 30px rgba(0,237,100,0.5); }
-        #streak-fire { font-size: 8rem; filter: drop-shadow(0 0 30px #ff4757); }
+        /* Background Layers */
+        .bg-fx {
+            position: fixed; inset: 0; z-index: -2;
+            background: radial-gradient(circle at 80% 0%, rgba(0, 255, 102, 0.08) 0%, transparent 40%);
+        }
+        .bg-grid {
+            position: fixed; inset: 0; z-index: -1;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.2;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+        }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(10px); }
-        .modal-overlay.active { display: flex; }
-        .modal { background: var(--surface); padding: 35px; border-radius: 20px; width: 420px; border: 1px solid var(--border); }
-        .mbtn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: 'Inter'; transition: 0.2s; }
-        .mbtn.primary { background: var(--green); color: #000; }
-        .mbtn.secondary { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+        .app { 
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            height: 100vh; 
+        }
+
+        /* Sidebar */
+        .sidebar { 
+            background: rgba(8, 8, 12, 0.9); 
+            border-right: 1px solid var(--border); 
+            padding: 40px 24px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 24px; 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 10;
+        }
         
-        .field { margin-bottom: 15px; }
-        .field label { display: block; font-size: 11px; color: var(--text2); text-transform: uppercase; margin-bottom: 5px; }
-        .field input { width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 8px; outline: none; font-family: 'JetBrains Mono'; }
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
+        .logo span { color: var(--green); text-shadow: 0 0 15px var(--green-glow); }
+        
+        .stat-card { 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius-lg); 
+            padding: 24px; 
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.2); }
+        .stat-card::before {
+            content: ''; position: absolute; left: 0; top: 20%; height: 60%; width: 4px;
+            background: var(--green); border-radius: 0 4px 4px 0; box-shadow: 0 0 15px var(--green);
+        }
+        .stat-card.blue::before { background: var(--blue); box-shadow: 0 0 15px var(--blue); }
+        
+        .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 800; }
+        .stat-val { font-size: 3.2rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1; }
+        #st-streak { color: var(--green); }
+        #st-pct { color: var(--blue); }
+
+        /* Main Timeline */
+        .main { padding: 40px; overflow-y: auto; }
+        .timeline { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+            gap: 15px; 
+            margin-top: 30px;
+        }
+        
+        .day-box { 
+            height: 110px; 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius-md); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            background: var(--surface); 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+        }
+        
+        .day-box:hover { 
+            transform: scale(1.05) translateY(-5px); 
+            border-color: var(--green); 
+            box-shadow: 0 10px 30px rgba(0, 255, 102, 0.15);
+            z-index: 5;
+        }
+        
+        .day-box.completed { 
+            border-color: var(--green); 
+            background: rgba(0, 255, 102, 0.05);
+        }
+
+        .project-badge { font-size: 9px; font-weight: 900; background: rgba(0,255,102,0.15); padding: 2px 8px; border-radius: 20px; color: var(--green); margin-bottom: 8px; }
+        .project-name { font-weight: 700; font-size: 13px; color: #fff; line-height: 1.2; word-break: break-all; }
+        .link-icon { font-size: 10px; margin-top: 5px; opacity: 0.6; }
+
+        /* Modal & Buttons */
+        .mbtn { 
+            width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; 
+            font-weight: 900; cursor: pointer; font-family: 'Outfit'; text-transform: uppercase;
+        }
+        .primary { background: var(--green); color: #000; }
+        .secondary { background: var(--surface); color: #fff; border: 1px solid var(--border); }
+
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
+            display: flex; align-items: center; justify-content: center; 
+            z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(10px);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal { background: #0a0a0f; padding: 40px; border-radius: var(--radius-lg); width: 440px; border: 1px solid var(--border); }
+        .field { margin-bottom: 20px; }
+        .field label { font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 8px; }
+        .field input { width: 100%; padding: 14px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 8px; font-family: 'JetBrains Mono'; outline: none; }
+        .field input:focus { border-color: var(--green); }
+
+        #impact { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 5rem; font-weight: 900; z-index: 2000; pointer-events: none; opacity: 0; color: var(--green); text-shadow: 0 0 30px var(--green); }
     </style>
 </head>
 <body>
 
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
 <div id="impact">DEPLOYED 🚀</div>
-<div id="streak-fire">🔥 <div style="font-size: 2rem; color: #ffb84d; font-family: 'JetBrains Mono';" id="fire-val">STREAK 1</div></div>
 
 <div class="app">
     <aside class="sidebar">
         <div class="logo">⚡ <span>Ego</span>Hurt</div>
         <div class="stat-card">
             <div class="stat-label">🔥 Current Streak</div>
-            <div class="stat-val" id="st-streak">0</div>
+            <div id="st-streak" class="stat-val">0</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card blue">
             <div class="stat-label">📈 Progress</div>
-            <div class="stat-val" id="st-pct" style="color:var(--blue)">0%</div>
+            <div id="st-pct" class="stat-val">0%</div>
         </div>
-        <button class="mbtn secondary" onclick="testTelegram()">🔔 Test Bot</button>
-        <button class="mbtn secondary" style="color:var(--red); margin-top: auto;" onclick="resetAll()">🗑 Reset System</button>
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+            <button class="mbtn secondary" onclick="testTelegram()">🔔 Test Bot</button>
+            <button class="mbtn secondary" style="color: #ff4757;" onclick="resetAll()">🗑 Reset</button>
+        </div>
     </aside>
+    
     <main class="main">
+        <h1 style="font-size: 2.8rem; font-weight: 900;">Sprint Timeline</h1>
+        <p style="color: var(--text-muted); font-family: 'JetBrains Mono';">210 Days Challenge</p>
         <div class="timeline" id="timeline"></div>
     </main>
 </div>
 
 <div class="modal-overlay" id="modal">
     <div class="modal">
-        <h2 style="margin-bottom: 20px; font-weight: 900;">COMMIT SPRINT</h2>
-        <div class="field"><label>Project Name</label><input type="text" id="f-name" placeholder="Name"></div>
-        <div class="field"><label>Project URL (GitHub/Live)</label><input type="text" id="f-link" placeholder="https://..."></div>
-        <div class="field"><label>Duration (Days)</label><input type="number" id="f-days" value="1"></div>
-        <button class="mbtn primary" onclick="saveProject()">COMMIT & DEPLOY</button>
-        <button class="mbtn secondary" onclick="closeModal()">CANCEL</button>
+        <h2 style="margin-bottom: 24px; font-weight: 900;">COMMIT SPRINT</h2>
+        <div class="field">
+            <label>PROJECT NAME</label>
+            <input type="text" id="f-name" placeholder="e.g. JWT Auth Flow">
+        </div>
+        <div class="field">
+            <label>GITHUB / PROJECT LINK</label>
+            <input type="url" id="f-link" placeholder="https://github.com/...">
+        </div>
+        <div class="field">
+            <label>DAYS TAKEN</label>
+            <input type="number" id="f-days" value="1" min="1">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+            <button class="mbtn secondary" onclick="closeModal()">CANCEL</button>
+            <button class="mbtn primary" onclick="saveProject()">DEPLOY</button>
+        </div>
     </div>
 </div>
 
 <script>
 const TG_TOKEN = "8277776181:AAGrepxdpsYewXz85hIkygGx1Rd1E5FlRBc";
 const TG_ID = "6228156468";
-
+const TOTAL_DAYS = 210;
 let data = JSON.parse(localStorage.getItem('egohurt_v3')) || {};
 let currentDayIdx = null;
 
 function getTodayStr() { return new Date().toLocaleDateString('en-GB'); }
 
 async function sendTelegram(msg) {
-    const url = `https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown&disable_web_page_preview=false`;
-    try { await fetch(url); } catch(e) { console.error("TG Error", e); }
+    const url = `https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+    try { await fetch(url); } catch(e) { console.error(e); }
 }
 
 function render() {
@@ -102,22 +222,31 @@ function render() {
     tl.innerHTML = '';
     const occupied = new Set();
     
+    // Calculate occupied days for spans
     Object.keys(data).forEach(day => {
-        for(let i=1; i < data[day].duration; i++) occupied.add(parseInt(day) + i);
+        const dur = parseInt(data[day].duration);
+        for(let i=1; i < dur; i++) occupied.add(parseInt(day) + i);
     });
 
-    for(let i=1; i<=210; i++) {
+    for(let i=1; i<=TOTAL_DAYS; i++) {
         if(occupied.has(i)) continue;
         const box = document.createElement('div');
-        box.className = 'day-box' + (data[i] ? ' completed' : '');
-        box.style.gridColumn = data[i] ? `span ${Math.min(data[i].duration, 5)}` : 'span 1';
+        const proj = data[i];
         
-        if(data[i]) {
-            box.innerHTML = `<span style="font-size:9px; opacity:0.7">PROJECT</span><br><span style="font-size:11px">${data[i].name}</span>`;
-            box.onclick = () => { if(data[i].link) window.open(data[i].link, '_blank'); };
+        if(proj) {
+            box.className = 'day-box completed';
+            box.style.gridColumn = `span ${Math.min(proj.duration, 4)}`; 
+            box.innerHTML = `
+                <div class="project-badge">MERGED</div>
+                <div class="project-name">${proj.name}</div>
+                ${proj.link ? '<div class="link-icon">🔗 Open Repo</div>' : ''}
+            `;
+            // Click to open link if exists
+            box.onclick = () => { if(proj.link) window.open(proj.link, '_blank'); };
         } else {
-            box.innerHTML = `DAY ${i}`;
-            box.onclick = () => { currentDayIdx = i; document.getElementById('modal').classList.add('active'); };
+            box.className = 'day-box';
+            box.innerHTML = `<span style="opacity:0.4; font-size:10px;">DAY</span><span style="font-weight:800; font-family:'JetBrains Mono'">${i}</span>`;
+            box.onclick = () => openModal(i);
         }
         tl.appendChild(box);
     }
@@ -126,95 +255,54 @@ function render() {
 
 function updateStats() {
     const keys = Object.keys(data);
-    document.getElementById('st-pct').innerText = Math.round((keys.length/210)*100) + '%';
+    let totalCompleted = 0;
+    keys.forEach(k => totalCompleted += parseInt(data[k].duration));
+    const pct = Math.min(Math.round((totalCompleted / TOTAL_DAYS) * 100), 100);
+    document.getElementById('st-pct').innerText = pct + '%';
     
     let streak = 0;
     let checkDate = new Date();
-    while(true) {
+    const dates = Object.values(data).map(p => p.date);
+    for(let i=0; i<TOTAL_DAYS; i++) {
         let s = checkDate.toLocaleDateString('en-GB');
-        let found = Object.values(data).some(p => p.date === s);
-        if(found) { streak++; checkDate.setDate(checkDate.getDate() - 1); }
+        if(dates.includes(s)) { streak++; checkDate.setDate(checkDate.getDate() - 1); }
+        else if (i === 0) { checkDate.setDate(checkDate.getDate() - 1); }
         else break;
     }
     document.getElementById('st-streak').innerText = streak;
     return streak;
 }
 
+function openModal(dayIdx) {
+    currentDayIdx = dayIdx;
+    document.getElementById('modal').classList.add('active');
+}
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
 function saveProject() {
-    const nameInput = document.getElementById('f-name');
-    const linkInput = document.getElementById('f-link');
-    const daysInput = document.getElementById('f-days');
-
-    const name = nameInput.value;
-    const link = linkInput.value || "No link provided";
-    const dur = parseInt(daysInput.value) || 1;
-
-    if (!name) {
-        alert("Project Name is required!");
-        return;
-    }
-
-    const today = getTodayStr();
-    data[currentDayIdx] = { name, link, duration: dur, date: today };
+    const name = document.getElementById('f-name').value.trim();
+    const link = document.getElementById('f-link').value.trim();
+    const dur = parseInt(document.getElementById('f-days').value) || 1;
+    if (!name) return;
+    
+    data[currentDayIdx] = { name, link, duration: dur, date: getTodayStr() };
     localStorage.setItem('egohurt_v3', JSON.stringify(data));
     
-    const streakCount = updateStats();
+    const s = updateStats();
+    sendTelegram(`🚀 *MERGE SUCCESS*\n🔥 Streak: ${s} Days\n📦 Project: ${name}\n🔗 Link: ${link || 'None'}`);
     
-    // Telegram Success Alert
-    const msg = `✅ *STREAK MAINTAINED* 🎉\n━━━━━━━━━━━━━━━━━━\n📅 *Date:* ${today}\n🔥 *Current Streak:* ${streakCount} days\n🚀 *Project:* ${name}\n🔗 *Link:* ${link}\n\n💪 Great job! You are staying consistent.\n━━━━━━━━━━━━━━━━━━`;
-    sendTelegram(msg);
-
-    // --- NEW: CLEAR INPUTS AFTER COMMIT ---
-    nameInput.value = '';
-    linkInput.value = '';
-    daysInput.value = 1;
-
     closeModal();
     render();
-    triggerAnims(streakCount);
-}
-
-// Added this to the open function to ensure a fresh start
-function openModal(day) {
-    currentDayIdx = day;
-    document.getElementById('f-name').value = '';
-    document.getElementById('f-link').value = '';
-    document.getElementById('f-days').value = 1;
-    document.getElementById('modal').classList.add('active');
-    document.getElementById('f-name').focus(); // Auto-focus for speed
-}
-
-function triggerAnims(s) {
-    confetti({particleCount: 150, spread: 70, origin: {y: 0.6}, colors:['#00ed64', '#61dbfb']});
+    
     const imp = document.getElementById('impact');
-    const fire = document.getElementById('streak-fire');
-    document.getElementById('fire-val').innerText = `STREAK ${s}`;
-
-    gsap.fromTo(imp, {opacity:0, scale:0.5}, {opacity:1, scale:1, duration:0.4, onComplete:() => {
-        gsap.to(imp, {opacity:0, scale:2, delay:0.5});
-        gsap.fromTo(fire, {opacity:0, y:50}, {opacity:1, y:0, delay:0.6, duration:0.5, onComplete:()=>gsap.to(fire, {opacity:0, scale:0, delay:1.5})});
-    }});
+    gsap.fromTo(imp, {opacity: 1, scale: 0.5}, {opacity: 0, scale: 2, duration: 1});
+    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 }
 
-// 12 AM Failure Check
-setInterval(() => {
-    const now = new Date();
-    if(now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
-        const today = getTodayStr();
-        const done = Object.values(data).some(p => p.date === today);
-        if(!done) {
-            const streakCount = updateStats();
-            const msg = `🚨 *STREAK ALERT* 🚨\n━━━━━━━━━━━━━━━━━━\n❌ *Status:* Streak Broken\n📅 *Date:* ${today}\n🔥 *Previous Streak:* ${streakCount} days\n\n⚠️ You missed your daily goal.\nDon’t stop now — restart and stay consistent!\n\n💡 *Tip:* Small daily progress = Big success\n━━━━━━━━━━━━━━━━━━`;
-            sendTelegram(msg);
-        }
-    }
-}, 1000);
+function resetAll() { if(confirm("Wipe data?")) { localStorage.clear(); data={}; render(); } }
+function testTelegram() { sendTelegram("⚡ Connection Verified."); }
 
-function closeModal() { document.getElementById('modal').classList.remove('active'); }
-function resetAll() { if(confirm("Wipe everything?")) { data={}; localStorage.clear(); render(); } }
-function testTelegram() { sendTelegram("⚡ EgoHurt System: Connection Active!"); alert("Test Sent!"); }
-
-render();
+document.addEventListener("DOMContentLoaded", render);
 </script>
 </body>
 </html>
