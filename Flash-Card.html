@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>project5</title>
+    <style>
+        body{
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            gap: 10px;
+        }
+       h1{
+        animation: colorChange 5s infinite;
+        transition: 0.4s;
+        }
+        @keyframes colorChange {
+            0%{color:rgb(255, 142, 13)}
+            25%{color:white}
+            50%{color:green}
+            75%{color:blue}
+            100%{color: rgb(255, 142, 13);}
+        }
+        input{
+            padding: 10px;
+            border-radius: 10px;
+        }
+        #Qs:hover{
+            box-shadow: -5px 5px 10px white;
+        }
+        #Ans:hover{
+            box-shadow: 5px 5px 10px white;
+        }
+        button{
+            padding: 10px;
+            border-radius:10px ;
+        }
+        #card{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap:10px;
+        }
+        .main{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .bike{
+            border: 2px solid white;
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+        .bike:hover{
+            transform: skew(20deg);
+            box-shadow: 0 0 20px white,
+            0 0 40px white;
+        }
+        
+    </style>
+</head>
+<body>
+   <div class="main">
+        <h1 align="center">Flash Cards</h1>
+        <div class="row">
+            <input type="text" placeholder="Enter the Question" id="Qs">
+            <input type="text" placeholder="Enter the Answer" id="Ans">
+            <button onclick="Add()">Add</button>
+        </div>
+        <div id="card"></div>
+   </div>
+   <script>
+        flashcards=[];
+        function Add(){
+            let Question=document.getElementById('Qs').value;
+            let Answer=document.getElementById('Ans').value;
+            if(Question==""||Answer=="")
+        {
+            alert("Enter the both the Inputs");
+        }
+        flashcards.push({
+            q:Question,
+            a:Answer,
+            show:false
+        });
+        display();
+        document.getElementById('Qs').value="";
+        document.getElementById('Ans').value="";
+        }
+        function display(){
+            let container=document.getElementById('card');
+            container.innerHTML="";
+            flashcards.forEach((card,index) => {
+                
+            
+            let div=document.createElement("div");
+            container.appendChild(div);
+            div.className="bike";
+            div.innerText=card.show?card.a:card.q;
+            div.onclick=()=>{
+                flashcards[index].show=!flashcards[index].show;
+                display()
+            }
+        });
+        }
+   </script>
+</body>
+</html>
