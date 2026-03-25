@@ -289,7 +289,16 @@ function saveProject() {
     localStorage.setItem('egohurt_v3', JSON.stringify(data));
     
     const s = updateStats();
-    sendTelegram(`🚀 *MERGE SUCCESS*\n🔥 Streak: ${s} Days\n📦 Project: ${name}\n🔗 Link: ${link || 'None'}`);
+
+    const message = `✅ *STREAK SECURED* 🎉
+━━━━━━━━━━━━━━━━━━
+📅 *Date:* ${getTodayStr()}
+🔥 *Current Streak:* ${s} Days
+🚀 *Merge:* ${name}
+🔗 *Link:* ${link || 'None'}
+━━━━━━━━━━━━━━━━━━`;
+
+    sendTelegram(message);
     
     closeModal();
     render();
