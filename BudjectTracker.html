@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practise</title>
+    <style>
+        body{
+            background-color: rgb(0,0,25);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .horizontal{
+            border: 2px solid gray;
+            height: 500px;
+            width: 400px;
+            border-radius: 15px;
+            background-color: rgb(179, 172, 172);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .money{
+            font-size: 30px;
+        }
+        .items{
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 10px;
+            font-size: 20px;
+        }
+        .buttons{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input{
+            border-radius: 10px;
+            width: 250px;
+            padding: 10px;
+        }
+        .inpu{
+            border: 1px solid black;
+            border-radius: 10px;
+            width: 250px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+        button{
+            background-color: green;
+            border-radius: 6px;
+            padding: 10px;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="horizontal">
+            <h2>Budget Calculator</h2>
+            <div class="money" id="money">Rs.0.00</div>
+            <div class="items">
+                <div class="Income" id="Income">Income:₹0.00</div>
+                <div class="Expense" id="Expense">Expense:₹0.00</div>
+            </div>
+            <div class="buttons">
+                <input type="text" placeholder="Enter the Description" id="text" class="input">
+                <input type="number" placeholder="Enter the +income,-Expense" id="number">
+                <button  onclick="Add()">Add</button>
+            </div>
+            <div id="print"></div>
+        </div>
+    </div>
+    <script>
+        let income=0;
+        let expense=0;
+        let balance=0;
+        let term="";
+        function Add(){
+            let matter=document.getElementById('text').value;
+            let Reason=Number(document.getElementById('number').value);
+            if(matter==""||Reason==""){
+                alert('Please Enter both Feilds');
+            }
+            if(Reason>0)
+            {
+                income+=Reason;
+                term="Income";
+            }
+            else{
+                expense+=Math.abs(Reason);
+                term="Expense";
+            }
+            balance=income-expense;
+            document.getElementById('Income').innerText="Income:-₹"+income.toFixed(2);
+            document.getElementById('money').innerText="Rs:"+balance.toFixed(2);
+            document.getElementById('Expense').innerText="Expense:-₹"+expense.toFixed(2);
+            let div=document.createElement("div");
+            div.innerText=matter+":"+Reason+"("+term+")";
+            div.className="inpu";
+            document.getElementById('print').appendChild(div);
+            document.getElementById('text').value="";
+            document.getElementById('number').value="";
+        }
+    </script>
+</body>
+</html>
