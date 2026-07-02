@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -261,28 +261,25 @@
 
         .memory-grid {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: stretch;
+            flex-direction: column;
+            align-items: center;
             gap: 2.5rem;
             width: 100%;
-            max-width: 800px;
-            margin: 1.5rem auto;
+            max-width: 600px;
+            margin: 1.5rem 0;
         }
 
         .memory-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             border-radius: 32px;
-            padding: 0.8rem;
+            padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             opacity: 0;
             transform: translateY(50px) scale(0.95);
-            width: calc(50% - 1.25rem);
-            flex: 0 0 calc(50% - 1.25rem);
-            min-width: 200px;
+            width: 100%;
         }
 
         .memory-card.visible {
@@ -292,7 +289,7 @@
 
         .memory-card:hover {
             transform: scale(1.02) translateY(-5px);
-            box-shadow: 0 25px 50px rgba(255, 77, 141, 0.25);
+            box-shadow: 0 25px 50px rgba(255, 77, 141, 0.2);
             border-color: #ff85a266;
         }
 
@@ -319,7 +316,7 @@
             font-size: 1.2rem;
             color: #ff85a2;
             text-align: center;
-            opacity: 0.8;
+            opacity: 0.7;
         }
 
         .gift-trigger-btn {
@@ -567,6 +564,7 @@
             transition: opacity 1.2s ease 1.5s;
             padding-right: 0.5rem;
         }
+        
 
         .letter-content .signature.show {
             opacity: 1;
@@ -662,6 +660,9 @@
             border-radius: 2px;
             outline: none;
         }
+        pic1{
+            background-color: white;
+        }
 
         .volume-control input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -721,10 +722,6 @@
                 height: 80px;
                 font-size: 2.5rem;
             }
-            .memory-card {
-                width: calc(50% - 1rem);
-                flex: 0 0 calc(50% - 1rem);
-            }
         }
 
         @media (max-width: 480px) {
@@ -744,10 +741,6 @@
             }
             .letter-content .typing-message {
                 font-size: 1rem;
-            }
-            .memory-card {
-                width: 100%;
-                flex: 0 0 100%;
             }
         }
     </style>
@@ -918,6 +911,7 @@
 
             const grid = document.getElementById('memoryGrid');
             
+            // Check if images exist, if not show placeholder with error handling
             memoryImages.forEach((m, i) => {
                 const card = document.createElement('div');
                 card.className = 'memory-card';
