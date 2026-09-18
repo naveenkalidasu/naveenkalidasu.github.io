@@ -915,6 +915,7 @@
       align-items: stretch;
     }
 
+    /* ---------- CARD: base state (icon + title only) ---------- */
     .why-card {
       position: relative;
       background: var(--white);
@@ -937,6 +938,7 @@
       isolation: isolate;
     }
 
+    /* Gold sweeping line at the top */
     .why-card::before {
       content: "";
       position: absolute;
@@ -955,6 +957,7 @@
       transform: scaleX(1);
     }
 
+    /* Soft gold wash that fades in from bottom */
     .why-card::after {
       content: "";
       position: absolute;
@@ -970,6 +973,7 @@
       opacity: 1;
     }
 
+    /* Hover lift */
     .why-card:hover {
       transform: translateY(-8px);
       border-color: rgba(168, 123, 32, .35);
@@ -978,6 +982,7 @@
         0 8px 18px -10px rgba(168, 123, 32, .20);
     }
 
+    /* ---------- ICON ---------- */
     .why-card .why-icon {
       width: 52px;
       height: 52px;
@@ -1014,6 +1019,7 @@
       stroke-linejoin: round;
     }
 
+    /* ---------- TITLE ---------- */
     .why-card .why-title {
       font-family: var(--serif);
       font-size: 1.2rem;
@@ -1029,6 +1035,7 @@
       color: var(--gold);
     }
 
+    /* ---------- TEXT: hidden by default, revealed on hover ---------- */
     .why-card .why-text {
       font-size: 0.9rem;
       color: var(--gray);
@@ -1054,11 +1061,13 @@
       pointer-events: auto;
     }
 
+    /* Subtle gold underline inside text accent */
     .why-card .why-text strong {
       color: var(--charcoal);
       font-weight: 600;
     }
 
+    /* Responsive grid */
     @media(max-width: 1000px) {
       .why-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1076,6 +1085,7 @@
         min-height: 0;
       }
 
+      /* On touch devices, always show the text */
       @media (hover: none) {
         .why-card .why-text {
           max-height: 220px;
@@ -1086,6 +1096,7 @@
       }
     }
 
+    /* Touch devices (no hover) — always show the text */
     @media (hover: none) {
       .why-card .why-text {
         max-height: 220px;
@@ -1464,7 +1475,7 @@
   <!-- HEADER / NAV -->
   <header id="siteHeader">
     <div class="wrap nav-row">
-      <a href="#" class="brand">
+      <a href="#home" class="brand">
         <img class="brand-logo" src="./logo.jpeg" alt="Wizard Digitech logo">
         <div>
           <div class="brand-name">Wizard Digitech</div>
@@ -1472,8 +1483,8 @@
         </div>
       </a>
       <nav class="primary-nav">
-        <a href="#">Home</a>
-        <a href="#">About</a>
+        <a href="#home">Home</a>
+        <a href="#why">About</a>
 
         <div class="dropdown" id="dropdown">
           <button class="drop-btn" id="dropBtn" aria-haspopup="true" aria-expanded="false">
@@ -1481,28 +1492,28 @@
             <span class="arrow">▼</span>
           </button>
           <div class="menu">
-            <a href="#">
+            <a href="./digitalmarketing.html">
               <span class="icon">⚡</span>
               Digital Solutions
             </a>
-            <a href="#">
+            <a href="./digitalmarketing.html">
               <span class="icon">🎓</span>
               Digital Marketing Training
             </a>
-            <a href="#">
+            <a href="./electronicrepairs.html">
               <span class="icon">🔧</span>
               Technology Solutions
             </a>
           </div>
         </div>
 
-        <a href="#">Work</a>
-        <a href="#">Achievements</a>
-        <a href="#">Team</a>
-        <a href="#">Contact</a>
+        <a href="#work">Work</a>
+        <a href="./archeivements.html">Achievements</a>
+        <a href="./team.html">Team</a>
+        <a href="#contact">Contact</a>
       </nav>
       <div class="nav-right">
-        <a href="#" class="btn btn-primary">Get in Touch</a>
+        <a href="#contact" class="btn btn-primary">Get in Touch</a>
         <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -1512,8 +1523,8 @@
 
   <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#">Home</a>
-    <a href="#">About</a>
+    <a href="#home">Home</a>
+    <a href="#why">About</a>
 
     <div class="mobile-dropdown" id="mobileDropdown">
       <button class="mobile-dropdown-btn" id="mobileDropBtn" aria-expanded="false">
@@ -1521,26 +1532,26 @@
         <span class="arrow">▼</span>
       </button>
       <div class="mobile-submenu">
-        <a href="#">
+        <a href="./digitalmarketing.html">
           <span class="icon">⚡</span>
           Digital Solutions
         </a>
-        <a href="#">
+        <a href="./digitalmarketing.html">
           <span class="icon">🎓</span>
           Digital Marketing Training
         </a>
-        <a href="#">
+        <a href="./electronicrepairs.html">
           <span class="icon">🔧</span>
           Technology Solutions
         </a>
       </div>
     </div>
 
-    <a href="#">Work</a>
-    <a href="#">Achievements</a>
-    <a href="#">Team</a>
-    <a href="#">Contact</a>
-    <a href="#" class="btn btn-primary">Get in Touch</a>
+    <a href="#work">Work</a>
+    <a href="./archeivements.html">Achievements</a>
+    <a href="./team.html">Team</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact" class="btn btn-primary">Get in Touch</a>
   </div>
 
   <!-- HERO -->
@@ -1552,8 +1563,8 @@
         <span class="hero-subtitle">Your Digital &amp; Technology Solutions Partner</span>
         <p class="lead">We craft elegant digital strategies that build brands, create opportunities and deliver lasting success.</p>
         <div class="hero-actions">
-          <a href="#" class="btn btn-primary">Explore Digital Solutions <span class="arrow">→</span></a>
-          <a href="#" class="btn btn-outline">Explore Technology Solutions</a>
+          <a href="#services" class="btn btn-primary">Explore Digital Solutions <span class="arrow">→</span></a>
+          <a href="./digitalmarketing.html" class="btn btn-outline">Explore Technology Solutions</a>
         </div>
       </div>
       <div class="hero-visual reveal in">
@@ -1585,7 +1596,7 @@
               <li>Reputation</li>
             </ul>
           </div>
-          <a href="#" class="card-btn">Explore <span class="arrow">→</span></a>
+          <a href="./digitalmarketing.html" class="card-btn">Explore <span class="arrow">→</span></a>
         </div>
 
         <div class="solution-card reveal">
@@ -1598,7 +1609,7 @@
               <li>Support &amp; Maintenance</li>
             </ul>
           </div>
-          <a href="#" class="card-btn">Explore <span class="arrow">→</span></a>
+          <a href="./electronicrepairs.html" class="card-btn">Explore <span class="arrow">→</span></a>
         </div>
       </div>
     </div>
@@ -1687,7 +1698,7 @@
               </div>
               <div class="contact-detail-text">
                 <span class="label">Phone</span>
-                <a href="#">+91 70977 54200</a>
+                <a href="tel:+917097754200">+91 70977 54200</a>
               </div>
             </div>
 
@@ -1700,7 +1711,7 @@
               </div>
               <div class="contact-detail-text">
                 <span class="label">Email</span>
-                <a href="#">wizard.digitech@gmail.com</a>
+                <a href="mailto:wizard.digitech@gmail.com">wizard.digitech@gmail.com</a>
               </div>
             </div>
 
@@ -1811,31 +1822,31 @@
         <div>
           <div class="col-title">Navigation</div>
           <div class="col-list">
-            <a href="#">Home</a>
-            <a href="#">Digital Marketing</a>
-            <a href="#">Electronic Repairs</a>
-            <a href="#">Team</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Achievements</a>
+            <a href="#home">Home</a>
+            <a href="./modified/digitalmarketing.html">Digital Marketing</a>
+            <a href="./modified/elctronics repair.html">Electronic Repairs</a>
+            <a href="./modified/team.html">Team</a>
+            <a href="./modified/About.html">About</a>
+            <a href="#contact">Contact</a>
+            <a href="./modified/archeivements.html">Achievements</a>
           </div>
         </div>
         <div>
           <div class="col-title">Services</div>
           <div class="col-list">
-            <a href="#">Digital Strategy</a>
-            <a href="#">SEO</a>
-            <a href="#">Social Media Marketing</a>
-            <a href="#">Paid Advertising</a>
-            <a href="#">Content Marketing</a>
-            <a href="#">Brand Strategy</a>
+            <a href="./modified/digitalmarketing.html">Digital Strategy</a>
+            <a href="./modified/digitalmarketing.html">SEO</a>
+            <a href="./modified/digitalmarketing.html">Social Media Marketing</a>
+            <a href="./modified/digitalmarketing.html">Paid Advertising</a>
+            <a href="./modified/digitalmarketing.html">Content Marketing</a>
+            <a href="./modified/digitalmarketing.html">Brand Strategy</a>
           </div>
         </div>
         <div>
           <div class="col-title">Contact</div>
           <div class="col-list">
-            <a href="#">+91 70977 54200</a>
-            <a href="#">wizard.digitech@gmail.com</a>
+            <a href="tel:+917097754200">+91 70977 54200</a>
+            <a href="mailto:wizard.digitech@gmail.com">wizard.digitech@gmail.com</a>
             <span>Vijayawada, Andhra Pradesh</span>
           </div>
         </div>
