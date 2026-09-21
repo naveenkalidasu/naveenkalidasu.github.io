@@ -631,11 +631,10 @@
       }
     }
 
-    /* === HERO VISUAL — REDUCED SIZE === */
     .hero-visual {
       position: relative;
-      aspect-ratio: 5 / 5.4;         /* smaller than 4/5 — makes it shorter */
-      max-width: 420px;              /* cap the width on large screens */
+      aspect-ratio: 5 / 5.4;
+      max-width: 420px;
       width: 100%;
       justify-self: end;
       border-radius: 4px;
@@ -659,7 +658,7 @@
 
       .hero-visual {
         order: -1;
-        aspect-ratio: 16 / 10;       /* wide on mobile, not tall */
+        aspect-ratio: 16 / 10;
         max-width: 100%;
         justify-self: center;
       }
@@ -837,7 +836,7 @@
     }
 
     /* ============================================
-      WHY WIZARD DIGITECH — premium hover reveal
+      WHY WIZARD DIGITECH
       ============================================ */
     .why-section {
       padding: 20px 0 min(9vw, 100px);
@@ -1145,6 +1144,17 @@
       stroke-linejoin: round;
     }
 
+    /* WhatsApp icon — official green, no chip background */
+    .contact-detail-icon.whatsapp-icon {
+      background: transparent;
+    }
+    .contact-detail-icon.whatsapp-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: #25D366;
+      stroke: none;
+    }
+
     .contact-detail-text .label {
       font-size: 0.68rem;
       letter-spacing: 0.1em;
@@ -1165,34 +1175,60 @@
       color: var(--gold);
     }
 
-    .contact-social {
-      margin-top: 40px;
+    /* WhatsApp CTA block */
+    .contact-social-block {
+      margin-top: 36px;
       display: flex;
-      gap: 14px;
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
     }
 
-    .contact-social a {
-      width: 38px;
-      height: 38px;
-      border: 1px solid rgba(250, 249, 246, .2);
-      border-radius: 50%;
-      display: flex;
+    .contact-social-note {
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: rgba(250, 249, 246, 0.62);
+      max-width: 280px;
+      margin: 0;
+    }
+
+    .whatsapp-btn {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      color: rgba(250, 249, 246, .6);
-      font-size: 0.7rem;
-      transition: all .3s var(--ease);
+      gap: 10px;
+      padding: 12px 20px;
+      background: #25D366;
+      color: #ffffff;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border-radius: 2px;
+      transition: all .35s var(--ease);
+      white-space: nowrap;
     }
 
-    .contact-social a:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(168, 123, 32, .1);
+    .whatsapp-btn svg {
+      width: 18px;
+      height: 18px;
+      flex: none;
+      fill: currentColor;
     }
 
+    .whatsapp-btn:hover {
+      background: #1EBE5B;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px -8px rgba(37, 211, 102, .55);
+    }
+
+    /* ============================================
+      CONTACT — RIGHT PANEL (form side, filled in)
+      ============================================ */
     .contact-card-right {
       background: var(--white);
       padding: clamp(40px, 5vw, 70px);
+      display: flex;
+      flex-direction: column;
     }
 
     .contact-card-right h3 {
@@ -1201,9 +1237,40 @@
       color: var(--charcoal);
     }
 
-    .contact-card-right>p {
-      margin-bottom: 34px;
+    .contact-card-right > p.form-sub {
+      margin-bottom: 24px;
       font-size: 0.95rem;
+    }
+
+    /* Info strip at top of form */
+    .form-info-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(168, 123, 32, 0.07);
+      border-left: 3px solid var(--gold);
+      border-radius: 3px;
+      margin-bottom: 28px;
+    }
+
+    .form-info-strip svg {
+      width: 18px;
+      height: 18px;
+      flex: none;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .form-info-strip span {
+      font-size: 0.8rem;
+      color: var(--charcoal);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      line-height: 1.4;
     }
 
     .contact-form .field {
@@ -1222,22 +1289,29 @@
     .contact-form .field select,
     .contact-form .field textarea {
       width: 100%;
-      border: 1px solid rgba(17, 17, 17, .12);
+      border: 1px solid rgba(17, 17, 17, .18);
       border-radius: 4px;
-      background: transparent;
+      background: rgba(17, 17, 17, .025);
       padding: 14px 16px;
       font-family: var(--sans);
       font-size: 0.92rem;
       color: var(--charcoal);
-      transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
+      transition: border-color .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+    }
+
+    .contact-form .field input:hover,
+    .contact-form .field select:hover,
+    .contact-form .field textarea:hover {
+      border-color: rgba(17, 17, 17, .3);
     }
 
     .contact-form .field input:focus,
     .contact-form .field select:focus,
     .contact-form .field textarea:focus {
       border-color: var(--gold);
+      background: var(--white);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(168, 123, 32, .1);
+      box-shadow: 0 0 0 3px rgba(168, 123, 32, .12);
     }
 
     .contact-form .field textarea {
@@ -1256,6 +1330,78 @@
       justify-content: center;
       padding: 18px 30px;
       margin-top: 8px;
+    }
+
+    /* Below-form info */
+    .form-after {
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(17, 17, 17, .08);
+    }
+
+    .form-after-title {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .form-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.55;
+    }
+
+    .form-steps li .step-num {
+      flex: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(168, 123, 32, 0.14);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .form-steps li strong {
+      color: var(--charcoal);
+      font-weight: 600;
+    }
+
+    .form-quick-hint {
+      margin-top: 24px;
+      font-size: 0.82rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .form-quick-hint a {
+      color: var(--gold);
+      font-weight: 600;
+      border-bottom: 1px solid rgba(168, 123, 32, .35);
+      padding-bottom: 1px;
+      transition: border-color .3s var(--ease);
+    }
+
+    .form-quick-hint a:hover {
+      border-bottom-color: var(--gold);
     }
 
     @media(max-width: 900px) {
@@ -1433,7 +1579,7 @@
   <header id="siteHeader">
     <div class="wrap nav-row">
       <a href="#home" class="brand">
-        <img class="brand-logo" src="./logo.png" alt="Wizard Digitech logo">
+        <img class="brand-logo" src="./logo.jpeg" alt="Wizard Digitech logo">
         <div>
           <div class="brand-name">Wizard Digitech</div>
           <div class="brand-tagline">YOUR DIGITAL & TECH PARTNER</div>
@@ -1663,6 +1809,19 @@
               </div>
             </div>
 
+            <!-- WHATSAPP -->
+            <div class="contact-detail-item">
+              <div class="contact-detail-icon whatsapp-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+              </div>
+              <div class="contact-detail-text">
+                <span class="label">WhatsApp</span>
+                <a href="https://wa.me/917097754200" target="_blank" rel="noopener">+91 70977 54200</a>
+              </div>
+            </div>
+
             <div class="contact-detail-item">
               <div class="contact-detail-icon">
                 <svg viewBox="0 0 24 24">
@@ -1704,17 +1863,32 @@
             </div>
           </div>
 
-          <div class="contact-social">
-            <a href="#" aria-label="Instagram">IG</a>
-            <a href="#" aria-label="LinkedIn">IN</a>
-            <a href="#" aria-label="Facebook">FB</a>
-            <a href="#" aria-label="YouTube">YT</a>
+          <div class="contact-social-block">
+            <p class="contact-social-note">Prefer a quick chat? Reach us on WhatsApp and we'll get back to you right away.</p>
+            <a href="https://wa.me/917097754200?text=Hi%20Wizard%20Digitech%2C%20I%27d%20like%20to%20know%20more%20about%20your%20services."
+               target="_blank" rel="noopener"
+               class="whatsapp-btn">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Send WhatsApp Message
+            </a>
           </div>
         </div>
 
+        <!-- ===== RIGHT PANEL — NOW FILLED IN ===== -->
         <div class="contact-card-right">
           <h3>Send a Message</h3>
-          <p>Fill out the form below and we'll get back to you within 24 hours.</p>
+          <p class="form-sub">Fill out the form below and we'll get back to you within 24 hours.</p>
+
+          <!-- Info strip -->
+          <div class="form-info-strip">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span>Fast response — usually within a few hours during business days.</span>
+          </div>
 
           <form class="contact-form" id="contactForm" onsubmit="return false;">
             <div class="form-row-2">
@@ -1759,6 +1933,29 @@
 
             <button type="submit" class="btn btn-primary">Send Message <span class="arrow">→</span></button>
           </form>
+
+          <!-- Below-form info -->
+          <div class="form-after">
+            <span class="form-after-title">What happens next</span>
+            <ul class="form-steps">
+              <li>
+                <span class="step-num">1</span>
+                <span>We review your message and <strong>understand your requirement</strong>.</span>
+              </li>
+              <li>
+                <span class="step-num">2</span>
+                <span>We get back to you within <strong>24 hours</strong> with the right direction.</span>
+              </li>
+              <li>
+                <span class="step-num">3</span>
+                <span>We plan a <strong>practical, no-pressure conversation</strong> to take it forward.</span>
+              </li>
+            </ul>
+
+            <p class="form-quick-hint">
+              In a hurry? <a href="https://wa.me/917097754200" target="_blank" rel="noopener">Message us directly on WhatsApp →</a>
+            </p>
+          </div>
         </div>
 
       </div>
@@ -1771,7 +1968,7 @@
       <div class="footer-grid">
         <div>
           <div class="footer-brand">
-            <img class="brand-logo" src="./logo.png" alt="Wizard Digitech logo">
+            <img class="brand-logo" src="./logo.jpeg" alt="Wizard Digitech logo">
             <div>
               <div class="footer-brand-name">Wizard Digitech</div>
               <div class="footer-tagline">Your Digital Tech Partner</div>
