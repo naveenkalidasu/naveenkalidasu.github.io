@@ -305,46 +305,48 @@
     }
 
     /* ============================================================
-       INTRO EDITORIAL SPLIT
+       WHO WE ARE — EDITORIAL SPLIT + FOUNDERS
        ============================================================ */
-    .about-split {
+    .who-section {
+      background: var(--white);
+      padding: min(9vw, 100px) 0 60px;
+    }
+    .who-intro-split {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: clamp(40px, 6vw, 80px);
       align-items: center;
+      margin-bottom: 70px;
     }
-    .about-split .split-text p {
+    .who-intro-split .intro-text p {
       font-size: 1.02rem;
       margin-bottom: 20px;
       line-height: 1.7;
     }
-    .about-split .split-text p:last-child { margin-bottom: 0; }
-    .about-split .split-text strong { color: var(--charcoal); font-weight: 600; }
-    .about-split .split-img {
+    .who-intro-split .intro-text p:last-child { margin-bottom: 0; }
+    .who-intro-split .intro-text strong { color: var(--charcoal); font-weight: 600; }
+    .who-intro-split .intro-img {
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
       background: var(--beige);
     }
-    .about-split .split-img img {
-      width: 100%; height: auto; max-height: 480px; object-fit: cover;
+    .who-intro-split .intro-img img {
+      width: 100%; height: auto;
+      object-fit: cover;
       aspect-ratio: 4 / 5;
     }
     @media(max-width:900px) {
-      .about-split { grid-template-columns: 1fr; gap: 40px; }
-      .about-split .split-img { order: -1; }
-      .about-split .split-img img { aspect-ratio: 16 / 10; }
+      .who-intro-split { grid-template-columns: 1fr; gap: 40px; margin-bottom: 50px; }
+      .who-intro-split .intro-img { order: -1; }
+      .who-intro-split .intro-img img { aspect-ratio: 16 / 10; }
     }
 
-    /* ============================================================
-       WHO WE ARE — FOUNDERS
-       ============================================================ */
-    .founders-section { background: var(--white); padding: min(9vw, 100px) 0 60px; }
+    /* Founder cards */
     .founders-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 32px;
-      margin-top: 40px;
     }
     .founder-card {
       background: var(--white);
@@ -672,31 +674,25 @@
     </div>
   </section>
 
-  <!-- ===== INTRO — EDITORIAL SPLIT ===== -->
-  <section class="section">
-    <div class="wrap about-split">
-      <div class="split-text reveal">
-        <p>Wizard Digitech is a multi-service business based in Vijayawada, Andhra Pradesh, offering practical digital and technology solutions for individuals, businesses and organisations.</p>
-        <p>Our services span two core verticals — <strong>Digital Solutions</strong> and <strong>Technology Solutions</strong>.</p>
-        <p>Through our Digital Solutions vertical, we help businesses build and strengthen their online presence through digital marketing and advertising, SEO and content marketing, web and creative solutions, reputation and performance management, and event and party planning services.</p>
-        <p>Our Technology Solutions vertical provides electronics sales, accessories, repairs and servicing, along with ongoing technical support and maintenance. From laptops, computers and customised desktops to mobiles, tablets, printers and peripherals, we aim to provide dependable products and practical technical support for everyday and business needs.</p>
-        <p>At Wizard Digitech, our approach is simple: understand the requirement, provide a practical solution and focus on delivering a reliable customer experience.</p>
-      </div>
-      <div class="split-img reveal">
-        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=1000&fit=crop&crop=center" alt="Wizard Digitech workspace" loading="lazy">
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== WHO WE ARE — FOUNDERS ===== -->
-  <section class="founders-section">
+  <!-- ===== WHO WE ARE ===== -->
+  <section class="who-section">
     <div class="wrap">
-      <div style="text-align:center; margin-bottom: 10px;" class="reveal">
-        <span class="eyebrow">Who We Are</span>
-        <h2>A shared vision for a smarter tomorrow</h2>
-        <p style="max-width: 640px; margin: 16px auto 0; font-size: 1rem;">Wizard Digitech was founded with the vision of bringing together technology expertise and digital capabilities under one platform.</p>
+
+      <!-- Editorial split -->
+      <div class="who-intro-split">
+        <div class="intro-text reveal">
+          <span class="eyebrow">Who We Are</span>
+          <p>Wizard Digitech was founded with the vision of bringing together technology expertise and digital capabilities under one platform.</p>
+          <p><strong>T.V. Amarnadh, Founder,</strong> leads the Technology Solutions side of the business, while <strong>T.S.L. Nishitha, Proprietor,</strong> leads the Digital Solutions side.</p>
+          <p>Together, they bring complementary expertise across technology and digital solutions, with a shared focus on understanding customer requirements and providing practical and dependable support.</p>
+          <p>At Wizard Digitech, we believe that good solutions begin with understanding. Our approach is centred on listening to what our customers need, identifying the right direction and delivering solutions that are useful, reliable and relevant.</p>
+        </div>
+        <div class="intro-img reveal">
+          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=1000&fit=crop&crop=center" alt="Wizard Digitech workspace" loading="lazy">
+        </div>
       </div>
 
+      <!-- Founder cards -->
       <div class="founders-grid">
         <div class="founder-card reveal">
           <div class="founder-img">
@@ -706,7 +702,7 @@
             <div class="founder-name">T.V. Amarnadh</div>
             <div class="founder-role">Founder</div>
             <div class="founder-vertical">Technology Solutions</div>
-            <p class="founder-desc">Leads technology solutions with expertise in electronics sales, repairs, servicing and support.</p>
+            <p class="founder-desc">T.V. Amarnadh is the Founder of Wizard Digitech and leads the Technology Solutions side of the business. With a focus on technology products, electronics services and technical support, he oversees the technology operations of Wizard Digitech.</p>
           </div>
         </div>
 
@@ -718,10 +714,11 @@
             <div class="founder-name">T.S.L. Nishitha</div>
             <div class="founder-role">Proprietor</div>
             <div class="founder-vertical">Digital Solutions</div>
-            <p class="founder-desc">Leads digital solutions with a focus on helping businesses grow through practical and creative digital services.</p>
+            <p class="founder-desc">T.S.L. Nishitha is the Proprietor of Wizard Digitech and leads the Digital Solutions side of the business. She focuses on digital, creative and online solutions, with an emphasis on helping businesses and organisations build and strengthen their digital presence.</p>
           </div>
         </div>
       </div>
+
     </div>
   </section>
 
