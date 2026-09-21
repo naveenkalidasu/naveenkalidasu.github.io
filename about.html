@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us — Wizard Digitech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== TOKENS ===== */
+    :root {
+      --charcoal: #111111;
+      --white: #FAF9F6;
+      --beige: #EDE9E2;
+      --gray: #77736D;
+      --gold: #A88752;
+      --gold-hover: #8C661A;
+      --serif: 'Cormorant Garamond', serif;
+      --sans: 'Inter', sans-serif;
+      --container: 1200px;
+      --pad: clamp(24px, 5vw, 96px);
+      --ease: cubic-bezier(.4, 0, .2, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--white);
+      color: var(--charcoal);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; height: auto; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    ul { list-style: none; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .wrap { max-width: var(--container); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+    .section { padding: min(9vw, 100px) 0; }
+
+    /* ===== TYPOGRAPHY ===== */
+    .eyebrow {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    h1 { font-size: clamp(2.4rem, 4.5vw, 3.6rem); }
+    h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+    h3 { font-size: clamp(1.15rem, 1.7vw, 1.5rem); font-weight: 600; }
+    p { color: var(--gray); }
+    .gold { color: var(--gold); }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 26px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border-radius: 2px;
+      transition: all .4s var(--ease);
+      white-space: nowrap;
+      text-align: center;
+    }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-hover); transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(168, 123, 32, .4); }
+    .btn-outline { border: 1px solid var(--charcoal); color: var(--charcoal); }
+    .btn-outline:hover { background: var(--charcoal); color: var(--white); }
+    .btn span.arrow { transition: transform .35s var(--ease); }
+    .btn:hover span.arrow { transform: translateX(5px); }
+
+    /* ===== REVEAL ===== */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ===== NAVBAR ===== */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transition: background .4s var(--ease), border-color .4s var(--ease), padding .4s var(--ease);
+      padding: 20px 0;
+      background: rgba(250, 249, 246, 0);
+      border-bottom: 1px solid transparent;
+    }
+    header.scrolled {
+      background: rgba(250, 249, 246, .92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(17, 17, 17, .08);
+      padding: 12px 0;
+    }
+    .nav-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; flex: none; height: 48px; }
+    .brand-mark {
+      display: flex; align-items: center; justify-content: center;
+      height: 48px; width: auto;
+      background: transparent !important; padding: 0 !important;
+      box-shadow: none !important; border: none !important;
+      border-radius: 0 !important; overflow: visible; flex: none;
+    }
+    .brand-mark img {
+      height: 48px; width: auto; max-width: none;
+      object-fit: contain;
+      background: transparent !important; padding: 0 !important;
+      box-shadow: none !important; border-radius: 0 !important;
+      border: none !important; display: block;
+    }
+    .brand-text { display: flex; flex-direction: column; justify-content: center; line-height: 1; }
+    .brand-name {
+      font-family: var(--serif); font-size: 1.15rem; font-weight: 600;
+      letter-spacing: 0.01em; line-height: 1.05;
+      color: var(--charcoal); white-space: nowrap;
+    }
+    .brand-tagline {
+      font-family: var(--sans); font-size: 0.6rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray); margin-top: 4px; line-height: 1; white-space: nowrap;
+    }
+    nav.primary-nav { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; align-items: center; }
+    nav.primary-nav > a {
+      font-size: 0.85rem; font-weight: 500; color: var(--charcoal);
+      position: relative; padding: 4px 0; white-space: nowrap; line-height: 1.2;
+    }
+    nav.primary-nav > a::after {
+      content: ""; position: absolute; left: 0; bottom: -2px;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width .35s var(--ease);
+    }
+    nav.primary-nav > a:hover::after,
+    nav.primary-nav > a.active::after { width: 100%; }
+
+    /* dropdown */
+    .dropdown { position: relative; }
+    .drop-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 0; font-size: 0.85rem; font-weight: 500;
+      color: var(--charcoal); cursor: pointer; transition: color .3s var(--ease);
+      position: relative; font-family: inherit; background: none;
+      border: none; line-height: 1.2;
+    }
+    .drop-btn::after {
+      content: ""; position: absolute; left: 0; bottom: -2px;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width .35s var(--ease);
+    }
+    .dropdown.active .drop-btn::after,
+    .drop-btn:hover::after { width: 100%; }
+    .drop-btn .arrow {
+      font-size: 8px; color: var(--gold);
+      transition: transform 0.4s var(--ease); display: inline-block; line-height: 1;
+    }
+    .dropdown.active .drop-btn .arrow { transform: rotate(180deg); }
+    .dropdown .menu {
+      position: absolute; top: calc(100% + 18px); left: 50%;
+      transform: translateX(-50%) translateY(-12px) scale(0.97);
+      width: 300px; padding: 14px 10px 10px; border-radius: 10px;
+      background: var(--white); border: 1px solid rgba(17, 17, 17, 0.06);
+      box-shadow:
+        0 2px 6px -1px rgba(17, 17, 17, 0.04),
+        0 18px 40px -12px rgba(17, 17, 17, 0.14),
+        0 40px 80px -24px rgba(17, 17, 17, 0.12);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform-origin: top center;
+      transition: opacity 0.28s ease, transform 0.45s cubic-bezier(.16, 1, .3, 1), visibility 0.28s;
+      z-index: 120;
+    }
+    .dropdown .menu::before {
+      content: ""; position: absolute; top: -7px; left: 50%;
+      width: 12px; height: 12px; background: var(--white);
+      border-left: 1px solid rgba(17, 17, 17, 0.06);
+      border-top: 1px solid rgba(17, 17, 17, 0.06);
+      transform: translateX(-50%) rotate(45deg);
+      border-top-left-radius: 3px;
+    }
+    .dropdown .menu .menu-label {
+      display: block; font-size: 0.66rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray);
+      padding: 0 14px 10px; margin-bottom: 6px;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+    }
+    .dropdown.active .menu {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+    .dropdown .menu a {
+      position: relative; display: flex; align-items: flex-start;
+      gap: 12px; padding: 11px 14px; margin: 2px 0; border-radius: 8px;
+      color: var(--charcoal); text-decoration: none; overflow: hidden;
+      opacity: 0; transform: translateY(-6px);
+      transition: color 0.25s ease, background 0.25s ease, transform 0.35s ease, opacity 0.35s ease;
+      font-size: 0.85rem; font-weight: 500;
+      white-space: normal; line-height: 1.35;
+    }
+    .dropdown .menu a::before {
+      content: ""; position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 3px; border-radius: 3px; background: var(--gold);
+      transform: scaleY(0); transform-origin: center;
+      transition: transform 0.35s var(--ease);
+    }
+    .dropdown .menu a:hover { color: var(--gold); background: rgba(168, 123, 32, 0.06); }
+    .dropdown .menu a:hover::before { transform: scaleY(1); }
+    .dropdown.active .menu a { opacity: 1; transform: translateY(0); }
+    .dropdown.active .menu a:nth-child(2) { transition-delay: 0.05s; }
+    .dropdown.active .menu a:nth-child(3) { transition-delay: 0.10s; }
+    .dropdown.active .menu a:nth-child(4) { transition-delay: 0.15s; }
+    .dropdown.active .menu a:nth-child(5) { transition-delay: 0.20s; }
+    .dropdown .menu .icon {
+      width: 32px; height: 32px; display: flex;
+      align-items: center; justify-content: center;
+      border-radius: 8px; background: rgba(168, 123, 32, 0.10);
+      color: var(--gold); transition: all 0.3s var(--ease);
+      font-size: 0.9rem; flex: none; margin-top: 1px;
+    }
+    .dropdown .menu a:hover .icon {
+      background: var(--gold); color: var(--white); transform: scale(1.05);
+    }
+    .dropdown .menu .item-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .dropdown .menu .item-text .title { font-size: 0.86rem; font-weight: 600; color: inherit; line-height: 1.25; }
+    .dropdown .menu .item-text .desc { font-size: 0.72rem; font-weight: 400; color: var(--gray); line-height: 1.35; }
+    .dropdown .menu a:hover .item-text .desc { color: rgba(168, 123, 32, 0.75); }
+
+    .nav-right { display: flex; align-items: center; gap: 20px; flex: none; height: 48px; }
+    .nav-right .btn { padding: 12px 24px; font-size: 0.8rem; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; width: 26px; }
+    .hamburger span { height: 1.5px; width: 100%; background: var(--charcoal); transition: all .35s var(--ease); }
+    @media(max-width:1100px) {
+      nav.primary-nav { display: none; }
+      .nav-right .btn-primary { display: none; }
+      .hamburger { display: flex; }
+      .brand-mark, .brand-mark img { height: 42px; }
+    }
+
+    /* mobile */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 99; background: var(--white);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 0 var(--pad); transform: translateY(-100%);
+      transition: transform .5s var(--ease); overflow-y: auto;
+    }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu > a,
+    .mobile-menu .mobile-dropdown-btn {
+      font-family: var(--serif); font-size: 1.8rem;
+      padding: 12px 0; border-bottom: 1px solid rgba(17, 17, 17, .08);
+      color: var(--charcoal); text-align: left; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      background: none; cursor: pointer;
+    }
+    .mobile-menu .mobile-dropdown-btn .arrow { font-size: 12px; color: var(--gold); transition: transform .35s var(--ease); }
+    .mobile-menu .mobile-dropdown.open .mobile-dropdown-btn .arrow { transform: rotate(180deg); }
+    .mobile-submenu { max-height: 0; overflow: hidden; transition: max-height .4s var(--ease), opacity .3s var(--ease); opacity: 0; }
+    .mobile-dropdown.open .mobile-submenu { max-height: 420px; opacity: 1; }
+    .mobile-submenu a {
+      font-family: var(--sans) !important; font-size: 0.95rem !important;
+      color: var(--gray) !important; padding: 14px 0 14px 20px !important;
+      border-bottom: 1px solid rgba(17, 17, 17, .05) !important;
+      display: flex !important; align-items: center; gap: 12px;
+      transition: color .25s var(--ease), padding-left .3s var(--ease);
+    }
+    .mobile-submenu a:hover { color: var(--gold) !important; padding-left: 26px !important; }
+    .mobile-submenu a .icon {
+      width: 28px; height: 28px; display: flex; align-items: center;
+      justify-content: center; border-radius: 4px;
+      background: rgba(168, 123, 32, 0.10); color: var(--gold);
+      font-size: 0.8rem; flex: none;
+    }
+    .mobile-menu .btn { margin-top: 28px; align-self: flex-start; }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .page-hero {
+      padding: 160px 0 60px;
+      background: var(--beige);
+    }
+    .page-hero h1 {
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+      line-height: 1.15;
+    }
+    .page-hero h1 .line { display: block; }
+    .page-hero .subtitle {
+      max-width: 620px;
+      margin-top: 22px;
+      font-size: 1.05rem;
+      color: var(--gray);
+    }
+
+    /* ============================================================
+       INTRO EDITORIAL SPLIT
+       ============================================================ */
+    .about-split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+    }
+    .about-split .split-text p {
+      font-size: 1.02rem;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+    .about-split .split-text p:last-child { margin-bottom: 0; }
+    .about-split .split-text strong { color: var(--charcoal); font-weight: 600; }
+    .about-split .split-img {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
+      background: var(--beige);
+    }
+    .about-split .split-img img {
+      width: 100%; height: auto; max-height: 480px; object-fit: cover;
+      aspect-ratio: 4 / 5;
+    }
+    @media(max-width:900px) {
+      .about-split { grid-template-columns: 1fr; gap: 40px; }
+      .about-split .split-img { order: -1; }
+      .about-split .split-img img { aspect-ratio: 16 / 10; }
+    }
+
+    /* ============================================================
+       WHO WE ARE — FOUNDERS
+       ============================================================ */
+    .founders-section { background: var(--white); padding: min(9vw, 100px) 0 60px; }
+    .founders-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .founder-card {
+      background: var(--white);
+      border: 1px solid rgba(17, 17, 17, .08);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all .4s var(--ease);
+      box-shadow: 0 6px 24px -12px rgba(17, 17, 17, .08);
+      display: flex;
+      flex-direction: column;
+    }
+    .founder-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 48px -16px rgba(17, 17, 17, .14);
+      border-color: rgba(168, 135, 82, .3);
+    }
+    .founder-card .founder-img {
+      width: 100%;
+      aspect-ratio: 5 / 4;
+      background: var(--beige);
+      overflow: hidden;
+    }
+    .founder-card .founder-img img { width: 100%; height: 100%; object-fit: cover; }
+    .founder-card .founder-body { padding: 28px 26px 30px; }
+    .founder-card .founder-name {
+      font-family: var(--serif); font-size: 1.4rem;
+      font-weight: 600; color: var(--charcoal); line-height: 1.15;
+    }
+    .founder-card .founder-role {
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-top: 4px; margin-bottom: 18px;
+    }
+    .founder-card .founder-vertical {
+      font-family: var(--sans); font-size: 0.92rem;
+      font-weight: 600; color: var(--charcoal); margin-bottom: 6px;
+    }
+    .founder-card .founder-desc { font-size: 0.92rem; color: var(--gray); line-height: 1.6; }
+    @media(max-width:800px) { .founders-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       OUR APPROACH — 5 steps
+       ============================================================ */
+    .approach-section { background: var(--beige); padding: min(9vw, 100px) 0; }
+    .approach-section .approach-head { text-align: center; margin-bottom: 50px; }
+    .approach-section .approach-head h2 { margin-bottom: 8px; }
+    .approach-section .approach-head p { font-size: 0.95rem; }
+
+    .approach-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: start;
+      gap: 8px;
+    }
+    .approach-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .approach-step .step-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(168, 135, 82, .12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .approach-step .step-icon svg {
+      width: 26px; height: 26px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .approach-step .step-title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    .approach-step .step-desc {
+      font-size: 0.82rem;
+      color: var(--gray);
+      line-height: 1.55;
+      max-width: 160px;
+    }
+    .approach-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 20px;
+      color: var(--gold);
+    }
+    .approach-arrow svg {
+      width: 22px; height: 22px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    @media(max-width: 900px) {
+      .approach-flow { grid-template-columns: 1fr; gap: 24px; }
+      .approach-arrow { display: none; }
+      .approach-step { flex-direction: row; text-align: left; align-items: flex-start; gap: 16px; }
+      .approach-step .step-icon { margin-bottom: 0; flex: none; }
+      .approach-step .step-desc { max-width: none; }
+    }
+
+    /* ============================================================
+       VISION & MISSION
+       ============================================================ */
+    .vm-section { background: var(--white); padding: min(9vw, 100px) 0; }
+    .vm-section .vm-head { text-align: center; margin-bottom: 40px; }
+    .vm-section .vm-head h2 { margin-bottom: 8px; }
+
+    .vm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .vm-card {
+      background: var(--beige);
+      border-radius: 8px;
+      padding: 32px 30px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      transition: all .4s var(--ease);
+    }
+    .vm-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px -16px rgba(17, 17, 17, .14);
+    }
+    .vm-card .vm-icon {
+      width: 44px;
+      height: 44px;
+      flex: none;
+      color: var(--gold);
+    }
+    .vm-card .vm-icon svg {
+      width: 100%; height: 100%;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .vm-card h3 {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 10px;
+    }
+    .vm-card p { font-size: 0.95rem; color: var(--gray); line-height: 1.65; }
+    @media(max-width: 700px) { .vm-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      background: var(--charcoal);
+      color: rgba(250, 249, 246, .7);
+      padding: min(8vw, 90px) 0 30px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid rgba(250, 249, 246, .12);
+    }
+    .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .footer-brand .brand-mark {
+      height: 44px;
+      background: transparent !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+    }
+    .footer-brand .brand-mark img {
+      height: 44px; width: auto;
+      background: transparent !important;
+      padding: 0 !important;
+    }
+    .footer-brand-name {
+      font-family: var(--serif); font-size: 1.05rem;
+      color: var(--white); font-weight: 600; line-height: 1.1;
+    }
+    .footer-tagline {
+      font-size: 0.62rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold);
+      margin-top: 3px; display: block;
+    }
+    footer .col-title {
+      font-size: 0.72rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--white); margin-bottom: 20px;
+    }
+    footer .col-list { display: flex; flex-direction: column; gap: 12px; }
+    footer .col-list a { font-size: 0.88rem; transition: color .3s var(--ease); }
+    footer .col-list a:hover { color: var(--gold); }
+    .footer-desc { font-size: 0.88rem; max-width: 280px; line-height: 1.6; }
+    .footer-bottom {
+      padding-top: 26px; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px; font-size: 0.78rem;
+    }
+    .footer-bottom .legal { display: flex; gap: 24px; }
+    .footer-bottom a:hover { color: var(--gold); }
+    .social-row { display: flex; gap: 16px; margin-top: 20px; }
+    .social-row a {
+      width: 34px; height: 34px;
+      border: 1px solid rgba(250, 249, 246, .2);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.7rem;
+      transition: all .3s var(--ease);
+    }
+    .social-row a:hover { border-color: var(--gold); color: var(--gold); }
+    @media(max-width:900px) { .footer-grid { grid-template-columns: 1fr 1fr; row-gap: 40px; } }
+    @media(max-width:560px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header id="siteHeader">
+    <div class="wrap nav-row">
+      <a href="index.html" class="brand">
+        <span class="brand-mark"><img src="./logo.png" alt="Wizard Digitech logo"></span>
+        <span class="brand-text">
+          <span class="brand-name">Wizard Digitech</span>
+          <span class="brand-tagline">Digital Growth Partner</span>
+        </span>
+      </a>
+      <nav class="primary-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html" class="active">About</a>
+
+        <div class="dropdown" id="dropdown">
+          <button class="drop-btn" id="dropBtn" aria-haspopup="true" aria-expanded="false">
+            Services
+            <span class="arrow">▼</span>
+          </button>
+          <div class="menu" role="menu">
+            <span class="menu-label">What we offer</span>
+
+            <a href="./digitalmarketing.html" role="menuitem">
+              <span class="icon">⚡</span>
+              <span class="item-text">
+                <span class="title">Digital Solutions</span>
+                <span class="desc">Marketing, SEO, web &amp; branding</span>
+              </span>
+            </a>
+
+            <a href="./digitalmarketing.html" role="menuitem">
+              <span class="icon">🎓</span>
+              <span class="item-text">
+                <span class="title">Digital Marketing Training</span>
+                <span class="desc">Hands-on programs &amp; workshops</span>
+              </span>
+            </a>
+
+            <a href="./electronicrepairs.html" role="menuitem">
+              <span class="icon">🔧</span>
+              <span class="item-text">
+                <span class="title">Technology Solutions</span>
+                <span class="desc">Sales, repairs &amp; maintenance</span>
+              </span>
+            </a>
+
+            <a href="#" role="menuitem">
+              <span class="icon">🎉</span>
+              <span class="item-text">
+                <span class="title">Event &amp; Party Planning</span>
+                <span class="desc">Curated events &amp; celebrations</span>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <a href="index.html#work">Work</a>
+        <a href="Archeivements.html">Achievements</a>
+        <a href="team.html">Team</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="nav-right">
+        <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MOBILE MENU ===== -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+
+    <div class="mobile-dropdown" id="mobileDropdown">
+      <button class="mobile-dropdown-btn" id="mobileDropBtn" aria-expanded="false">
+        Services
+        <span class="arrow">▼</span>
+      </button>
+      <div class="mobile-submenu">
+        <a href="./digitalmarketing.html"><span class="icon">⚡</span>Digital Solutions</a>
+        <a href="./digitalmarketing.html"><span class="icon">🎓</span>Digital Marketing Training</a>
+        <a href="./electronicrepairs.html"><span class="icon">🔧</span>Technology Solutions</a>
+        <a href="#"><span class="icon">🎉</span>Event &amp; Party Planning</a>
+      </div>
+    </div>
+
+    <a href="index.html#work">Work</a>
+    <a href="Archeivements.html">Achievements</a>
+    <a href="team.html">Team</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">About Wizard Digitech</span>
+      <h1>
+        <span class="line">Digital Thinking.</span>
+        <span class="line">Technology Solutions.</span>
+        <span class="line gold">Practical Support.</span>
+      </h1>
+      <p class="subtitle">A Vijayawada-based business bringing together digital, creative and technology solutions under one brand.</p>
+    </div>
+  </section>
+
+  <!-- ===== INTRO — EDITORIAL SPLIT ===== -->
+  <section class="section">
+    <div class="wrap about-split">
+      <div class="split-text reveal">
+        <p>Wizard Digitech is a multi-service business based in Vijayawada, Andhra Pradesh, offering practical digital and technology solutions for individuals, businesses and organisations.</p>
+        <p>Our services span two core verticals — <strong>Digital Solutions</strong> and <strong>Technology Solutions</strong>.</p>
+        <p>Through our Digital Solutions vertical, we help businesses build and strengthen their online presence through digital marketing and advertising, SEO and content marketing, web and creative solutions, reputation and performance management, and event and party planning services.</p>
+        <p>Our Technology Solutions vertical provides electronics sales, accessories, repairs and servicing, along with ongoing technical support and maintenance. From laptops, computers and customised desktops to mobiles, tablets, printers and peripherals, we aim to provide dependable products and practical technical support for everyday and business needs.</p>
+        <p>At Wizard Digitech, our approach is simple: understand the requirement, provide a practical solution and focus on delivering a reliable customer experience.</p>
+      </div>
+      <div class="split-img reveal">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=1000&fit=crop&crop=center" alt="Wizard Digitech workspace" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHO WE ARE — FOUNDERS ===== -->
+  <section class="founders-section">
+    <div class="wrap">
+      <div style="text-align:center; margin-bottom: 10px;" class="reveal">
+        <span class="eyebrow">Who We Are</span>
+        <h2>A shared vision for a smarter tomorrow</h2>
+        <p style="max-width: 640px; margin: 16px auto 0; font-size: 1rem;">Wizard Digitech was founded with the vision of bringing together technology expertise and digital capabilities under one platform.</p>
+      </div>
+
+      <div class="founders-grid">
+        <div class="founder-card reveal">
+          <div class="founder-img">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&h=640&fit=crop&crop=faces" alt="T.V. Amarnadh" loading="lazy">
+          </div>
+          <div class="founder-body">
+            <div class="founder-name">T.V. Amarnadh</div>
+            <div class="founder-role">Founder</div>
+            <div class="founder-vertical">Technology Solutions</div>
+            <p class="founder-desc">Leads technology solutions with expertise in electronics sales, repairs, servicing and support.</p>
+          </div>
+        </div>
+
+        <div class="founder-card reveal">
+          <div class="founder-img">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=640&fit=crop&crop=faces" alt="T.S.L. Nishitha" loading="lazy">
+          </div>
+          <div class="founder-body">
+            <div class="founder-name">T.S.L. Nishitha</div>
+            <div class="founder-role">Proprietor</div>
+            <div class="founder-vertical">Digital Solutions</div>
+            <p class="founder-desc">Leads digital solutions with a focus on helping businesses grow through practical and creative digital services.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== OUR APPROACH ===== -->
+  <section class="approach-section">
+    <div class="wrap">
+      <div class="approach-head reveal">
+        <h2>Our Approach</h2>
+        <p>A simple process for better results.</p>
+      </div>
+
+      <div class="approach-flow">
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="step-title">Understand</div>
+          <div class="step-desc">We begin by understanding your actual requirement.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+          </div>
+          <div class="step-title">Identify</div>
+          <div class="step-desc">We identify the appropriate solution for your needs.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg>
+          </div>
+          <div class="step-title">Plan</div>
+          <div class="step-desc">We create a practical approach based on the requirement.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <div class="step-title">Deliver</div>
+          <div class="step-desc">We work towards delivering the agreed solution.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </div>
+          <div class="step-title">Support</div>
+          <div class="step-desc">We remain focused on dependable service and customer support.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VISION & MISSION ===== -->
+  <section class="vm-section">
+    <div class="wrap">
+      <div class="vm-head reveal">
+        <h2>Our Vision &amp; Mission</h2>
+      </div>
+
+      <div class="vm-grid">
+        <div class="vm-card reveal">
+          <div class="vm-icon">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div>
+            <h3>Our Vision</h3>
+            <p>To build Wizard Digitech into a trusted destination for digital, creative and technology solutions.</p>
+          </div>
+        </div>
+
+        <div class="vm-card reveal">
+          <div class="vm-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div>
+            <h3>Our Mission</h3>
+            <p>To provide practical, accessible and customer focused solutions that help businesses, organisations and individuals grow, operate efficiently and stay connected.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <span class="brand-mark"><img src="./logo.png" alt="Wizard Digitech logo"></span>
+            <span>
+              <span class="footer-brand-name">Wizard Digitech</span>
+              <span class="footer-tagline">Your Digital Growth Partner</span>
+            </span>
+          </div>
+          <p class="footer-desc">Building meaningful digital experiences for ambitious businesses.</p>
+          <div class="social-row"><a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="LinkedIn">IN</a><a href="#" aria-label="Facebook">FB</a><a href="#" aria-label="YouTube">YT</a></div>
+        </div>
+        <div>
+          <div class="col-title">Navigation</div>
+          <div class="col-list">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="digitalmarketing.html">Digital Solutions</a>
+            <a href="electronicrepairs.html">Technology Solutions</a>
+            <a href="index.html#work">Work</a>
+            <a href="Archeivements.html">Achievements</a>
+            <a href="team.html">Team</a>
+            <a href="index.html#contact">Contact</a>
+          </div>
+        </div>
+        <div>
+          <div class="col-title">Services</div>
+          <div class="col-list">
+            <a href="digitalmarketing.html">Digital Marketing &amp; Advertising</a>
+            <a href="digitalmarketing.html">SEO &amp; Content Marketing</a>
+            <a href="digitalmarketing.html">Website Designing</a>
+            <a href="digitalmarketing.html">E-commerce Solutions</a>
+            <a href="digitalmarketing.html">Branding &amp; Creative</a>
+            <a href="#">Event &amp; Party Planning</a>
+          </div>
+        </div>
+        <div>
+          <div class="col-title">Contact</div>
+          <div class="col-list">
+            <a href="tel:+917097754200">+91 70977 54200</a>
+            <a href="mailto:wizard.digitech@gmail.com">wizard.digitech@gmail.com</a>
+            <span>Vijayawada, AP</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Wizard Digitech. All rights reserved.</span>
+        <div class="legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== STICKY HEADER =====
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+
+    // ===== MOBILE MENU =====
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburgerBtn.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      hamburgerBtn.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      if (a.closest('.mobile-submenu')) return;
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }));
+
+    // ===== MOBILE SERVICES ACCORDION =====
+    const mobileDropdown = document.getElementById('mobileDropdown');
+    const mobileDropBtn = document.getElementById('mobileDropBtn');
+    mobileDropBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = mobileDropdown.classList.toggle('open');
+      mobileDropBtn.setAttribute('aria-expanded', isOpen);
+    });
+    mobileDropdown.querySelectorAll('.mobile-submenu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileDropdown.classList.remove('open');
+        mobileDropBtn.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // ===== DESKTOP DROPDOWN =====
+    const dropdown = document.getElementById('dropdown');
+    const dropBtn = document.getElementById('dropBtn');
+    dropBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = dropdown.classList.toggle('active');
+      dropBtn.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (event) => {
+      if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+        dropBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    dropdown.querySelectorAll('.menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        dropdown.classList.remove('active');
+        dropBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        dropdown.classList.remove('active');
+        dropBtn.setAttribute('aria-expanded', 'false');
+        mobileDropdown.classList.remove('open');
+        mobileDropBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // ===== SCROLL REVEAL =====
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+    revealElements.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
