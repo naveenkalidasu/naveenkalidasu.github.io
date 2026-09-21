@@ -10,8 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================
-       TOKENS
-       ============================================ */
+      TOKENS
+      ============================================ */
     :root {
       --charcoal: #111111;
       --white: #FAF9F6;
@@ -95,8 +95,8 @@
     }
 
     /* ============================================
-       TYPOGRAPHY
-       ============================================ */
+      TYPOGRAPHY
+      ============================================ */
     .eyebrow {
       font-family: var(--sans);
       font-size: 0.72rem;
@@ -139,8 +139,8 @@
     }
 
     /* ============================================
-       BUTTONS
-       ============================================ */
+      BUTTONS
+      ============================================ */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -186,8 +186,8 @@
     }
 
     /* ============================================
-       LOGO
-       ============================================ */
+      LOGO
+      ============================================ */
     .brand-logo {
       width: auto;
       height: 56px;
@@ -201,8 +201,8 @@
     }
 
     /* ============================================
-       NAVBAR
-       ============================================ */
+      NAVBAR
+      ============================================ */
     header {
       position: fixed;
       top: 0;
@@ -566,8 +566,8 @@
     }
 
     /* ============================================
-       HERO
-       ============================================ */
+      HERO
+      ============================================ */
     .hero {
       padding: 170px 0 min(8vw, 80px);
       position: relative;
@@ -648,32 +648,7 @@
       object-fit: cover;
     }
 
-    .floating-card {
-      position: absolute;
-      bottom: 28px;
-      left: 28px;
-      background: var(--white);
-      padding: 22px 26px;
-      border-radius: 2px;
-      box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .35);
-      min-width: 170px;
-    }
-
-    .floating-card .big {
-      font-family: var(--serif);
-      font-size: 2.1rem;
-      color: var(--gold);
-      line-height: 1;
-    }
-
-    .floating-card .small {
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-top: 8px;
-      display: block;
-    }
+    /* floating card removed as per request */
 
     @media(max-width:900px) {
       .hero-grid {
@@ -699,22 +674,11 @@
         font-size: 1rem;
         margin-bottom: 28px;
       }
-
-      .floating-card {
-        bottom: 16px;
-        left: 16px;
-        padding: 16px 20px;
-        min-width: 140px;
-      }
-
-      .floating-card .big {
-        font-size: 1.6rem;
-      }
     }
 
     /* ============================================
-       ONE BUSINESS. TWO SOLUTIONS.
-       ============================================ */
+      ONE BUSINESS. TWO SOLUTIONS.
+      ============================================ */
     .two-solutions {
       padding: 20px 0 60px;
     }
@@ -869,8 +833,8 @@
     }
 
     /* ============================================
-       WHY WIZARD DIGITECH — premium hover reveal
-       ============================================ */
+      WHY WIZARD DIGITECH — premium hover reveal
+      ============================================ */
     .why-section {
       padding: 20px 0 min(9vw, 100px);
       background: var(--white);
@@ -1107,8 +1071,8 @@
     }
 
     /* ============================================
-       CONTACT
-       ============================================ */
+      CONTACT
+      ============================================ */
     .contact-section {
       background: var(--white);
       padding: min(9vw, 100px) 0;
@@ -1318,8 +1282,8 @@
     }
 
     /* ============================================
-       FOOTER
-       ============================================ */
+      FOOTER
+      ============================================ */
     footer {
       background: var(--charcoal);
       color: rgba(250, 249, 246, .7);
@@ -1456,8 +1420,8 @@
     }
 
     /* ============================================
-       REVEAL
-       ============================================ */
+      REVEAL
+      ============================================ */
     .reveal {
       opacity: 0;
       transform: translateY(28px);
@@ -1504,6 +1468,10 @@
               <span class="icon">🔧</span>
               Technology Solutions
             </a>
+            <a href="#">
+              <span class="icon">🎉</span>
+              Event &amp; Party Planning
+            </a>
           </div>
         </div>
 
@@ -1544,6 +1512,10 @@
           <span class="icon">🔧</span>
           Technology Solutions
         </a>
+        <a href="#">
+          <span class="icon">🎉</span>
+          Event &amp; Party Planning
+        </a>
       </div>
     </div>
 
@@ -1558,21 +1530,17 @@
   <section id="home" class="hero">
     <div class="wrap hero-grid">
       <div class="reveal in">
-        <span class="eyebrow">Digital Marketing Agency</span>
+        <span class="eyebrow">Digital &amp; Technology Solutions</span>
         <h1>Wizard Digitech</h1>
         <span class="hero-subtitle">Your Digital &amp; Technology Solutions Partner</span>
-        <p class="lead">We craft elegant digital strategies that build brands, create opportunities and deliver lasting success.</p>
+        <p class="lead">We craft practical digital, creative, and technology solutions for businesses, organisations, and individuals.</p>
         <div class="hero-actions">
           <a href="#services" class="btn btn-primary">Explore Digital Solutions <span class="arrow">→</span></a>
           <a href="./digitalmarketing.html" class="btn btn-outline">Explore Technology Solutions</a>
         </div>
       </div>
       <div class="hero-visual reveal in">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1000&fit=crop&crop=center" alt="Modern office interior with marketing sign" loading="lazy">
-        <div class="floating-card">
-          <span class="big gold">+200%</span>
-          <span class="small">Average Traffic Growth</span>
-        </div>
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=1000&fit=crop&crop=center" alt="Team collaborating on digital and technology projects">
       </div>
     </div>
   </section>
@@ -1582,7 +1550,7 @@
     <div class="wrap">
       <div class="section-head reveal">
         <h2>ONE BUSINESS.<br><span class="gold">TWO SOLUTIONS.</span></h2>
-        <p class="sub">Everything you need to grow online — and keep your tech running.</p>
+        <p class="sub">Practical digital solutions to grow your presence — and reliable technology solutions to keep you connected.</p>
       </div>
 
       <div class="solution-grid">
@@ -1590,10 +1558,12 @@
           <div>
             <h3 class="card-title">DIGITAL <span class="accent">SOLUTIONS</span></h3>
             <ul class="card-list">
-              <li>Digital Marketing</li>
-              <li>SEO &amp; Content</li>
-              <li>Web &amp; Creative</li>
-              <li>Reputation</li>
+              <li>Digital Marketing &amp; Advertising</li>
+              <li>SEO &amp; Content Marketing</li>
+              <li>Website Designing &amp; Development</li>
+              <li>E-commerce Solutions</li>
+              <li>Branding &amp; Creative Solutions</li>
+              <li>Reputation &amp; Performance Management</li>
             </ul>
           </div>
           <a href="./digitalmarketing.html" class="card-btn">Explore <span class="arrow">→</span></a>
@@ -1603,10 +1573,9 @@
           <div>
             <h3 class="card-title">TECHNOLOGY <span class="accent">SOLUTIONS</span></h3>
             <ul class="card-list">
-              <li>Sales</li>
-              <li>Repairs</li>
-              <li>Accessories</li>
-              <li>Support &amp; Maintenance</li>
+              <li>Electronics Sales &amp; Accessories</li>
+              <li>Electronics Repairs &amp; Servicing</li>
+              <li>Electronics Support &amp; Maintenance</li>
             </ul>
           </div>
           <a href="./electronicrepairs.html" class="card-btn">Explore <span class="arrow">→</span></a>
@@ -1686,7 +1655,7 @@
           <div>
             <span class="eyebrow" style="color: var(--gold-light);">Get in Touch</span>
             <h2>Let's build something<br>great together.</h2>
-            <p>Whether you need digital marketing training, marketing services, or professional electronics repair, our team is ready to help.</p>
+            <p>Whether you need digital marketing, creative and web solutions, technology products, repairs or technical support, we're here to help you find the right solution.</p>
           </div>
 
           <div class="contact-details">
@@ -1737,7 +1706,8 @@
               </div>
               <div class="contact-detail-text">
                 <span class="label">Business Details</span>
-                <span class="val" style="font-size: 0.85rem; opacity: 0.8;">Proprietor: T.S.L. Nishitha<br>UDYAM-AP-06-0008803</span>
+                <span class="val" style="font-size: 0.95rem; font-weight: 500;">Wizard Digitech</span>
+                <span class="val" style="font-size: 0.85rem; opacity: 0.8; display: block; margin-top: 2px;">UDYAM-AP-06-0008803</span>
               </div>
             </div>
           </div>
@@ -1774,13 +1744,17 @@
               <div class="field">
                 <label for="fservice">Service Interested In</label>
                 <select id="fservice">
-                  <option>Digital Strategy</option>
-                  <option>SEO</option>
-                  <option>Social Media Marketing</option>
-                  <option>Paid Advertising</option>
-                  <option>Content Marketing</option>
-                  <option>Brand Strategy</option>
-                  <option>Electronics Repair</option>
+                  <option>Digital Marketing &amp; Advertising</option>
+                  <option>SEO &amp; Content Marketing</option>
+                  <option>Website Designing &amp; Development</option>
+                  <option>E-commerce Solutions</option>
+                  <option>Branding &amp; Creative Solutions</option>
+                  <option>Reputation &amp; Performance Management</option>
+                  <option>Digital Marketing Training</option>
+                  <option>Event &amp; Party Planning</option>
+                  <option>Electronics Sales &amp; Accessories</option>
+                  <option>Electronics Repairs &amp; Servicing</option>
+                  <option>Electronics Support &amp; Maintenance</option>
                   <option>Other</option>
                 </select>
               </div>
@@ -1823,23 +1797,25 @@
           <div class="col-title">Navigation</div>
           <div class="col-list">
             <a href="#home">Home</a>
-            <a href="./modified/digitalmarketing.html">Digital Marketing</a>
-            <a href="./modified/elctronics repair.html">Electronic Repairs</a>
-            <a href="./modified/team.html">Team</a>
-            <a href="./modified/About.html">About</a>
+            <a href="#why">About</a>
+            <a href="./digitalmarketing.html">Digital Solutions</a>
+            <a href="./electronicrepairs.html">Technology Solutions</a>
+            <a href="#work">Work</a>
+            <a href="./archeivements.html">Achievements</a>
+            <a href="./team.html">Team</a>
             <a href="#contact">Contact</a>
-            <a href="./modified/archeivements.html">Achievements</a>
           </div>
         </div>
         <div>
           <div class="col-title">Services</div>
           <div class="col-list">
-            <a href="./modified/digitalmarketing.html">Digital Strategy</a>
-            <a href="./modified/digitalmarketing.html">SEO</a>
-            <a href="./modified/digitalmarketing.html">Social Media Marketing</a>
-            <a href="./modified/digitalmarketing.html">Paid Advertising</a>
-            <a href="./modified/digitalmarketing.html">Content Marketing</a>
-            <a href="./modified/digitalmarketing.html">Brand Strategy</a>
+            <a href="./digitalmarketing.html">Digital Marketing &amp; Advertising</a>
+            <a href="./digitalmarketing.html">SEO &amp; Content Marketing</a>
+            <a href="./digitalmarketing.html">Website Designing &amp; Development</a>
+            <a href="./digitalmarketing.html">E-commerce Solutions</a>
+            <a href="./digitalmarketing.html">Branding &amp; Creative Solutions</a>
+            <a href="./digitalmarketing.html">Reputation &amp; Performance Management</a>
+            <a href="#">Event &amp; Party Planning</a>
           </div>
         </div>
         <div>
