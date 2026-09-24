@@ -376,74 +376,175 @@
     }
 
     /* ============================================================
-       SERVICE SECTIONS (ZIGZAG)
+       SERVICES GRID (2-COLUMN SIDE BY SIDE)
        ============================================================ */
-    .service-block {
-      padding: min(8vw, 90px) 0;
+    .services-section {
+      background: var(--white);
+      padding: min(9vw, 100px) 0;
     }
-    .service-block:nth-child(even) {
-      background: var(--beige);
+    .services-header {
+      text-align: center;
+      margin-bottom: 60px;
     }
-    .service-inner {
+    .services-header h2 {
+      margin-bottom: 12px;
+    }
+    .services-header p {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.02rem;
+    }
+    .services-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: clamp(40px, 6vw, 80px);
-      align-items: center;
+      gap: 32px;
     }
-    .service-inner.reverse .service-content {
-      order: -1;
-    }
-    .service-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .service-content .service-num {
-      font-family: var(--serif);
-      font-size: 3.5rem;
-      font-weight: 600;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 8px;
-      opacity: 0.4;
-    }
-    .service-content h2 {
-      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-      margin-bottom: 16px;
-    }
-    .service-content .service-quote {
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      font-style: italic;
-      color: var(--gold);
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
-    .service-content p {
-      font-size: 1.02rem;
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    .service-content .btn {
-      align-self: flex-start;
-    }
-    .service-img {
+    .service-card {
+      background: var(--white);
+      border: 1px solid rgba(17, 17, 17, .08);
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
-      background: var(--white);
-      aspect-ratio: 4 / 3;
+      transition: all .4s var(--ease);
+      box-shadow: 0 6px 24px -12px rgba(17, 17, 17, .08);
+      display: flex;
+      flex-direction: row;
+      min-height: 280px;
     }
-    .service-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 48px -16px rgba(17, 17, 17, .14);
+      border-color: rgba(168, 135, 82, .3);
+    }
+    .service-card .service-img {
+      width: 40%;
+      flex: none;
+      background: var(--beige);
+      overflow: hidden;
+      position: relative;
+    }
+    .service-card .service-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .service-card .service-body {
+      padding: 28px 26px 30px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: center;
+    }
+    .service-card .service-num {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 6px;
+      line-height: 1;
+      opacity: 0.7;
+    }
+    .service-card .service-title {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .service-card .service-desc {
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+    .service-card .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gold);
+      transition: color .3s var(--ease);
+      margin-top: auto;
+    }
+    .service-card .service-link:hover {
+      color: var(--gold-hover);
+    }
+    .service-card .service-link .arrow {
+      transition: transform .35s var(--ease);
+    }
+    .service-card .service-link:hover .arrow {
+      transform: translateX(4px);
     }
 
     @media(max-width: 900px) {
-      .service-inner { grid-template-columns: 1fr; gap: 40px; }
-      .service-inner.reverse .service-content { order: 0; }
-      .service-img { order: -1; aspect-ratio: 16 / 10; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card { flex-direction: column; min-height: auto; }
+      .service-card .service-img { width: 100%; height: 200px; position: relative; }
+      .service-card .service-img img { position: relative; }
+    }
+
+    /* ============================================================
+       OUR APPROACH (DARK SECTION)
+       ============================================================ */
+    .approach-section {
+      background: var(--charcoal);
+      padding: min(9vw, 100px) 0;
+    }
+    .approach-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .approach-header h2 {
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .approach-header p {
+      color: rgba(250, 249, 246, 0.7);
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.02rem;
+    }
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: start;
+      gap: 8px;
+    }
+    .approach-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .approach-step .step-icon {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: rgba(168, 135, 82, .15);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); margin-bottom: 16px;
+    }
+    .approach-step .step-icon svg {
+      width: 26px; height: 26px; stroke: currentColor; fill: none;
+      stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .approach-step .step-title {
+      font-family: var(--serif); font-size: 1.15rem;
+      font-weight: 600; color: var(--white); margin-bottom: 8px;
+    }
+    .approach-step .step-desc {
+      font-size: 0.82rem; color: rgba(250, 249, 246, 0.6);
+      line-height: 1.55; max-width: 160px;
+    }
+    .approach-arrow {
+      display: flex; align-items: center; justify-content: center;
+      padding-top: 20px; color: var(--gold);
+    }
+    .approach-arrow svg {
+      width: 22px; height: 22px; stroke: currentColor; fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    @media(max-width: 900px) {
+      .approach-grid { grid-template-columns: 1fr; gap: 24px; }
+      .approach-arrow { display: none; }
+      .approach-step { flex-direction: row; text-align: left; align-items: flex-start; gap: 16px; }
+      .approach-step .step-icon { margin-bottom: 0; flex: none; }
+      .approach-step .step-desc { max-width: none; }
     }
 
     /* ============================================================
@@ -846,109 +947,153 @@
     </div>
   </section>
 
-  <!-- ===== SERVICE 01 ===== -->
-  <section class="service-block">
+  <!-- ===== SERVICES GRID (2-COLUMN SIDE BY SIDE) ===== -->
+  <section id="services" class="services-section">
     <div class="wrap">
-      <div class="service-inner reveal">
-        <div class="service-content">
-          <div class="service-num">01</div>
-          <h2>Digital Marketing &amp; Advertising</h2>
-          <div class="service-quote">Expand your reach. Engage the right audience. Drive meaningful growth.</div>
-          <p>We create and manage targeted digital campaigns across social media, Google, Facebook, LinkedIn, WhatsApp and email to help your business connect with the people who matter.</p>
-          <a href="#contact" class="btn btn-outline">Learn More <span class="arrow">→</span></a>
+      <div class="services-header reveal">
+        <span class="eyebrow">What We Offer</span>
+        <h2>Our Digital Solutions</h2>
+        <p>Practical, effective and tailored digital solutions to help your business thrive online.</p>
+      </div>
+
+      <div class="services-grid">
+        <!-- Service 01 -->
+        <div class="service-card reveal">
+          <div class="service-img">
+            <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&h=600&fit=crop" alt="Digital Marketing & Advertising">
+          </div>
+          <div class="service-body">
+            <div class="service-num">01</div>
+            <div class="service-title">Digital Marketing &amp; Advertising</div>
+            <p class="service-desc">Expand your reach. Engage the right audience. Drive meaningful growth. We create and manage targeted digital campaigns across social media, Google, Facebook, LinkedIn, WhatsApp and email.</p>
+            <a href="#contact" class="service-link">Learn More <span class="arrow">→</span></a>
+          </div>
         </div>
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop" alt="Digital Marketing & Advertising">
+
+        <!-- Service 02 -->
+        <div class="service-card reveal">
+          <div class="service-img">
+            <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=600&h=600&fit=crop" alt="SEO & Content Marketing">
+          </div>
+          <div class="service-body">
+            <div class="service-num">02</div>
+            <div class="service-title">SEO &amp; Content Marketing</div>
+            <p class="service-desc">Get discovered. Build authority. Stay relevant. We combine strategic SEO with purposeful content to strengthen your online visibility through keyword research, blogs, copywriting, video scripts and backlink strategies.</p>
+            <a href="#contact" class="service-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- Service 03 -->
+        <div class="service-card reveal">
+          <div class="service-img">
+            <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=600&fit=crop" alt="Website Designing & Development">
+          </div>
+          <div class="service-body">
+            <div class="service-num">03</div>
+            <div class="service-title">Website Designing &amp; Development</div>
+            <p class="service-desc">Turn your digital presence into a powerful business asset. We design responsive, user friendly websites and landing pages that reflect your brand and create a professional online experience.</p>
+            <a href="#contact" class="service-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- Service 04 -->
+        <div class="service-card reveal">
+          <div class="service-img">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=600&fit=crop" alt="E Commerce Solutions">
+          </div>
+          <div class="service-body">
+            <div class="service-num">04</div>
+            <div class="service-title">E Commerce Solutions</div>
+            <p class="service-desc">Take your products online and turn digital browsing into business opportunities. We create practical e commerce experiences with thoughtfully designed online stores and essential integrations.</p>
+            <a href="#contact" class="service-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- Service 05 -->
+        <div class="service-card reveal">
+          <div class="service-img">
+            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=600&fit=crop" alt="Branding & Creative Solutions">
+          </div>
+          <div class="service-body">
+            <div class="service-num">05</div>
+            <div class="service-title">Branding &amp; Creative Solutions</div>
+            <p class="service-desc">Create a brand that people recognise, remember and trust. From logos and brand identity to graphic design, we develop cohesive visual solutions that give your business a distinctive identity.</p>
+            <a href="#contact" class="service-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- Service 06 -->
+        <div class="service-card reveal">
+          <div class="service-img">
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=600&fit=crop" alt="Reputation & Performance Management">
+          </div>
+          <div class="service-body">
+            <div class="service-num">06</div>
+            <div class="service-title">Reputation &amp; Performance Management</div>
+            <p class="service-desc">Build trust. Protect your reputation. Strengthen your digital presence. We help you stay on top of customer reviews, respond professionally and improve your overall digital performance.</p>
+            <a href="#contact" class="service-link">Learn More <span class="arrow">→</span></a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== SERVICE 02 ===== -->
-  <section class="service-block">
+  <!-- ===== OUR APPROACH (DARK) ===== -->
+  <section class="approach-section">
     <div class="wrap">
-      <div class="service-inner reverse reveal">
-        <div class="service-content">
-          <div class="service-num">02</div>
-          <h2>SEO &amp; Content Marketing</h2>
-          <div class="service-quote">Get discovered. Build authority. Stay relevant.</div>
-          <p>We combine strategic SEO with purposeful content to strengthen your online visibility and connect your business with the right audience through keyword research, blogs, copywriting, video scripts and backlink strategies.</p>
-          <a href="#contact" class="btn btn-outline">Learn More <span class="arrow">→</span></a>
-        </div>
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=800&h=600&fit=crop" alt="SEO & Content Marketing">
-        </div>
+      <div class="approach-header reveal">
+        <span class="eyebrow" style="color: var(--gold-light);">Our Process</span>
+        <h2>Our Approach</h2>
+        <p>A simple process for better results.</p>
       </div>
-    </div>
-  </section>
 
-  <!-- ===== SERVICE 03 ===== -->
-  <section class="service-block">
-    <div class="wrap">
-      <div class="service-inner reveal">
-        <div class="service-content">
-          <div class="service-num">03</div>
-          <h2>Website Designing &amp; Development</h2>
-          <div class="service-quote">Turn your digital presence into a powerful business asset.</div>
-          <p>We design responsive, user friendly websites and landing pages that reflect your brand, communicate your offering clearly and create a professional online experience for your customers.</p>
-          <a href="#contact" class="btn btn-outline">Learn More <span class="arrow">→</span></a>
+      <div class="approach-grid">
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="step-title">Understand</div>
+          <div class="step-desc">We begin by understanding your actual requirement.</div>
         </div>
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&h=600&fit=crop" alt="Website Designing & Development">
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ===== SERVICE 04 ===== -->
-  <section class="service-block">
-    <div class="wrap">
-      <div class="service-inner reverse reveal">
-        <div class="service-content">
-          <div class="service-num">04</div>
-          <h2>E Commerce Solutions</h2>
-          <div class="service-quote">Take your products online and turn digital browsing into business opportunities.</div>
-          <p>We create practical e commerce experiences with thoughtfully designed online stores, product pages and essential integrations that make it easier for customers to discover, engage and shop.</p>
-          <a href="#contact" class="btn btn-outline">Learn More <span class="arrow">→</span></a>
-        </div>
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop" alt="E Commerce Solutions">
-        </div>
-      </div>
-    </div>
-  </section>
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
 
-  <!-- ===== SERVICE 05 ===== -->
-  <section class="service-block">
-    <div class="wrap">
-      <div class="service-inner reveal">
-        <div class="service-content">
-          <div class="service-num">05</div>
-          <h2>Branding &amp; Creative Solutions</h2>
-          <div class="service-quote">Create a brand that people recognise, remember and trust.</div>
-          <p>From logos and brand identity to graphic design and marketing creatives, we develop cohesive visual solutions that give your business a distinctive and professional identity.</p>
-          <a href="#contact" class="btn btn-outline">Learn More <span class="arrow">→</span></a>
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+          </div>
+          <div class="step-title">Identify</div>
+          <div class="step-desc">We identify the appropriate solution for your needs.</div>
         </div>
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=600&fit=crop" alt="Branding & Creative Solutions">
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ===== SERVICE 06 ===== -->
-  <section class="service-block">
-    <div class="wrap">
-      <div class="service-inner reverse reveal">
-        <div class="service-content">
-          <div class="service-num">06</div>
-          <h2>Reputation &amp; Performance Management</h2>
-          <div class="service-quote">Build trust. Protect your reputation. Strengthen your digital presence.</div>
-          <p>We help you stay on top of customer reviews, respond professionally and identify opportunities to improve your online reputation and overall digital performance.</p>
-          <a href="#contact" class="btn btn-outline">Learn More <span class="arrow">→</span></a>
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg>
+          </div>
+          <div class="step-title">Plan</div>
+          <div class="step-desc">We create a practical approach based on the requirement.</div>
         </div>
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop" alt="Reputation & Performance Management">
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <div class="step-title">Deliver</div>
+          <div class="step-desc">We work towards delivering the agreed solution.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </div>
+          <div class="step-title">Support</div>
+          <div class="step-desc">We remain focused on dependable service and customer support.</div>
         </div>
       </div>
     </div>
