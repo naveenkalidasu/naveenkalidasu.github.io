@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Marketing Training — Wizard Digitech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== TOKENS ===== */
+    :root {
+      --charcoal: #111111;
+      --white: #FAF9F6;
+      --beige: #EDE9E2;
+      --gray: #77736D;
+      --gold: #A88752;
+      --gold-hover: #8C661A;
+      --gold-light: #C99A3A;
+      --serif: 'Cormorant Garamond', serif;
+      --sans: 'Inter', sans-serif;
+      --container: 1200px;
+      --pad: clamp(24px, 5vw, 96px);
+      --ease: cubic-bezier(.4, 0, .2, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--white);
+      color: var(--charcoal);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; height: auto; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    ul { list-style: none; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .wrap { max-width: var(--container); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+    .section { padding: min(9vw, 100px) 0; }
+
+    /* ===== TYPOGRAPHY ===== */
+    .eyebrow {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    h1 { font-size: clamp(2.4rem, 4.5vw, 3.6rem); }
+    h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+    h3 { font-size: clamp(1.15rem, 1.7vw, 1.5rem); font-weight: 600; }
+    p { color: var(--gray); }
+    .gold { color: var(--gold); }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 26px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border-radius: 2px;
+      transition: all .4s var(--ease);
+      white-space: nowrap;
+      text-align: center;
+    }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-hover); transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(168, 123, 32, .4); }
+    .btn-outline { border: 1px solid var(--charcoal); color: var(--charcoal); }
+    .btn-outline:hover { background: var(--charcoal); color: var(--white); }
+    .btn span.arrow { transition: transform .35s var(--ease); }
+    .btn:hover span.arrow { transform: translateX(5px); }
+
+    /* ===== REVEAL ===== */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ===== NAVBAR ===== */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transition: background .4s var(--ease), border-color .4s var(--ease), padding .4s var(--ease);
+      padding: 20px 0;
+      background: rgba(250, 249, 246, 0);
+      border-bottom: 1px solid transparent;
+    }
+    header.scrolled {
+      background: rgba(250, 249, 246, .92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(17, 17, 17, .08);
+      padding: 12px 0;
+    }
+    .nav-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; flex: none; height: 48px; }
+    .brand-mark {
+      display: flex; align-items: center; justify-content: center;
+      height: 48px; width: auto;
+      background: transparent !important; padding: 0 !important;
+      box-shadow: none !important; border: none !important;
+      border-radius: 0 !important; overflow: visible; flex: none;
+    }
+    .brand-mark img {
+      height: 48px; width: auto; max-width: none;
+      object-fit: contain;
+      background: transparent !important; padding: 0 !important;
+      box-shadow: none !important; border-radius: 0 !important;
+      border: none !important; display: block;
+    }
+    .brand-text { display: flex; flex-direction: column; justify-content: center; line-height: 1; }
+    .brand-name {
+      font-family: var(--serif); font-size: 1.15rem; font-weight: 600;
+      letter-spacing: 0.01em; line-height: 1.05;
+      color: var(--charcoal); white-space: nowrap;
+    }
+    .brand-tagline {
+      font-family: var(--sans); font-size: 0.6rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray); margin-top: 4px; line-height: 1; white-space: nowrap;
+    }
+    nav.primary-nav { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; align-items: center; }
+    nav.primary-nav > a {
+      font-size: 0.85rem; font-weight: 500; color: var(--charcoal);
+      position: relative; padding: 4px 0; white-space: nowrap; line-height: 1.2;
+    }
+    nav.primary-nav > a::after {
+      content: ""; position: absolute; left: 0; bottom: -2px;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width .35s var(--ease);
+    }
+    nav.primary-nav > a:hover::after,
+    nav.primary-nav > a.active::after { width: 100%; }
+
+    /* dropdown */
+    .dropdown { position: relative; }
+    .drop-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 0; font-size: 0.85rem; font-weight: 500;
+      color: var(--charcoal); cursor: pointer; transition: color .3s var(--ease);
+      position: relative; font-family: inherit; background: none;
+      border: none; line-height: 1.2;
+    }
+    .drop-btn::after {
+      content: ""; position: absolute; left: 0; bottom: -2px;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width .35s var(--ease);
+    }
+    .dropdown.active .drop-btn::after,
+    .drop-btn:hover::after { width: 100%; }
+    .drop-btn .arrow {
+      font-size: 8px; color: var(--gold);
+      transition: transform 0.4s var(--ease); display: inline-block; line-height: 1;
+    }
+    .dropdown.active .drop-btn .arrow { transform: rotate(180deg); }
+    .dropdown .menu {
+      position: absolute; top: calc(100% + 18px); left: 50%;
+      transform: translateX(-50%) translateY(-12px) scale(0.97);
+      width: 300px; padding: 14px 10px 10px; border-radius: 10px;
+      background: var(--white); border: 1px solid rgba(17, 17, 17, 0.06);
+      box-shadow:
+        0 2px 6px -1px rgba(17, 17, 17, 0.04),
+        0 18px 40px -12px rgba(17, 17, 17, 0.14),
+        0 40px 80px -24px rgba(17, 17, 17, 0.12);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform-origin: top center;
+      transition: opacity 0.28s ease, transform 0.45s cubic-bezier(.16, 1, .3, 1), visibility 0.28s;
+      z-index: 120;
+    }
+    .dropdown .menu::before {
+      content: ""; position: absolute; top: -7px; left: 50%;
+      width: 12px; height: 12px; background: var(--white);
+      border-left: 1px solid rgba(17, 17, 17, 0.06);
+      border-top: 1px solid rgba(17, 17, 17, 0.06);
+      transform: translateX(-50%) rotate(45deg);
+      border-top-left-radius: 3px;
+    }
+    .dropdown .menu .menu-label {
+      display: block; font-size: 0.66rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray);
+      padding: 0 14px 10px; margin-bottom: 6px;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+    }
+    .dropdown.active .menu {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+    .dropdown .menu a {
+      position: relative; display: flex; align-items: flex-start;
+      gap: 12px; padding: 11px 14px; margin: 2px 0; border-radius: 8px;
+      color: var(--charcoal); text-decoration: none; overflow: hidden;
+      opacity: 0; transform: translateY(-6px);
+      transition: color 0.25s ease, background 0.25s ease, transform 0.35s ease, opacity 0.35s ease;
+      font-size: 0.85rem; font-weight: 500;
+      white-space: normal; line-height: 1.35;
+    }
+    .dropdown .menu a::before {
+      content: ""; position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 3px; border-radius: 3px; background: var(--gold);
+      transform: scaleY(0); transform-origin: center;
+      transition: transform 0.35s var(--ease);
+    }
+    .dropdown .menu a:hover { color: var(--gold); background: rgba(168, 123, 32, 0.06); }
+    .dropdown .menu a:hover::before { transform: scaleY(1); }
+    .dropdown.active .menu a { opacity: 1; transform: translateY(0); }
+    .dropdown.active .menu a:nth-child(2) { transition-delay: 0.05s; }
+    .dropdown.active .menu a:nth-child(3) { transition-delay: 0.10s; }
+    .dropdown.active .menu a:nth-child(4) { transition-delay: 0.15s; }
+    .dropdown.active .menu a:nth-child(5) { transition-delay: 0.20s; }
+    .dropdown .menu .icon {
+      width: 32px; height: 32px; display: flex;
+      align-items: center; justify-content: center;
+      border-radius: 8px; background: rgba(168, 123, 32, 0.10);
+      color: var(--gold); transition: all 0.3s var(--ease);
+      font-size: 0.9rem; flex: none; margin-top: 1px;
+    }
+    .dropdown .menu a:hover .icon {
+      background: var(--gold); color: var(--white); transform: scale(1.05);
+    }
+    .dropdown .menu .item-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .dropdown .menu .item-text .title { font-size: 0.86rem; font-weight: 600; color: inherit; line-height: 1.25; }
+    .dropdown .menu .item-text .desc { font-size: 0.72rem; font-weight: 400; color: var(--gray); line-height: 1.35; }
+    .dropdown .menu a:hover .item-text .desc { color: rgba(168, 123, 32, 0.75); }
+
+    .nav-right { display: flex; align-items: center; gap: 20px; flex: none; height: 48px; }
+    .nav-right .btn { padding: 12px 24px; font-size: 0.8rem; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; width: 26px; }
+    .hamburger span { height: 1.5px; width: 100%; background: var(--charcoal); transition: all .35s var(--ease); }
+    @media(max-width:1100px) {
+      nav.primary-nav { display: none; }
+      .nav-right .btn-primary { display: none; }
+      .hamburger { display: flex; }
+      .brand-mark, .brand-mark img { height: 42px; }
+    }
+
+    /* mobile menu */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 99; background: var(--white);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 0 var(--pad); transform: translateY(-100%);
+      transition: transform .5s var(--ease); overflow-y: auto;
+    }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu > a,
+    .mobile-menu .mobile-dropdown-btn {
+      font-family: var(--serif); font-size: 1.8rem;
+      padding: 12px 0; border-bottom: 1px solid rgba(17, 17, 17, .08);
+      color: var(--charcoal); text-align: left; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      background: none; cursor: pointer;
+    }
+    .mobile-menu .mobile-dropdown-btn .arrow { font-size: 12px; color: var(--gold); transition: transform .35s var(--ease); }
+    .mobile-menu .mobile-dropdown.open .mobile-dropdown-btn .arrow { transform: rotate(180deg); }
+    .mobile-submenu { max-height: 0; overflow: hidden; transition: max-height .4s var(--ease), opacity .3s var(--ease); opacity: 0; }
+    .mobile-dropdown.open .mobile-submenu { max-height: 420px; opacity: 1; }
+    .mobile-submenu a {
+      font-family: var(--sans) !important; font-size: 0.95rem !important;
+      color: var(--gray) !important; padding: 14px 0 14px 20px !important;
+      border-bottom: 1px solid rgba(17, 17, 17, .05) !important;
+      display: flex !important; align-items: center; gap: 12px;
+      transition: color .25s var(--ease), padding-left .3s var(--ease);
+    }
+    .mobile-submenu a:hover { color: var(--gold) !important; padding-left: 26px !important; }
+    .mobile-submenu a .icon {
+      width: 28px; height: 28px; display: flex; align-items: center;
+      justify-content: center; border-radius: 4px;
+      background: rgba(168, 123, 32, 0.10); color: var(--gold);
+      font-size: 0.8rem; flex: none;
+    }
+    .mobile-menu .btn { margin-top: 28px; align-self: flex-start; }
+
+    /* ============================================================
+       HERO SECTION
+       ============================================================ */
+    .page-hero {
+      padding: 160px 0 60px;
+      background: var(--beige);
+      position: relative;
+      overflow: hidden;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+    }
+    .page-hero .wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      margin-left: 0;
+      padding-left: var(--pad);
+    }
+    .page-hero h1 {
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+      line-height: 1.15;
+    }
+    .page-hero h1 .line { display: block; }
+    .page-hero .subtitle {
+      max-width: 620px;
+      margin-top: 22px;
+      font-size: 1.05rem;
+      color: var(--gray);
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    /* Hero image styling */
+    .hero-img-wrapper {
+      position: absolute;
+      top: 50%;
+      right: var(--pad);
+      transform: translateY(-50%);
+      width: 48%;
+      max-width: 680px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .hero-img-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
+    }
+
+    @media(max-width: 900px) {
+      .page-hero .wrap {
+        max-width: var(--container);
+        margin: 0 auto;
+        padding-left: var(--pad);
+        padding-right: var(--pad);
+      }
+      .hero-img-wrapper {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 40px;
+        justify-content: center;
+      }
+    }
+
+    /* ============================================================
+       WHY SKILLS MATTER
+       ============================================================ */
+    .skills-section {
+      background: var(--white);
+      padding: min(9vw, 100px) 0;
+    }
+    .skills-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+    }
+    .skills-text h2 {
+      margin-bottom: 20px;
+    }
+    .skills-text p {
+      font-size: 1.02rem;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .skill-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .skill-card .icon {
+      width: 32px;
+      height: 32px;
+      color: var(--gold);
+    }
+    .skill-card .icon svg {
+      width: 100%; height: 100%; stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .skill-card h4 {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin: 0;
+    }
+    .skill-card p {
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.5;
+      margin: 0;
+    }
+    @media(max-width: 900px) {
+      .skills-split { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       WHAT YOU WILL LEARN
+       ============================================================ */
+    .learn-section {
+      background: var(--beige);
+      padding: min(9vw, 100px) 0;
+    }
+    .learn-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .learn-header h2 {
+      margin-bottom: 12px;
+    }
+    .learn-header p {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.02rem;
+    }
+    .learn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .learn-card {
+      display: flex;
+      gap: 24px;
+      background: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px -12px rgba(17, 17, 17, .08);
+      transition: all .4s var(--ease);
+    }
+    .learn-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px -16px rgba(17, 17, 17, .14);
+    }
+    .learn-card .learn-img {
+      width: 180px;
+      flex: none;
+      background: var(--beige);
+      overflow: hidden;
+    }
+    .learn-card .learn-img img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .learn-card .learn-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .learn-card .learn-num {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+    .learn-card .learn-title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .learn-card .learn-desc {
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .learn-card .learn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      transition: color .3s var(--ease);
+    }
+    .learn-card .learn-link:hover { color: var(--gold-hover); }
+    .learn-card .learn-link .arrow { transition: transform .35s var(--ease); }
+    .learn-card .learn-link:hover .arrow { transform: translateX(4px); }
+
+    @media(max-width: 900px) {
+      .learn-grid { grid-template-columns: 1fr; }
+    }
+    @media(max-width: 500px) {
+      .learn-card { flex-direction: column; }
+      .learn-card .learn-img { width: 100%; height: 180px; }
+    }
+
+    /* ============================================================
+       WHO SHOULD JOIN
+       ============================================================ */
+    .join-section {
+      background: var(--white);
+      padding: min(9vw, 100px) 0;
+    }
+    .join-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .join-header h2 {
+      margin-bottom: 12px;
+    }
+    .join-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .join-card {
+      background: var(--white);
+      border: 1px solid rgba(17, 17, 17, .08);
+      border-radius: 8px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all .4s var(--ease);
+      box-shadow: 0 6px 24px -12px rgba(17, 17, 17, .08);
+    }
+    .join-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px -16px rgba(17, 17, 17, .14);
+      border-color: rgba(168, 135, 82, .3);
+    }
+    .join-card .join-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 20px;
+      color: var(--gold);
+    }
+    .join-card .join-icon svg {
+      width: 100%; height: 100%; stroke: currentColor; fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .join-card .join-title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    .join-card .join-desc {
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.55;
+    }
+    @media(max-width: 900px) {
+      .join-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media(max-width: 500px) {
+      .join-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       TRAINING APPROACH (DARK)
+       ============================================================ */
+    .approach-section {
+      background: var(--charcoal);
+      padding: min(9vw, 100px) 0;
+    }
+    .approach-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .approach-header h2 {
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: start;
+      gap: 8px;
+    }
+    .approach-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .approach-step .step-icon {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: rgba(168, 135, 82, .15);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); margin-bottom: 16px;
+    }
+    .approach-step .step-icon svg {
+      width: 26px; height: 26px; stroke: currentColor; fill: none;
+      stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .approach-step .step-title {
+      font-family: var(--serif); font-size: 1.15rem;
+      font-weight: 600; color: var(--white); margin-bottom: 8px;
+    }
+    .approach-step .step-desc {
+      font-size: 0.82rem; color: rgba(250, 249, 246, 0.6);
+      line-height: 1.55; max-width: 160px;
+    }
+    .approach-arrow {
+      display: flex; align-items: center; justify-content: center;
+      padding-top: 20px; color: var(--gold);
+    }
+    .approach-arrow svg {
+      width: 22px; height: 22px; stroke: currentColor; fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    @media(max-width: 900px) {
+      .approach-grid { grid-template-columns: 1fr; gap: 24px; }
+      .approach-arrow { display: none; }
+      .approach-step { flex-direction: row; text-align: left; align-items: flex-start; gap: 16px; }
+      .approach-step .step-icon { margin-bottom: 0; flex: none; }
+      .approach-step .step-desc { max-width: none; }
+    }
+
+    /* ============================================================
+       WHAT YOU GET
+       ============================================================ */
+    .get-section {
+      background: var(--beige);
+      padding: min(9vw, 100px) 0;
+    }
+    .get-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+    }
+    .get-text h2 {
+      margin-bottom: 20px;
+    }
+    .get-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .get-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+    .get-list li .check {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1.1rem;
+      line-height: 1.2;
+      flex: none;
+      margin-top: 1px;
+    }
+    .get-img {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
+      background: var(--white);
+    }
+    .get-img img {
+      width: 100%; height: auto;
+      object-fit: cover;
+      aspect-ratio: 4 / 3;
+    }
+    @media(max-width: 900px) {
+      .get-split { grid-template-columns: 1fr; }
+      .get-img { order: -1; }
+    }
+
+    /* ============================================================
+       COURSE DETAILS
+       ============================================================ */
+    .details-section {
+      background: var(--white);
+      padding: min(9vw, 100px) 0;
+    }
+    .details-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .details-header h2 {
+      margin-bottom: 12px;
+    }
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .detail-card {
+      background: var(--beige);
+      border-radius: 8px;
+      padding: 28px 24px;
+      text-align: center;
+      transition: all .4s var(--ease);
+    }
+    .detail-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px -16px rgba(17, 17, 17, .14);
+    }
+    .detail-card .detail-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 16px;
+      color: var(--gold);
+    }
+    .detail-card .detail-icon svg {
+      width: 100%; height: 100%; stroke: currentColor; fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .detail-card .detail-title {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .detail-card .detail-value {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      line-height: 1.2;
+    }
+    @media(max-width: 900px) {
+      .details-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media(max-width: 500px) {
+      .details-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       CTA / CONTACT SECTION
+       ============================================================ */
+    .cta-section {
+      background: var(--charcoal);
+      padding: min(9vw, 100px) 0;
+      text-align: center;
+    }
+    .cta-section h2 {
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      color: rgba(250, 249, 246, 0.7);
+      max-width: 600px;
+      margin: 0 auto 32px;
+      font-size: 1.05rem;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-contact {
+      margin-top: 40px;
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: rgba(250, 249, 246, 0.6);
+    }
+    .cta-contact a {
+      color: var(--gold);
+      transition: color .3s var(--ease);
+    }
+    .cta-contact a:hover { color: var(--gold-light); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      background: var(--charcoal); color: rgba(250, 249, 246, .7);
+      padding: min(8vw, 90px) 0 30px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 40px; padding-bottom: 60px;
+      border-bottom: 1px solid rgba(250, 249, 246, .12);
+    }
+    .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .footer-brand .brand-mark {
+      height: 44px; background: transparent !important;
+      border-radius: 0 !important; padding: 0 !important;
+      box-shadow: none !important;
+    }
+    .footer-brand .brand-mark img {
+      height: 44px; width: auto;
+      background: transparent !important; padding: 0 !important;
+    }
+    .footer-brand-name {
+      font-family: var(--serif); font-size: 1.05rem;
+      color: var(--white); font-weight: 600; line-height: 1.1;
+    }
+    .footer-tagline {
+      font-size: 0.62rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold);
+      margin-top: 3px; display: block;
+    }
+    footer .col-title {
+      font-size: 0.72rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--white); margin-bottom: 20px;
+    }
+    footer .col-list { display: flex; flex-direction: column; gap: 12px; }
+    footer .col-list a { font-size: 0.88rem; transition: color .3s var(--ease); }
+    footer .col-list a:hover { color: var(--gold); }
+    .footer-desc { font-size: 0.88rem; max-width: 280px; line-height: 1.6; }
+    .footer-bottom {
+      padding-top: 26px; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px; font-size: 0.78rem;
+    }
+    .footer-bottom .legal { display: flex; gap: 24px; }
+    .footer-bottom a:hover { color: var(--gold); }
+    .social-row { display: flex; gap: 16px; margin-top: 20px; }
+    .social-row a {
+      width: 34px; height: 34px;
+      border: 1px solid rgba(250, 249, 246, .2);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.7rem;
+      transition: all .3s var(--ease);
+    }
+    .social-row a:hover { border-color: var(--gold); color: var(--gold); }
+    @media(max-width:900px) { .footer-grid { grid-template-columns: 1fr 1fr; row-gap: 40px; } }
+    @media(max-width:560px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header id="siteHeader">
+    <div class="wrap nav-row">
+      <a href="index.html" class="brand">
+        <span class="brand-mark"><img src="./logo.png" alt="Wizard Digitech logo"></span>
+        <span class="brand-text">
+          <span class="brand-name">Wizard Digitech</span>
+          <span class="brand-tagline">YOUR DIGITAL & TECH PARTNER</span>
+        </span>
+      </a>
+      <nav class="primary-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+
+        <div class="dropdown" id="dropdown">
+          <button class="drop-btn" id="dropBtn" aria-haspopup="true" aria-expanded="false">
+            Services
+            <span class="arrow">▼</span>
+          </button>
+          <div class="menu" role="menu">
+            <span class="menu-label">What we offer</span>
+
+            <a href="./digitalmarketing.html" role="menuitem">
+              <span class="icon">⚡</span>
+              <span class="item-text">
+                <span class="title">Digital Solutions</span>
+                <span class="desc">Marketing, SEO, web &amp; branding</span>
+              </span>
+            </a>
+
+            <a href="./digitalmarketingtraining.html" role="menuitem">
+              <span class="icon">🎓</span>
+              <span class="item-text">
+                <span class="title">Digital Marketing Training</span>
+                <span class="desc">Hands-on programs &amp; workshops</span>
+              </span>
+            </a>
+
+            <a href="./electronicrepairs.html" role="menuitem">
+              <span class="icon">🔧</span>
+              <span class="item-text">
+                <span class="title">Technology Solutions</span>
+                <span class="desc">Sales, repairs &amp; maintenance</span>
+              </span>
+            </a>
+
+            <a href="#" role="menuitem">
+              <span class="icon">🎉</span>
+              <span class="item-text">
+                <span class="title">Event &amp; Party Planning</span>
+                <span class="desc">Curated events &amp; celebrations</span>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <a href="index.html#work">Work</a>
+        <a href="Archeivements.html">Achievements</a>
+        <a href="team.html">Team</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="nav-right">
+        <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MOBILE MENU ===== -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+
+    <div class="mobile-dropdown" id="mobileDropdown">
+      <button class="mobile-dropdown-btn" id="mobileDropBtn" aria-expanded="false">
+        Services
+        <span class="arrow">▼</span>
+      </button>
+      <div class="mobile-submenu">
+        <a href="./digitalmarketing.html"><span class="icon">⚡</span>Digital Solutions</a>
+        <a href="./digitalmarketingtraining.html"><span class="icon">🎓</span>Digital Marketing Training</a>
+        <a href="./electronicrepairs.html"><span class="icon">🔧</span>Technology Solutions</a>
+        <a href="#"><span class="icon">🎉</span>Event &amp; Party Planning</a>
+      </div>
+    </div>
+
+    <a href="index.html#work">Work</a>
+    <a href="Archeivements.html">Achievements</a>
+    <a href="team.html">Team</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+  </div>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Digital Marketing Training</span>
+      <h1>
+        <span class="line">Learn Digital</span>
+        <span class="line">Marketing.</span>
+        <span class="line gold">Build Skills.</span>
+        <span class="line">Upskill Your Career.</span>
+      </h1>
+      <p class="subtitle">Master practical digital marketing skills across SEO, social media, content, advertising, analytics, email marketing and AI through hands-on, real-world training.</p>
+      <div class="hero-buttons">
+        <a href="#contact" class="btn btn-primary">Join the Course <span class="arrow">→</span></a>
+        <a href="#details" class="btn btn-outline">View Course Modules</a>
+      </div>
+    </div>
+    <!-- Hero Image -->
+    <div class="hero-img-wrapper">
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop" alt="Digital Marketing Training">
+    </div>
+  </section>
+
+  <!-- ===== WHY SKILLS MATTER ===== -->
+  <section class="skills-section">
+    <div class="wrap">
+      <div class="skills-split">
+        <div class="skills-text reveal">
+          <span class="eyebrow">Build Skills That Matter</span>
+          <h2>Build Skills That Matter in Today's Digital World</h2>
+          <p>Whether you are starting your career, looking to upskill or want to understand digital marketing for your own business, this practical training is designed to help you learn, practise and apply real world digital marketing skills.</p>
+        </div>
+        <div class="skills-grid reveal">
+          <div class="skill-card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+            <h4>8 Core Modules</h4>
+            <p>A structured learning journey covering essential areas of digital marketing.</p>
+          </div>
+          <div class="skill-card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+            <h4>Practical Learning</h4>
+            <p>Learn concepts through practical exercises and real-world applications.</p>
+          </div>
+          <div class="skill-card">
+            <div class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Modern Digital Tools</h4>
+            <p>Understand the platforms and tools used across today's digital marketing ecosystem.</p>
+          </div>
+          <div class="skill-card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <h4>Skills for Real World Application</h4>
+            <p>Gain practical knowledge you can apply to projects, careers and business requirements.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHAT YOU WILL LEARN ===== -->
+  <section class="learn-section">
+    <div class="wrap">
+      <div class="learn-header reveal">
+        <span class="eyebrow">What You Will Learn</span>
+        <h2>Master the Core of Digital Marketing</h2>
+        <p>Explore the essential skills and tools needed to understand, plan and execute effective digital marketing activities.</p>
+      </div>
+
+      <div class="learn-grid">
+        <!-- 01 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=300&fit=crop" alt="Digital Marketing Fundamentals">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">01</div>
+            <div class="learn-title">Digital Marketing Fundamentals</div>
+            <p class="learn-desc">Understand the digital marketing landscape, key channels and the strategies businesses use to build a strong online presence.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=300&h=300&fit=crop" alt="SEO & Content Marketing">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">02</div>
+            <div class="learn-title">SEO &amp; Content Marketing</div>
+            <p class="learn-desc">Learn keyword research, search engine optimisation, content planning and copywriting to improve online visibility.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&h=300&fit=crop" alt="Social Media Marketing">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">03</div>
+            <div class="learn-title">Social Media Marketing</div>
+            <p class="learn-desc">Learn how to plan content, manage social media platforms, engage audiences and build a strong social media presence.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1533750516457-a7f992034fec?w=300&h=300&fit=crop" alt="Digital Advertising & Campaigns">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">04</div>
+            <div class="learn-title">Digital Advertising &amp; Campaigns</div>
+            <p class="learn-desc">Learn how to plan and manage paid campaigns, create effective advertisements, define target audiences, manage budgets and evaluate campaign performance.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 05 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=300&h=300&fit=crop" alt="Email & WhatsApp Marketing">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">05</div>
+            <div class="learn-title">Email &amp; WhatsApp Marketing</div>
+            <p class="learn-desc">Learn how to create targeted campaigns, build subscriber lists and use email and WhatsApp to build engagement and support customer communication.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 06 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=300&fit=crop" alt="Google Analytics & Performance">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">06</div>
+            <div class="learn-title">Google Analytics &amp; Performance</div>
+            <p class="learn-desc">Learn how to understand website traffic, user behaviour and conversions. Use analytics and data to measure and improve digital marketing performance.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 07 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=300&h=300&fit=crop" alt="AI for Digital Marketing">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">07</div>
+            <div class="learn-title">AI for Digital Marketing</div>
+            <p class="learn-desc">Learn how AI can be used for research, content creation, campaign planning, creative development, audience insights and improving marketing workflows.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 08 -->
+        <div class="learn-card reveal">
+          <div class="learn-img">
+            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=300&h=300&fit=crop" alt="Branding & Digital Creative">
+          </div>
+          <div class="learn-body">
+            <div class="learn-num">08</div>
+            <div class="learn-title">Branding &amp; Digital Creative</div>
+            <p class="learn-desc">Understand the basics of digital branding, visual communication and creative content to build a consistent and recognisable online identity.</p>
+            <a href="#" class="learn-link">Learn More <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHO SHOULD JOIN ===== -->
+  <section class="join-section">
+    <div class="wrap">
+      <div class="join-header reveal">
+        <span class="eyebrow">Is This Course For You?</span>
+        <h2>Who Should Join?</h2>
+      </div>
+
+      <div class="join-grid">
+        <div class="join-card reveal">
+          <div class="join-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="join-title">Students &amp; Freshers</div>
+          <div class="join-desc">Build practical digital marketing skills and develop a strong foundation for your career.</div>
+        </div>
+
+        <div class="join-card reveal">
+          <div class="join-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="join-title">Job Seekers &amp; Career Starters</div>
+          <div class="join-desc">Develop relevant digital skills and strengthen your professional capabilities.</div>
+        </div>
+
+        <div class="join-card reveal">
+          <div class="join-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="join-title">Working Professionals</div>
+          <div class="join-desc">Add digital marketing knowledge to your existing skill set and stay relevant in a changing digital environment.</div>
+        </div>
+
+        <div class="join-card reveal">
+          <div class="join-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="join-title">Business Owners &amp; Entrepreneurs</div>
+          <div class="join-desc">Understand how digital marketing can support your business visibility, customer reach and growth.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TRAINING APPROACH (DARK) ===== -->
+  <section class="approach-section">
+    <div class="wrap">
+      <div class="approach-header reveal">
+        <span class="eyebrow" style="color: var(--gold-light);">Our Training Approach</span>
+        <h2>Learn. Practise. Apply.</h2>
+      </div>
+
+      <div class="approach-grid">
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div class="step-title">Learn</div>
+          <div class="step-desc">Understand the concepts, platforms, tools and strategies you need.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="step-title">Practise</div>
+          <div class="step-desc">Work on practical exercises and examples to reinforce what you learn.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg>
+          </div>
+          <div class="step-title">Apply</div>
+          <div class="step-desc">Put your skills into practice through real world scenarios and assignments.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="step-title">Analyse</div>
+          <div class="step-desc">Understand performance data, interpret key metrics and learn how to make decisions for improvement.</div>
+        </div>
+
+        <div class="approach-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="approach-step reveal">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </div>
+          <div class="step-title">Grow</div>
+          <div class="step-desc">Build skills and continue developing your digital marketing capabilities.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHAT YOU GET ===== -->
+  <section class="get-section">
+    <div class="wrap">
+      <div class="get-split">
+        <div class="get-text reveal">
+          <span class="eyebrow">Your Learning Journey Includes</span>
+          <h2>What You Get</h2>
+          <ul class="get-list">
+            <li><span class="check">✓</span> Structured digital marketing training</li>
+            <li><span class="check">✓</span> Practical exercises and real-world applications</li>
+            <li><span class="check">✓</span> Exposure to modern digital marketing tools</li>
+            <li><span class="check">✓</span> SEO, social media and advertising knowledge</li>
+            <li><span class="check">✓</span> Analytics and performance understanding</li>
+            <li><span class="check">✓</span> AI applications for digital marketing</li>
+            <li><span class="check">✓</span> Guidance throughout the learning process</li>
+            <li><span class="check">✓</span> Certificate of completion</li>
+          </ul>
+        </div>
+        <div class="get-img reveal">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop" alt="Digital Marketing Learning">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COURSE DETAILS ===== -->
+  <section id="details" class="details-section">
+    <div class="wrap">
+      <div class="details-header reveal">
+        <span class="eyebrow">Course Information</span>
+        <h2>Course Details</h2>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-card reveal">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="detail-title">Course Duration</div>
+          <div class="detail-value">[To be updated]</div>
+        </div>
+
+        <div class="detail-card reveal">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="detail-title">Training Format</div>
+          <div class="detail-value">[Online / Offline / Hybrid]</div>
+        </div>
+
+        <div class="detail-card reveal">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="detail-title">Schedule</div>
+          <div class="detail-value">[To be updated]</div>
+        </div>
+
+        <div class="detail-card reveal">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="detail-title">Course Fee</div>
+          <div class="detail-value">[To be updated]</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA / CONTACT SECTION ===== -->
+  <section id="contact" class="cta-section">
+    <div class="wrap reveal">
+      <span class="eyebrow" style="color: var(--gold-light);">Ready to Join?</span>
+      <h2>Build Skills. Create Opportunities.</h2>
+      <p>Start building practical digital marketing skills and take the next step in your learning journey.</p>
+      <div class="cta-buttons">
+        <a href="https://wa.me/917097754200?text=Hi%20Wizard%20Digitech%2C%20I%27d%20like%20to%20join%20the%20Digital%20Marketing%20Training." target="_blank" rel="noopener" class="btn btn-primary">Join the Course <span class="arrow">→</span></a>
+      </div>
+      <div class="cta-contact">
+        <span>Have questions before joining?</span>
+        <a href="tel:+917097754200">Call +91 70977 54200</a>
+        <a href="mailto:wizard.digitech@gmail.com">Email wizard.digitech@gmail.com</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <span class="brand-mark"><img src="./logo.png" alt="Wizard Digitech logo"></span>
+            <span>
+              <span class="footer-brand-name">Wizard Digitech</span>
+              <span class="footer-tagline">Your Digital Tech Partner</span>
+            </span>
+          </div>
+          <p class="footer-desc">Practical digital, creative, and technology solutions for businesses, organisations, and individuals.</p>
+          <div class="social-row"><a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="LinkedIn">IN</a><a href="#" aria-label="Facebook">FB</a><a href="#" aria-label="YouTube">YT</a></div>
+        </div>
+        <div>
+          <div class="col-title">Navigation</div>
+          <div class="col-list">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="digitalmarketing.html">Digital Solutions</a>
+            <a href="electronicrepairs.html">Technology Solutions</a>
+            <a href="index.html#work">Work</a>
+            <a href="Archeivements.html">Achievements</a>
+            <a href="team.html">Team</a>
+            <a href="index.html#contact">Contact</a>
+          </div>
+        </div>
+        <div>
+          <div class="col-title">Services</div>
+          <div class="col-list">
+            <a href="digitalmarketing.html">Digital Marketing &amp; Advertising</a>
+            <a href="digitalmarketing.html">SEO &amp; Content Marketing</a>
+            <a href="digitalmarketing.html">Website Designing</a>
+            <a href="digitalmarketing.html">E-commerce Solutions</a>
+            <a href="digitalmarketing.html">Branding &amp; Creative</a>
+            <a href="#">Event &amp; Party Planning</a>
+          </div>
+        </div>
+        <div>
+          <div class="col-title">Contact</div>
+          <div class="col-list">
+            <a href="tel:+917097754200">+91 70977 54200</a>
+            <a href="mailto:wizard.digitech@gmail.com">wizard.digitech@gmail.com</a>
+            <span>Vijayawada, AP</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Wizard Digitech. All rights reserved.</span>
+        <div class="legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== STICKY HEADER =====
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+
+    // ===== MOBILE MENU =====
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburgerBtn.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      hamburgerBtn.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      if (a.closest('.mobile-submenu')) return;
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }));
+
+    // ===== MOBILE SERVICES ACCORDION =====
+    const mobileDropdown = document.getElementById('mobileDropdown');
+    const mobileDropBtn = document.getElementById('mobileDropBtn');
+    mobileDropBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = mobileDropdown.classList.toggle('open');
+      mobileDropBtn.setAttribute('aria-expanded', isOpen);
+    });
+    mobileDropdown.querySelectorAll('.mobile-submenu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileDropdown.classList.remove('open');
+        mobileDropBtn.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // ===== DESKTOP DROPDOWN =====
+    const dropdown = document.getElementById('dropdown');
+    const dropBtn = document.getElementById('dropBtn');
+    dropBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = dropdown.classList.toggle('active');
+      dropBtn.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (event) => {
+      if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+        dropBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    dropdown.querySelectorAll('.menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        dropdown.classList.remove('active');
+        dropBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        dropdown.classList.remove('active');
+        dropBtn.setAttribute('aria-expanded', 'false');
+        mobileDropdown.classList.remove('open');
+        mobileDropBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // ===== SCROLL REVEAL =====
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+    revealElements.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
