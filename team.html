@@ -382,7 +382,7 @@
     }
 
     /* ============================================================
-       TEAM GRID — WITH & WITHOUT IMAGES
+       TEAM GRID
        ============================================================ */
     .team-grid {
       display: grid;
@@ -536,35 +536,318 @@
     }
 
     /* ============================================================
-       COMPACT CARD — NO IMAGE (for members 03–07)
+       PREMIUM COMPACT CARD — NO IMAGE (Enhanced v3)
        ============================================================ */
     .team-card.compact {
-      border-left: 3px solid var(--gold);
+      position: relative;
+      border: none;
       background: var(--white);
-      box-shadow: 0 4px 16px -8px rgba(17, 17, 17, .06);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all .5s cubic-bezier(.4, 0, .2, 1);
+      box-shadow: 
+        0 1px 3px rgba(17, 17, 17, 0.04),
+        0 8px 24px -8px rgba(17, 17, 17, 0.08);
+      display: flex;
+      flex-direction: column;
+      isolation: isolate;
     }
+
+    /* Layered gradient background */
+    .team-card.compact::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 100% 0%, rgba(168, 135, 82, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(168, 135, 82, 0.05) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity .5s var(--ease);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .team-card.compact:hover::before {
+      opacity: 1;
+    }
+
+    /* Animated gradient border */
+    .team-card.compact::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      padding: 1.5px;
+      background: linear-gradient(135deg, 
+        rgba(168, 135, 82, 0.6) 0%, 
+        rgba(201, 154, 58, 0.3) 30%, 
+        rgba(168, 135, 82, 0.05) 50%,
+        rgba(201, 154, 58, 0.3) 70%,
+        rgba(168, 135, 82, 0.6) 100%);
+      background-size: 200% 200%;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .5s var(--ease);
+      animation: borderShimmer 4s ease infinite;
+    }
+    .team-card.compact:hover::after {
+      opacity: 1;
+    }
+    @keyframes borderShimmer {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
     .team-card.compact:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 36px -14px rgba(17, 17, 17, .12);
-      border-color: rgba(168, 135, 82, .35);
+      transform: translateY(-10px);
+      box-shadow: 
+        0 2px 6px rgba(17, 17, 17, 0.04),
+        0 30px 60px -20px rgba(17, 17, 17, 0.18);
     }
+
+    /* Top accent bar */
+    .team-card.compact .card-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), rgba(168, 135, 82, 0.2));
+      opacity: 0.6;
+      transition: opacity .4s var(--ease), height .4s var(--ease);
+      border-radius: 16px 16px 0 0;
+      z-index: 2;
+    }
+    .team-card.compact:hover .card-accent {
+      opacity: 1;
+      height: 4px;
+    }
+
+    /* Corner decorative dots */
+    .team-card.compact .corner-dots {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 5px;
+      opacity: 0.5;
+      transition: opacity .4s var(--ease);
+      z-index: 2;
+    }
+    .team-card.compact:hover .corner-dots {
+      opacity: 1;
+    }
+    .team-card.compact .corner-dots span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      transition: transform .3s var(--ease);
+    }
+    .team-card.compact:hover .corner-dots span:nth-child(1) {
+      transform: scale(1.3);
+      transition-delay: 0s;
+    }
+    .team-card.compact:hover .corner-dots span:nth-child(2) {
+      transform: scale(1.3);
+      transition-delay: 0.08s;
+    }
+    .team-card.compact:hover .corner-dots span:nth-child(3) {
+      transform: scale(1.3);
+      transition-delay: 0.16s;
+    }
+
+    /* Large decorative initial watermark */
+    .team-card.compact .card-watermark {
+      position: absolute;
+      bottom: -20px;
+      right: 10px;
+      font-family: var(--serif);
+      font-size: 9rem;
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(168, 135, 82, 0.04);
+      pointer-events: none;
+      user-select: none;
+      transition: color .5s var(--ease), transform .6s var(--ease);
+      z-index: 0;
+      letter-spacing: -0.05em;
+    }
+    .team-card.compact:hover .card-watermark {
+      color: rgba(168, 135, 82, 0.09);
+      transform: scale(1.1) translateY(-8px) rotate(-4deg);
+    }
+
+    /* Body */
     .team-card.compact .team-body {
-      padding: 28px 28px 26px;
+      padding: 34px 30px 28px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
     }
-    .team-card.compact .team-name {
-      font-size: 1.25rem;
-    }
-    .team-card.compact .team-role-flip {
-      margin-bottom: 12px;
-    }
-    .team-card.compact .team-desc {
-      font-size: 0.86rem;
+
+    /* Role pill */
+    .team-card.compact .compact-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
       margin-bottom: 16px;
+      padding: 6px 12px 6px 0;
+      position: relative;
     }
-    /* compact skill tags slightly tighter */
+    .team-card.compact .compact-role::before {
+      content: "";
+      width: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 2px;
+      transition: width .5s var(--ease);
+    }
+    .team-card.compact:hover .compact-role::before {
+      width: 36px;
+    }
+
+    /* Name with animated underline */
+    .team-card.compact .team-name {
+      font-size: 1.45rem;
+      margin-bottom: 14px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .team-card.compact .team-name::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 48px;
+      height: 2.5px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), transparent);
+      border-radius: 2px;
+      transition: width .6s cubic-bezier(.4, 0, .2, 1);
+    }
+    .team-card.compact:hover .team-name::after {
+      width: 90px;
+    }
+
+    /* Icon grid — creative role-based icons */
+    .team-card.compact .card-icon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+      max-width: 200px;
+    }
+    .team-card.compact .card-icon-grid .icon-cell {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      background: linear-gradient(145deg, rgba(168, 135, 82, 0.06), rgba(168, 135, 82, 0.02));
+      border: 1px solid rgba(168, 135, 82, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      transition: all .4s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .team-card.compact .card-icon-grid .icon-cell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      opacity: 0;
+      transition: opacity .4s var(--ease);
+    }
+    .team-card.compact .card-icon-grid .icon-cell svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      position: relative;
+      z-index: 1;
+      transition: color .4s var(--ease), transform .4s var(--ease);
+    }
+    .team-card.compact:hover .card-icon-grid .icon-cell::before {
+      opacity: 1;
+    }
+    .team-card.compact:hover .card-icon-grid .icon-cell {
+      border-color: transparent;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px -6px rgba(168, 135, 82, 0.4);
+    }
+    .team-card.compact:hover .card-icon-grid .icon-cell svg {
+      color: var(--white);
+      transform: scale(1.1);
+    }
+    .team-card.compact:hover .card-icon-grid .icon-cell:nth-child(1) {
+      transition-delay: 0s;
+    }
+    .team-card.compact:hover .card-icon-grid .icon-cell:nth-child(2) {
+      transition-delay: 0.06s;
+    }
+    .team-card.compact:hover .card-icon-grid .icon-cell:nth-child(3) {
+      transition-delay: 0.12s;
+    }
+
+    /* Description */
+    .team-card.compact .team-desc {
+      font-size: 0.85rem;
+      line-height: 1.65;
+      margin-bottom: 0;
+      color: #7A756D;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Skill tags — refined pills with hover */
+    .team-card.compact .team-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .team-card.compact .team-skills::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(168, 135, 82, 0.25), transparent);
+    }
     .team-card.compact .team-skills .skill-tag {
-      font-size: 0.68rem;
-      padding: 4px 10px;
+      background: rgba(168, 135, 82, 0.07);
+      color: #6B6358;
+      font-size: 0.66rem;
+      padding: 5px 11px;
+      border-radius: 20px;
+      font-weight: 500;
+      line-height: 1.3;
+      transition: all .35s var(--ease);
+      display: inline-block;
+      position: relative;
+      cursor: default;
+      border: 1px solid transparent;
+      letter-spacing: 0.01em;
+    }
+    .team-card.compact:hover .team-skills .skill-tag {
+      background: rgba(168, 135, 82, 0.12);
+      color: var(--gold-hover);
+      border-color: rgba(168, 135, 82, 0.22);
+      transform: translateY(-1px);
     }
 
     /* ============================================================
@@ -576,12 +859,16 @@
       .team-card .team-body { padding: 24px; }
       .team-card .team-name { font-size: 1.2rem; }
       .team-card .team-desc { font-size: 0.85rem; margin-bottom: 12px; }
-      .team-card.compact .team-body { padding: 24px; }
-      .team-card.compact .team-name { font-size: 1.15rem; }
+      .team-card.compact .team-body { padding: 28px 24px 24px; }
+      .team-card.compact .team-name { font-size: 1.3rem; }
+      .team-card.compact .card-watermark { font-size: 7rem; bottom: -10px; }
     }
     @media(max-width: 480px) {
       .team-card .team-img { height: 300px; }
-      .team-card.compact .team-body { padding: 20px; }
+      .team-card.compact .team-body { padding: 24px 20px 20px; }
+      .team-card.compact .card-watermark { font-size: 5.5rem; }
+      .team-card.compact .team-name { font-size: 1.2rem; }
+      .team-card.compact .card-icon-grid { max-width: 170px; }
     }
 
     /* ============================================================
@@ -1206,202 +1493,117 @@
           </div>
         </div>
 
-        <!-- Member 03 — T.N.S. Charishma (COMPACT — no image) -->
+        <!-- Member 03 — T.N.S. Charishma (PREMIUM COMPACT) -->
         <div class="team-card compact reveal">
+          <span class="card-accent"></span>
+          <span class="corner-dots"><span></span><span></span><span></span></span>
+          <span class="card-watermark">C</span>
           <div class="team-body">
+            <div class="compact-role">Social Media Specialist</div>
             <div class="team-name">T.N.S. Charishma</div>
-            <div class="team-role-flip">
-              <span class="flip-inner">
-                <span class="flip-front">Social Media Specialist</span>
-                <span class="flip-back">Social Media Specialist</span>
-              </span>
+            <div class="card-icon-grid">
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></span>
             </div>
             <p class="team-desc">Charishma manages social media presence, content coordination and audience engagement, helping businesses maintain a consistent, active and engaging presence across digital platforms.</p>
             <div class="team-skills">
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Social Media Management</span>
-                  <span class="skill-back">Social Media Management</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Content Coordination</span>
-                  <span class="skill-back">Content Coordination</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Audience Engagement</span>
-                  <span class="skill-back">Audience Engagement</span>
-                </span>
-              </span>
+              <span class="skill-tag">Social Media Management</span>
+              <span class="skill-tag">Content Coordination</span>
+              <span class="skill-tag">Audience Engagement</span>
             </div>
           </div>
         </div>
 
-        <!-- Member 04 — Surendra (COMPACT — no image) -->
+        <!-- Member 04 — Surendra (PREMIUM COMPACT) -->
         <div class="team-card compact reveal">
+          <span class="card-accent"></span>
+          <span class="corner-dots"><span></span><span></span><span></span></span>
+          <span class="card-watermark">S</span>
           <div class="team-body">
+            <div class="compact-role">Graphic Designer</div>
             <div class="team-name">Surendra</div>
-            <div class="team-role-flip">
-              <span class="flip-inner">
-                <span class="flip-front">Graphic Designer</span>
-                <span class="flip-back">Graphic Designer</span>
-              </span>
+            <div class="card-icon-grid">
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10 10 10 0 0 0 10-10 10 10 0 0 0-10-10z"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></span>
             </div>
             <p class="team-desc">Surendra creates visual content and marketing creatives that help businesses communicate their brand effectively across digital and promotional platforms.</p>
             <div class="team-skills">
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Graphic Design</span>
-                  <span class="skill-back">Graphic Design</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Branding Creatives</span>
-                  <span class="skill-back">Branding Creatives</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Social Media Creatives</span>
-                  <span class="skill-back">Social Media Creatives</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Marketing Materials</span>
-                  <span class="skill-back">Marketing Materials</span>
-                </span>
-              </span>
+              <span class="skill-tag">Graphic Design</span>
+              <span class="skill-tag">Branding Creatives</span>
+              <span class="skill-tag">Social Media Creatives</span>
+              <span class="skill-tag">Marketing Materials</span>
             </div>
           </div>
         </div>
 
-        <!-- Member 05 — Naveen Kumar (COMPACT — no image) -->
+        <!-- Member 05 — Naveen Kumar (PREMIUM COMPACT) -->
         <div class="team-card compact reveal">
+          <span class="card-accent"></span>
+          <span class="corner-dots"><span></span><span></span><span></span></span>
+          <span class="card-watermark">N</span>
           <div class="team-body">
+            <div class="compact-role">Website Design &amp; Development Specialist</div>
             <div class="team-name">Naveen Kumar</div>
-            <div class="team-role-flip">
-              <span class="flip-inner">
-                <span class="flip-front">Website Design &amp; Development Specialist</span>
-                <span class="flip-back">Website Design &amp; Development Specialist</span>
-              </span>
+            <div class="card-icon-grid">
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
             </div>
             <p class="team-desc">Naveen Kumar is responsible for designing and developing responsive, user friendly websites that create professional digital experiences and help businesses establish a strong online presence.</p>
             <div class="team-skills">
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Website Designing &amp; Development</span>
-                  <span class="skill-back">Website Designing &amp; Development</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Responsive Websites</span>
-                  <span class="skill-back">Responsive Websites</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Digital User Experience</span>
-                  <span class="skill-back">Digital User Experience</span>
-                </span>
-              </span>
+              <span class="skill-tag">Website Designing &amp; Development</span>
+              <span class="skill-tag">Responsive Websites</span>
+              <span class="skill-tag">Digital User Experience</span>
             </div>
           </div>
         </div>
 
-        <!-- Member 06 — Narsimha (COMPACT — no image) -->
+        <!-- Member 06 — Narsimha (PREMIUM COMPACT) -->
         <div class="team-card compact reveal">
+          <span class="card-accent"></span>
+          <span class="corner-dots"><span></span><span></span><span></span></span>
+          <span class="card-watermark">N</span>
           <div class="team-body">
+            <div class="compact-role">Social Media &amp; Online Marketing</div>
             <div class="team-name">Narsimha</div>
-            <div class="team-role-flip">
-              <span class="flip-inner">
-                <span class="flip-front">Social Media &amp; Online Marketing</span>
-                <span class="flip-back">Social Media &amp; Online Marketing</span>
-              </span>
+            <div class="card-icon-grid">
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
             </div>
             <p class="team-desc">Narsimha supports online marketing and social media activities, helping businesses expand their digital reach, connect with audiences and strengthen their online presence.</p>
             <div class="team-skills">
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Online Marketing</span>
-                  <span class="skill-back">Online Marketing</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Social Media</span>
-                  <span class="skill-back">Social Media</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Digital Audience Reach</span>
-                  <span class="skill-back">Digital Audience Reach</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Campaign Support</span>
-                  <span class="skill-back">Campaign Support</span>
-                </span>
-              </span>
+              <span class="skill-tag">Online Marketing</span>
+              <span class="skill-tag">Social Media</span>
+              <span class="skill-tag">Digital Audience Reach</span>
+              <span class="skill-tag">Campaign Support</span>
             </div>
           </div>
         </div>
 
-        <!-- Member 07 — P. Chandrakant (COMPACT — no image) -->
+        <!-- Member 07 — P. Chandrakant (PREMIUM COMPACT) -->
         <div class="team-card compact reveal">
+          <span class="card-accent"></span>
+          <span class="corner-dots"><span></span><span></span><span></span></span>
+          <span class="card-watermark">P</span>
           <div class="team-body">
+            <div class="compact-role">Event &amp; Party Planning Specialist</div>
             <div class="team-name">P. Chandrakant</div>
-            <div class="team-role-flip">
-              <span class="flip-inner">
-                <span class="flip-front">Event &amp; Party Planning Specialist</span>
-                <span class="flip-back">Event &amp; Party Planning Specialist</span>
-              </span>
+            <div class="card-icon-grid">
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <span class="icon-cell"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
             </div>
             <p class="team-desc">P. Chandrakant handles the planning and coordination of celebrations, surprise events, corporate occasions and special moments, bringing together creative ideas, practical arrangements and smooth execution.</p>
             <div class="team-skills">
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Party &amp; Celebration Planning</span>
-                  <span class="skill-back">Party &amp; Celebration Planning</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Surprise Events</span>
-                  <span class="skill-back">Surprise Events</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Corporate Events</span>
-                  <span class="skill-back">Corporate Events</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Special Occasions</span>
-                  <span class="skill-back">Special Occasions</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Return Gift Arrangements</span>
-                  <span class="skill-back">Return Gift Arrangements</span>
-                </span>
-              </span>
-              <span class="skill-tag">
-                <span class="skill-inner">
-                  <span class="skill-front">Event Decoration &amp; Coordination</span>
-                  <span class="skill-back">Event Decoration &amp; Coordination</span>
-                </span>
-              </span>
+              <span class="skill-tag">Party &amp; Celebration Planning</span>
+              <span class="skill-tag">Surprise Events</span>
+              <span class="skill-tag">Corporate Events</span>
+              <span class="skill-tag">Special Occasions</span>
+              <span class="skill-tag">Return Gift Arrangements</span>
+              <span class="skill-tag">Event Decoration &amp; Coordination</span>
             </div>
           </div>
         </div>
