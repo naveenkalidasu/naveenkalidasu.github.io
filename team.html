@@ -382,13 +382,15 @@
     }
 
     /* ============================================================
-       TEAM GRID — IMAGE ON TOP, TEXT BELOW, BOTH END TOGETHER
+       TEAM GRID — WITH & WITHOUT IMAGES
        ============================================================ */
     .team-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 32px;
     }
+
+    /* --- Standard card (with image) --- */
     .team-card {
       background: var(--white);
       border: 1px solid rgba(17, 17, 17, .08);
@@ -404,8 +406,6 @@
       box-shadow: 0 24px 48px -16px rgba(17, 17, 17, .14);
       border-color: rgba(168, 135, 82, .3);
     }
-    
-    /* ---------- IMAGE — FIXED 300x350 (no scroll, no stretch) ---------- */
     .team-card .team-img {
       width: 100%;
       height: 350px;
@@ -425,8 +425,6 @@
     .team-card:hover .team-img img {
       transform: scale(1.06);
     }
-    
-    /* ---------- TEXT BODY — expands to fill remaining space so bottom aligns ---------- */
     .team-card .team-body {
       padding: 26px 28px 28px;
       display: flex;
@@ -441,7 +439,7 @@
       margin-bottom: 6px;
     }
 
-    /* ---------- FLIP ANIMATION ON ROLE (TEXT SIDE) ---------- */
+    /* --- Flip role --- */
     .team-role-flip {
       perspective: 700px;
       margin-bottom: 16px;
@@ -488,7 +486,7 @@
       word-spacing: 0.02em;
     }
 
-    /* ---------- SKILL TAGS WITH FLIP ANIMATION (TEXT SIDE) ---------- */
+    /* --- Skill tags --- */
     .team-card .team-skills {
       display: flex;
       flex-wrap: wrap;
@@ -537,20 +535,53 @@
       color: var(--gold-hover);
     }
 
-    /* ---------- RESPONSIVE ---------- */
+    /* ============================================================
+       COMPACT CARD — NO IMAGE (for members 03–07)
+       ============================================================ */
+    .team-card.compact {
+      border-left: 3px solid var(--gold);
+      background: var(--white);
+      box-shadow: 0 4px 16px -8px rgba(17, 17, 17, .06);
+    }
+    .team-card.compact:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px -14px rgba(17, 17, 17, .12);
+      border-color: rgba(168, 135, 82, .35);
+    }
+    .team-card.compact .team-body {
+      padding: 28px 28px 26px;
+    }
+    .team-card.compact .team-name {
+      font-size: 1.25rem;
+    }
+    .team-card.compact .team-role-flip {
+      margin-bottom: 12px;
+    }
+    .team-card.compact .team-desc {
+      font-size: 0.86rem;
+      margin-bottom: 16px;
+    }
+    /* compact skill tags slightly tighter */
+    .team-card.compact .team-skills .skill-tag {
+      font-size: 0.68rem;
+      padding: 4px 10px;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
     @media(max-width: 900px) {
       .team-grid { grid-template-columns: 1fr; }
-      .team-card .team-img {
-        height: 350px;
-      }
-      .team-card .team-body {
-        padding: 24px;
-      }
+      .team-card .team-img { height: 350px; }
+      .team-card .team-body { padding: 24px; }
       .team-card .team-name { font-size: 1.2rem; }
       .team-card .team-desc { font-size: 0.85rem; margin-bottom: 12px; }
+      .team-card.compact .team-body { padding: 24px; }
+      .team-card.compact .team-name { font-size: 1.15rem; }
     }
     @media(max-width: 480px) {
       .team-card .team-img { height: 300px; }
+      .team-card.compact .team-body { padding: 20px; }
     }
 
     /* ============================================================
@@ -973,7 +1004,7 @@
           <div class="menu" role="menu">
             <span class="menu-label">What we offer</span>
 
-            <a href="./digitalmarketing.html" role="menuitem">
+            <a href="./digitalsolution.html" role="menuitem">
               <span class="icon">⚡</span>
               <span class="item-text">
                 <span class="title">Digital Solutions</span>
@@ -981,7 +1012,7 @@
               </span>
             </a>
 
-            <a href="./digitalmarketingtraining.html" role="menuitem">
+            <a href="./DM.html" role="menuitem">
               <span class="icon">🎓</span>
               <span class="item-text">
                 <span class="title">Digital Marketing Training</span>
@@ -989,7 +1020,7 @@
               </span>
             </a>
 
-            <a href="./electronicrepairs.html" role="menuitem">
+            <a href="./Technology.html" role="menuitem">
               <span class="icon">🔧</span>
               <span class="item-text">
                 <span class="title">Technology Solutions</span>
@@ -1007,8 +1038,7 @@
           </div>
         </div>
 
-        <a href="index.html#work">Work</a>
-        <a href="Archeivements.html">Achievements</a>
+        <a href="archeivements.html">Achievements</a>
         <a href="team.html" class="active">Team</a>
         <a href="index.html#contact">Contact</a>
       </nav>
@@ -1032,15 +1062,14 @@
         <span class="arrow">▼</span>
       </button>
       <div class="mobile-submenu">
-        <a href="./digitalmarketing.html"><span class="icon">⚡</span>Digital Solutions</a>
-        <a href="./digitalmarketingtraining.html"><span class="icon">🎓</span>Digital Marketing Training</a>
-        <a href="./electronicrepairs.html"><span class="icon">🔧</span>Technology Solutions</a>
+        <a href="./digitalsolution.html"><span class="icon">⚡</span>Digital Solutions</a>
+        <a href="./DM.html"><span class="icon">🎓</span>Digital Marketing Training</a>
+        <a href="./Technology.html"><span class="icon">🔧</span>Technology Solutions</a>
         <a href="./events.html"><span class="icon">🎉</span>Event &amp; Party Planning</a>
       </div>
     </div>
 
-    <a href="index.html#work">Work</a>
-    <a href="Archeivements.html">Achievements</a>
+    <a href="archeivements.html">Achievements</a>
     <a href="team.html">Team</a>
     <a href="index.html#contact">Contact</a>
     <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
@@ -1076,9 +1105,10 @@
         <p>A dedicated and talented team working together to understand your needs and deliver meaningful solutions.</p>
       </div>
 
-      <!-- ===== TEAM GRID — IMAGE TOP, TEXT BELOW, FLIP ON TEXT SIDE ===== -->
+      <!-- ===== TEAM GRID ===== -->
       <div class="team-grid">
-        <!-- Member 01 -->
+
+        <!-- Member 01 — T.V. Amarnadh (with image) -->
         <div class="team-card reveal">
           <div class="team-img">
             <img src="./sir.png">
@@ -1115,7 +1145,7 @@
           </div>
         </div>
 
-        <!-- Member 02 -->
+        <!-- Member 02 — T.S.L. Nishitha (with image) -->
         <div class="team-card reveal">
           <div class="team-img">
             <img src="./madam.png">
@@ -1176,11 +1206,8 @@
           </div>
         </div>
 
-        <!-- Member 03 -->
-        <div class="team-card reveal">
-          <div class="team-img">
-            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&h=450&fit=crop&crop=faces" alt="T.N.S. Charishma">
-          </div>
+        <!-- Member 03 — T.N.S. Charishma (COMPACT — no image) -->
+        <div class="team-card compact reveal">
           <div class="team-body">
             <div class="team-name">T.N.S. Charishma</div>
             <div class="team-role-flip">
@@ -1213,11 +1240,8 @@
           </div>
         </div>
 
-        <!-- Member 04 -->
-        <div class="team-card reveal">
-          <div class="team-img">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop&crop=faces" alt="Surendra">
-          </div>
+        <!-- Member 04 — Surendra (COMPACT — no image) -->
+        <div class="team-card compact reveal">
           <div class="team-body">
             <div class="team-name">Surendra</div>
             <div class="team-role-flip">
@@ -1256,11 +1280,8 @@
           </div>
         </div>
 
-        <!-- Member 05 -->
-        <div class="team-card reveal">
-          <div class="team-img">
-            <img src="./Naveen.jpeg">
-          </div>
+        <!-- Member 05 — Naveen Kumar (COMPACT — no image) -->
+        <div class="team-card compact reveal">
           <div class="team-body">
             <div class="team-name">Naveen Kumar</div>
             <div class="team-role-flip">
@@ -1293,11 +1314,8 @@
           </div>
         </div>
 
-        <!-- Member 06 -->
-        <div class="team-card reveal">
-          <div class="team-img">
-            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&h=450&fit=crop&crop=faces" alt="Narsimha">
-          </div>
+        <!-- Member 06 — Narsimha (COMPACT — no image) -->
+        <div class="team-card compact reveal">
           <div class="team-body">
             <div class="team-name">Narsimha</div>
             <div class="team-role-flip">
@@ -1336,11 +1354,8 @@
           </div>
         </div>
 
-        <!-- Member 07 -->
-        <div class="team-card reveal">
-          <div class="team-img">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&h=450&fit=crop&crop=faces" alt="P. Chandrakant">
-          </div>
+        <!-- Member 07 — P. Chandrakant (COMPACT — no image) -->
+        <div class="team-card compact reveal">
           <div class="team-body">
             <div class="team-name">P. Chandrakant</div>
             <div class="team-role-flip">
@@ -1390,7 +1405,8 @@
             </div>
           </div>
         </div>
-      </div>
+
+      </div><!-- /.team-grid -->
     </div>
   </section>
 
@@ -1703,10 +1719,9 @@
           <div class="col-list">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
-            <a href="digitalmarketing.html">Digital Solutions</a>
-            <a href="electronicrepairs.html">Technology Solutions</a>
-            <a href="index.html#work">Work</a>
-            <a href="Archeivements.html">Achievements</a>
+            <a href="digitalsolution.html">Digital Solutions</a>
+            <a href="Technology.html">Technology Solutions</a>
+            <a href="archeivements.html">Achievements</a>
             <a href="team.html">Team</a>
             <a href="index.html#contact">Contact</a>
           </div>
@@ -1714,11 +1729,11 @@
         <div>
           <div class="col-title">Services</div>
           <div class="col-list">
-            <a href="digitalmarketing.html">Digital Marketing &amp; Advertising</a>
-            <a href="digitalmarketing.html">SEO &amp; Content Marketing</a>
-            <a href="digitalmarketing.html">Website Designing</a>
-            <a href="digitalmarketing.html">E-commerce Solutions</a>
-            <a href="digitalmarketing.html">Branding &amp; Creative</a>
+            <a href="digitalsolution.html">Digital Marketing &amp; Advertising</a>
+            <a href="digitalsolution.html">SEO &amp; Content Marketing</a>
+            <a href="digitalsolution.html">Website Designing</a>
+            <a href="digitalsolution.html">E-commerce Solutions</a>
+            <a href="digitalsolution.html">Branding &amp; Creative</a>
             <a href="./events.html">Event &amp; Party Planning</a>
           </div>
         </div>
