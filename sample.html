@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Progress · Markdown Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f0f5fc;
+      --card: #ffffff;
+      --primary: #1e3a5f;
+      --primary-light: #3b82f6;
+      --text: #1e2f40;
+      --text-muted: #4b6584;
+      --border: #d9e7f5;
+      --success: #16a34a;
+      --warn: #eab308;
+      --danger: #dc2626;
+      --radius: 1.5rem;
+      --shadow: 0 10px 30px -10px rgba(0, 20, 40, 0.15);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+    body {
+      background: radial-gradient(circle at 10% 20%, #f0f7ff, #e3eefb);
+      min-height: 100vh;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      color: var(--text);
+    }
+    .app {
+      max-width: 1200px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      padding: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 30, 60, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0f263b, #2b4b6e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+    .sub {
+      color: var(--text-muted);
+      border-left: 4px solid var(--primary-light);
+      padding-left: 1rem;
+      margin-bottom: 1.8rem;
+      font-weight: 400;
+    }
+    /* Milestone banner */
+    .milestone-banner {
+      background: linear-gradient(135deg, #fef9c3, #fde68a);
+      border-radius: 1.5rem;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 2px solid #fbbf24;
+      box-shadow: 0 8px 20px -6px #fbbf2450;
+    }
+    .milestone-banner .badge-icon { font-size: 2.2rem; }
+    .milestone-banner .info { flex: 1; }
+    .milestone-banner .info h3 { font-size: 1.1rem; color: #78350f; margin-bottom: 0.25rem; }
+    .milestone-banner .info p { font-size: 0.9rem; color: #92400e; }
+    .cert-btn {
+      background: #1e3a5f;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.6rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px #1e3a5f40;
+    }
+    .cert-btn:hover { background: #0f263b; transform: translateY(-1px); }
+    .cert-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
+    /* Quote card */
+    .quote-card {
+      background: linear-gradient(135deg, #ffffff, #f2f9ff);
+      border-radius: 1.8rem;
+      padding: 1.4rem 1.8rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 18px -6px rgba(0, 30, 60, 0.08);
+    }
+    .quote-text {
+      flex: 1;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--primary);
+      line-height: 1.6;
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .quote-text i { color: var(--primary-light); opacity: 0.8; font-size: 1.3rem; }
+    .quote-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 6px 14px rgba(30, 58, 95, 0.2);
+      white-space: nowrap;
+    }
+    .quote-btn:hover { background: #0f263b; transform: scale(1.02); }
+    .quote-btn:disabled { opacity: 0.6; cursor: wait; }
+    /* Progress */
+    .progress-section {
+      background: white;
+      border-radius: 1.8rem;
+      padding: 1.4rem 1.8rem;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 6px 16px rgba(0, 20, 40, 0.04);
+      border: 1px solid var(--border);
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .progress-header .count { font-size: 1.2rem; background: var(--primary); color: white; padding: 0.2rem 1rem; border-radius: 2rem; }
+    .bar-bg { height: 14px; background: #dfe9f2; border-radius: 100px; overflow: hidden; }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3b82f6, #2563eb, #1e4a7a);
+      border-radius: 100px;
+      transition: width 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    /* Add question */
+    .add-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1.8rem;
+      background: white;
+      padding: 1.2rem 1.5rem;
+      border-radius: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--border);
+    }
+    .add-area input, .add-area select {
+      padding: 0.8rem 1.2rem;
+      border-radius: 3rem;
+      border: 1px solid #cbdae9;
+      background: #f9fcff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .add-area input:focus, .add-area select:focus { border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); background: white; }
+    .add-area input { flex: 2; min-width: 200px; }
+    .add-area button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+      box-shadow: 0 6px 14px rgba(30, 58, 95, 0.15);
+    }
+    .add-area button:hover { background: #0f263b; transform: translateY(-1px); }
+    /* Bulk import */
+    .bulk-area {
+      background: #eef6fe;
+      border-radius: 2rem;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      border: 1px dashed rgba(59, 130, 246, 0.5);
+    }
+    .bulk-area textarea {
+      flex: 2;
+      min-width: 260px;
+      height: 80px;
+      padding: 0.9rem 1.2rem;
+      border-radius: 1.5rem;
+      border: 1px solid #b6d0e8;
+      background: white;
+      font-size: 0.9rem;
+      resize: vertical;
+      outline: none;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .bulk-area button {
+      background: var(--primary-light);
+      color: white;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+      box-shadow: 0 6px 14px rgba(59, 130, 246, 0.25);
+    }
+    .bulk-area button:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .bulk-hint { font-size: 0.8rem; color: #3b5d81; }
+    /* Table */
+    .table-wrapper {
+      background: white;
+      border-radius: 2rem;
+      overflow: auto;
+      box-shadow: 0 12px 30px -10px rgba(0, 20, 40, 0.12);
+      border: 1px solid #e0eefb;
+      max-height: 550px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 700px; }
+    th {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      font-size: 0.9rem;
+    }
+    td { padding: 0.85rem 1rem; border-bottom: 1px solid #e6f0fa; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f4faff; }
+    .done-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); }
+    .difficulty-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      background: #e9f0f9;
+      color: var(--primary);
+    }
+    .topic-badge {
+      background: #e1ecf9;
+      padding: 0.25rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .completed-row td { background: #f0f9f0; color: #2b5e2b; }
+    .completed-row .difficulty-badge { background: #d1f0d1; }
+    .actions-cell { text-align: center; }
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 1rem;
+      opacity: 0.4;
+      transition: 0.2s;
+      padding: 0.4rem;
+      border-radius: 50%;
+    }
+    .delete-btn:hover { opacity: 1; background: #fee2e2; }
+    .empty-message { text-align: center; padding: 3rem; color: #6b8ba8; font-style: italic; }
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 3rem;
+      box-shadow: 0 15px 30px -8px black;
+      font-weight: 500;
+      z-index: 999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    /* Certificate modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 20, 40, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .certificate {
+      background: linear-gradient(145deg, #fffdf5, #fef9e7);
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+      border: 6px double #b45309;
+      box-shadow: 0 30px 60px -15px #00000080;
+      position: relative;
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .certificate .ribbon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    .certificate h2 {
+      font-size: 2rem;
+      color: #78350f;
+      font-family: Georgia, serif;
+      margin-bottom: 0.25rem;
+    }
+    .certificate .subtitle {
+      color: #92400e;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+    .certificate .name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      border-bottom: 2px dashed #b45309;
+      padding-bottom: 0.3rem;
+      margin: 1rem auto 1.5rem;
+      width: fit-content;
+      padding-inline: 1rem;
+    }
+    .certificate .achievement {
+      background: #fef3c7;
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      color: #78350f;
+      font-weight: 500;
+    }
+    .certificate .date {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    .cert-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #92400e;
+      opacity: 0.6;
+      transition: 0.2s;
+    }
+    .cert-close:hover { opacity: 1; }
+    .cert-actions {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .cert-actions button {
+      padding: 0.6rem 1.4rem;
+      border-radius: 3rem;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.2s;
+    }
+    .btn-download { background: var(--primary); color: white; }
+    .btn-download:hover { background: #0f263b; }
+    .btn-close-cert { background: #e5e7eb; color: #374151; }
+    .btn-close-cert:hover { background: #d1d5db; }
+    @media (max-width: 700px) {
+      .app { padding: 1.2rem; }
+      h1 { font-size: 1.6rem; }
+      .milestone-banner { flex-direction: column; text-align: center; }
+      .quote-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <h1><i class="fas fa-code"></i> DSA Progress Tracker</h1>
+  <div class="sub">Track, complete, and get motivated by AI</div>
+
+  <!-- Milestone banner -->
+  <div class="milestone-banner" id="milestoneBanner">
+    <div class="badge-icon" id="milestoneIcon">🏅</div>
+    <div class="info">
+      <h3 id="milestoneTitle">Milestone: 0%</h3>
+      <p id="milestoneDesc">Complete 5 questions to unlock your first certificate!</p>
+    </div>
+    <button class="cert-btn" id="viewCertBtn" disabled>
+      <i class="fas fa-certificate"></i> View Certificate
+    </button>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote-card">
+    <div class="quote-text" id="quoteDisplay">
+      <i class="fas fa-quote-left"></i> Loading a fresh quote...
+    </div>
+    <button class="quote-btn" id="newQuoteBtn">
+      <i class="fas fa-robot"></i> New Quote
+    </button>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <span><i class="fas fa-check-circle"></i> Completed</span>
+      <span class="count" id="progressFraction">0 / 0</span>
+    </div>
+    <div class="bar-bg"><div class="bar-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- Add single -->
+  <div class="add-area">
+    <input type="text" id="newQuestionInput" placeholder="e.g. Find the largest element in an array">
+    <select id="newTopicSelect">
+      <option>Array</option><option>String</option><option>Linked List</option>
+      <option>Stack</option><option>Queue</option><option>Tree</option>
+      <option>XOR</option><option>HashMap</option><option>Searching</option><option>Other</option>
+    </select>
+    <select id="newDifficultySelect">
+      <option value="⭐">⭐ Easy</option>
+      <option value="⭐⭐">⭐⭐ Medium</option>
+      <option value="⭐⭐⭐">⭐⭐⭐ Hard</option>
+    </select>
+    <button id="addQuestionBtn"><i class="fas fa-plus-circle"></i> Add</button>
+  </div>
+
+  <!-- Bulk import -->
+  <div class="bulk-area">
+    <textarea id="bulkInput" placeholder="Paste up to 30 questions (one per line, tab/pipe separated):&#10;Two Sum	Array / HashMap	⭐⭐&#10;Reverse a string	String	⭐"></textarea>
+    <button id="bulkImportBtn"><i class="fas fa-file-import"></i> Import</button>
+    <span class="bulk-hint"><i class="fas fa-info-circle"></i> Max 30 lines</span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px;">Done</th>
+          <th style="width:40px;">#</th>
+          <th>Problem</th>
+          <th>Topic</th>
+          <th>Difficulty</th>
+          <th style="width:60px;"></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div id="emptyMessage" class="empty-message" style="display:none;">
+      <i class="fas fa-clipboard-list"></i> No questions yet. Add one or bulk import.
+    </div>
+  </div>
+</div>
+
+<!-- Certificate modal -->
+<div class="modal-overlay" id="certModal">
+  <div class="certificate" id="certificateContent">
+    <button class="cert-close" id="closeCertBtn">&times;</button>
+    <div class="ribbon">🏆</div>
+    <h2>Certificate of Achievement</h2>
+    <div class="subtitle">This certifies that</div>
+    <div class="name" id="certName">DSA Learner</div>
+    <div class="achievement" id="certAchievement">has successfully completed 5 DSA problems!</div>
+    <div class="date" id="certDate"></div>
+    <div class="cert-actions">
+      <button class="btn-download" id="downloadCertBtn"><i class="fas fa-download"></i> Save as Image</button>
+      <button class="btn-close-cert" id="closeCertBtn2"><i class="fas fa-times"></i> Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">✅ Question added</div>
+
+<script>
+  (function() {
+    // ========== CONFIG ==========
+    // ⚠️ API key (demo only — in production use a backend proxy)
+    const MISTRAL_API_KEY = 'Zm68RHJ8zX6nKST0a1P7sAE4Ii3luIY2';
+    const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
+    const STORAGE_KEY = 'dsa_progress_tracker_v2';
+
+    // ========== DEFAULT QUESTIONS ==========
+    const DEFAULT_QUESTIONS = [
+      { problem: "Find the largest element in an array", topic: "Array", difficulty: "⭐" },
+      { problem: "Find the second largest element", topic: "Array", difficulty: "⭐" },
+      { problem: "Reverse an array", topic: "Array", difficulty: "⭐" },
+      { problem: "Check if an array is sorted", topic: "Array", difficulty: "⭐" },
+      { problem: "Remove duplicates from a sorted array", topic: "Array", difficulty: "⭐⭐" },
+      { problem: "Move all zeros to the end", topic: "Array", difficulty: "⭐⭐" },
+      { problem: "Find the missing number", topic: "Array / XOR", difficulty: "⭐⭐" },
+      { problem: "Find the element that appears once", topic: "XOR", difficulty: "⭐⭐" },
+      { problem: "Two Sum", topic: "Array / HashMap", difficulty: "⭐⭐" },
+      { problem: "Maximum subarray sum", topic: "Array / Kadane", difficulty: "⭐⭐" },
+      { problem: "Reverse a string", topic: "String", difficulty: "⭐" },
+      { problem: "Check palindrome", topic: "String", difficulty: "⭐" },
+      { problem: "Count vowels and consonants", topic: "String", difficulty: "⭐" },
+      { problem: "Find the first non-repeating character", topic: "String / HashMap", difficulty: "⭐⭐" },
+      { problem: "Check if two strings are anagrams", topic: "String / HashMap", difficulty: "⭐⭐" },
+      { problem: "Implement Stack using Array", topic: "Stack", difficulty: "⭐⭐" },
+      { problem: "Implement Queue using Array", topic: "Queue", difficulty: "⭐⭐" },
+      { problem: "Valid Parentheses", topic: "Stack", difficulty: "⭐⭐" },
+      { problem: "Reverse a Linked List", topic: "Linked List", difficulty: "⭐⭐" },
+      { problem: "Find middle of Linked List", topic: "Linked List", difficulty: "⭐⭐" },
+      { problem: "Detect cycle in Linked List", topic: "Linked List", difficulty: "⭐⭐⭐" },
+      { problem: "Binary Search", topic: "Searching", difficulty: "⭐⭐" },
+      { problem: "Linear Search", topic: "Searching", difficulty: "⭐" },
+      { problem: "Find maximum depth of Binary Tree", topic: "Tree", difficulty: "⭐⭐" },
+      { problem: "Tree Traversal: Inorder, Preorder, Postorder", topic: "Tree", difficulty: "⭐⭐" }
+    ];
+
+    // ========== STATE ==========
+    let questions = [];           // { id, problem, topic, difficulty, completed }
+    let lastMilestoneReached = 0; // track which milestone we've already celebrated
+
+    // ========== DOM refs ==========
+    const $ = (id) => document.getElementById(id);
+
+    // ========== TOAST ==========
+    function showToast(msg, ok = true) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.style.background = ok ? '#1e3a5f' : '#b91c1c';
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // ========== STORAGE ==========
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          questions,
+          lastMilestoneReached
+        }));
+      } catch (e) {
+        console.warn('Failed to save to localStorage', e);
+      }
+    }
+
+    function loadFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data.questions)) {
+            questions = data.questions;
+            lastMilestoneReached = data.lastMilestoneReached || 0;
+            return true;
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to load from localStorage', e);
+      }
+      return false;
+    }
+
+    // ========== RENDER ==========
+    function render() {
+      const tbody = $('tableBody');
+      const empty = $('emptyMessage');
+
+      if (!questions.length) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+      } else {
+        empty.style.display = 'none';
+        let html = '';
+        questions.forEach((q, i) => {
+          const rowClass = q.completed ? 'completed-row' : '';
+          html += `
+            <tr class="${rowClass}" data-id="${q.id}">
+              <td><input type="checkbox" class="done-checkbox" data-id="${q.id}" ${q.completed ? 'checked' : ''}></td>
+              <td>${i + 1}</td>
+              <td>${escapeHtml(q.problem)}</td>
+              <td><span class="topic-badge">${escapeHtml(q.topic)}</span></td>
+              <td><span class="difficulty-badge">${escapeHtml(q.difficulty)}</span></td>
+              <td class="actions-cell">
+                <button class="delete-btn" data-id="${q.id}"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      }
+
+      // progress
+      const total = questions.length;
+      const done = questions.filter(q => q.completed).length;
+      $('progressFraction').textContent = `${done} / ${total}`;
+      const pct = total === 0 ? 0 : (done / total) * 100;
+      $('progressFill').style.width = pct + '%';
+
+      // check milestone unlock
+      checkMilestone(done, total);
+
+      // attach listeners
+      document.querySelectorAll('.done-checkbox').forEach(cb => {
+        cb.removeEventListener('change', onCheckbox);
+        cb.addEventListener('change', onCheckbox);
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.removeEventListener('click', onDelete);
+        btn.addEventListener('click', onDelete);
+      });
+    }
+
+    function onCheckbox(e) {
+      const id = Number(e.target.dataset.id);
+      const q = questions.find(q => q.id === id);
+      if (q) {
+        q.completed = e.target.checked;
+        saveToStorage();
+        render();
+      }
+    }
+
+    function onDelete(e) {
+      const id = Number(e.currentTarget.dataset.id);
+      questions = questions.filter(q => q.id !== id);
+      saveToStorage();
+      render();
+      showToast('Question removed');
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s || '';
+      return d.innerHTML;
+    }
+
+    // ========== MILESTONE & CERTIFICATE ==========
+    function checkMilestone(done, total) {
+      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+      const banner = $('milestoneBanner');
+      const icon = $('milestoneIcon');
+      const title = $('milestoneTitle');
+      const desc = $('milestoneDesc');
+      const btn = $('viewCertBtn');
+
+      // Determine current milestone
+      let milestone = 0;
+      if (pct >= 100) milestone = 100;
+      else if (pct >= 75) milestone = 75;
+      else if (pct >= 50) milestone = 50;
+      else if (pct >= 25) milestone = 25;
+      else if (pct >= 10) milestone = 10;
+      else if (done >= 5) milestone = 5;
+      else if (done >= 1) milestone = 1;
+
+      // Update banner visuals
+      const milestones = {
+        0: { icon: '🏅', title: 'Milestone: 0%', desc: 'Complete 5 questions to unlock your first certificate!' },
+        1: { icon: '🌱', title: 'Milestone: Started!', desc: `${done} question${done > 1 ? 's' : ''} solved. Keep going!` },
+        5: { icon: '🔥', title: 'Milestone: 5 solved', desc: 'You unlocked the first certificate! 🎉' },
+        10: { icon: '⚡', title: 'Milestone: 10%', desc: 'Great momentum! Certificate available.' },
+        25: { icon: '🌟', title: 'Milestone: 25%', desc: 'Quarter way there! Certificate available.' },
+        50: { icon: '🏆', title: 'Milestone: 50%', desc: 'Halfway hero! Certificate available.' },
+        75: { icon: '💎', title: 'Milestone: 75%', desc: 'Almost there! Certificate available.' },
+        100: { icon: '👑', title: 'Milestone: 100%', desc: 'All questions completed! Legendary! Certificate available.' }
+      };
+
+      const info = milestones[milestone] || milestones[0];
+      icon.textContent = info.icon;
+      title.textContent = info.title;
+      desc.textContent = info.desc;
+
+      // Enable cert button if any milestone >= 5
+      const canView = milestone >= 5;
+      btn.disabled = !canView;
+
+      // Show celebration if new milestone reached
+      if (canView && milestone > lastMilestoneReached) {
+        lastMilestoneReached = milestone;
+        saveToStorage();
+        showToast(`🎉 Milestone unlocked: ${info.title}! Certificate available!`);
+      }
+    }
+
+    function openCertificate() {
+      const done = questions.filter(q => q.completed).length;
+      const total = questions.length;
+      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+      $('certName').textContent = 'DSA Learner';
+      $('certAchievement').textContent = `has successfully completed ${done} out of ${total} DSA problems (${pct}%)`;
+      $('certDate').textContent = `Awarded on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      $('certModal').classList.add('active');
+    }
+
+    function closeCert() {
+      $('certModal').classList.remove('active');
+    }
+
+    // Download certificate as image (simple canvas render of text)
+    function downloadCertificate() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+
+      // Background
+      const grad = ctx.createLinearGradient(0, 0, 800, 600);
+      grad.addColorStop(0, '#fffdf5');
+      grad.addColorStop(1, '#fef9e7');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 800, 600);
+
+      // Border
+      ctx.strokeStyle = '#b45309';
+      ctx.lineWidth = 12;
+      ctx.strokeRect(20, 20, 760, 560);
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(35, 35, 730, 530);
+
+      // Ribbon
+      ctx.font = '60px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🏆', 400, 120);
+
+      // Title
+      ctx.fillStyle = '#78350f';
+      ctx.font = 'bold 42px Georgia, serif';
+      ctx.fillText('Certificate of Achievement', 400, 200);
+
+      ctx.fillStyle = '#92400e';
+      ctx.font = 'italic 20px Georgia, serif';
+      ctx.fillText('This certifies that', 400, 250);
+
+      // Name
+      ctx.fillStyle = '#1e3a5f';
+      ctx.font = 'bold 36px system-ui, sans-serif';
+      ctx.fillText('DSA Learner', 400, 310);
+
+      // Achievement
+      const done = questions.filter(q => q.completed).length;
+      const total = questions.length;
+      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+      ctx.fillStyle = '#78350f';
+      ctx.font = '20px system-ui, sans-serif';
+      ctx.fillText(`has successfully completed ${done} out of ${total} DSA problems (${pct}%)`, 400, 380);
+
+      // Date
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '16px system-ui, sans-serif';
+      ctx.fillText(`Awarded on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 400, 450);
+
+      // Signature line
+      ctx.strokeStyle = '#b45309';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(250, 510);
+      ctx.lineTo(550, 510);
+      ctx.stroke();
+      ctx.fillStyle = '#92400e';
+      ctx.font = '16px Georgia, serif';
+      ctx.fillText('DSA Progress Tracker', 400, 540);
+
+      // Download
+      const link = document.createElement('a');
+      link.download = `DSA_Certificate_${new Date().toISOString().slice(0, 10)}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('📥 Certificate downloaded!');
+    }
+
+    // ========== ADD QUESTION ==========
+    function addQuestion(problem, topic, difficulty) {
+      if (!problem || !problem.trim()) return false;
+      questions.push({
+        id: Date.now() + Math.floor(Math.random() * 10000),
+        problem: problem.trim(),
+        topic: (topic || 'Other').trim(),
+        difficulty: (difficulty || '⭐').trim(),
+        completed: false
+      });
+      return true;
+    }
+
+    function addBulkQuestions(text) {
+      const lines = text.split(/\r?\n/).filter(l => l.trim());
+      if (!lines.length) { showToast('Nothing to import', false); return; }
+      const limit = Math.min(lines.length, 30);
+      let added = 0;
+      for (let i = 0; i < limit; i++) {
+        let parts = lines[i].trim().split(/\t+|\|+/).map(p => p.trim());
+        let problem = (parts[0] || '').replace(/^\d+[\.\)]?\s*/, '');
+        let topic = parts[1] || 'Other';
+        let diff = parts[2] || '⭐';
+        if (problem && addQuestion(problem, topic, diff)) added++;
+      }
+      if (added) {
+        saveToStorage();
+        render();
+        showToast(`✅ Imported ${added} question${added > 1 ? 's' : ''}`);
+        $('bulkInput').value = '';
+      } else {
+        showToast('No valid questions found', false);
+      }
+    }
+
+    // ========== LLM QUOTE (with fallback) ==========
+    const FALLBACK_QUOTES = [
+      "Code every day, debug every night.",
+      "The best way to learn DSA is to solve one more.",
+      "Consistency beats intensity. Keep pushing.",
+      "Every solved problem is a step toward mastery.",
+      "Your future self will thank you for not giving up.",
+      "Small progress is still progress. Keep going.",
+      "The expert in anything was once a beginner.",
+      "Don't watch the clock; do what it does. Keep going.",
+      "The only way to fail is to stop trying.",
+      "Problem by problem, you're building something great."
+    ];
+
+    async function fetchQuote() {
+      const display = $('quoteDisplay');
+      const btn = $('newQuoteBtn');
+      btn.disabled = true;
+      display.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Asking Mistral...`;
+
+      try {
+        const res = await fetch(MISTRAL_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${MISTRAL_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'mistral-small-latest',
+            messages: [
+              { role: 'system', content: 'You are a motivational coding coach. Generate a short, energetic quote about problem solving, consistency, or learning DSA. Keep it under 20 words. No markdown, no quotes.' },
+              { role: 'user', content: 'Give me a fresh motivational quote for a developer grinding DSA.' }
+            ],
+            temperature: 0.9,
+            max_tokens: 60
+          })
+        });
+
+        if (res.status === 429) {
+          throw new Error('rate_limit');
+        }
+        if (!res.ok) {
+          throw new Error(`API error ${res.status}`);
+        }
+
+        const data = await res.json();
+        let quote = data.choices?.[0]?.message?.content?.trim() || '';
+        quote = quote.replace(/^["']|["']$/g, '');
+        if (!quote) quote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
+        display.innerHTML = `<i class="fas fa-quote-left"></i> ${escapeHtml(quote)}`;
+      } catch (err) {
+        console.warn('Quote fetch failed, using fallback:', err.message);
+        const fallback = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
+        display.innerHTML = `<i class="fas fa-quote-left"></i> ${fallback}`;
+        if (err.message === 'rate_limit') {
+          showToast('⏳ Quote rate limited — showing fallback', false);
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // ========== INIT ==========
+    function init() {
+      // Load from storage or defaults
+      const loaded = loadFromStorage();
+      if (!loaded) {
+        DEFAULT_QUESTIONS.forEach((q, i) => {
+          questions.push({
+            id: Date.now() + i,
+            problem: q.problem,
+            topic: q.topic,
+            difficulty: q.difficulty,
+            completed: false
+          });
+        });
+        saveToStorage();
+      }
+
+      render();
+      fetchQuote();
+
+      // Event listeners
+      $('addQuestionBtn').addEventListener('click', () => {
+        const problem = $('newQuestionInput').value.trim();
+        const topic = $('newTopicSelect').value;
+        const diff = $('newDifficultySelect').value;
+        if (!problem) { showToast('Enter a problem statement', false); return; }
+        if (addQuestion(problem, topic, diff)) {
+          saveToStorage();
+          render();
+          $('newQuestionInput').value = '';
+          showToast('✅ Question added');
+        }
+      });
+
+      $('bulkImportBtn').addEventListener('click', () => {
+        addBulkQuestions($('bulkInput').value);
+      });
+
+      $('newQuoteBtn').addEventListener('click', fetchQuote);
+
+      $('viewCertBtn').addEventListener('click', openCertificate);
+      $('closeCertBtn').addEventListener('click', closeCert);
+      $('closeCertBtn2').addEventListener('click', closeCert);
+      $('downloadCertBtn').addEventListener('click', downloadCertificate);
+
+      // Close modal on overlay click
+      $('certModal').addEventListener('click', (e) => {
+        if (e.target === $('certModal')) closeCert();
+      });
+
+      // Allow Enter key in single input
+      $('newQuestionInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') $('addQuestionBtn').click();
+      });
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>
