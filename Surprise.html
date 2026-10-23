@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Surprise for You ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: linear-gradient(135deg, #18002e, #65004d, #17002b);
+    text-align: center;
+}
+
+.card {
+    width: 90%;
+    max-width: 400px;
+    padding: 35px 22px;
+    border: 1px solid #ff83d4;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 35px #ff00a6;
+    animation: appear 1.5s ease;
+    z-index: 2;
+}
+
+h1 {
+    color: #ff9de2;
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px #ff00c8;
+}
+
+p {
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.heart {
+    font-size: 55px;
+    animation: beat 1s infinite;
+    margin-bottom: 15px;
+}
+
+button, .follow {
+    display: inline-block;
+    padding: 13px 23px;
+    margin: 7px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+button {
+    color: white;
+    background: #ff1493;
+}
+
+.follow {
+    color: #8b004e;
+    background: #fff;
+}
+
+button:hover, .follow:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px #ff70d0;
+}
+
+#message {
+    display: none;
+    margin-top: 20px;
+    color: #ffd1ef;
+    font-size: 18px;
+}
+
+.floating {
+    position: absolute;
+    bottom: -30px;
+    animation: floatUp 7s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes beat {
+    50% { transform: scale(1.2); }
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes floatUp {
+    to {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="heart">💖</div>
+
+    <h1>Hey, Beautiful People! ✨</h1>
+
+    <p>
+        Welcome to my little world! 🥰<br>
+        You are not just a follower…<br>
+        You are a part of my journey! ❤️
+    </p>
+
+    <button onclick="surprise()">🎁 Open Your Surprise</button>
+
+    <div id="message">
+        🎉 Thank you for being here! 💕<br>
+        Keep supporting my journey! 🫶
+    </div>
+
+    <p style="margin-top:22px;">
+        Love my content? Join our family! 👇
+    </p>
+
+    <!-- Replace this URL with your website or social profile -->
+    <a class="follow"
+       href="https://www.instagram.com/"
+       target="_blank">
+       ❤️ Follow Me
+    </a>
+
+    <p style="font-size:13px; margin-top:20px;">
+        Made with ❤️ just for you
+    </p>
+</div>
+
+<script>
+function surprise() {
+    document.getElementById("message").style.display = "block";
+
+    for (let i = 0; i < 25; i++) {
+        let heart = document.createElement("div");
+        heart.className = "floating";
+        heart.innerHTML = ["❤️", "💖", "✨", "💕", "🎉"][
+            Math.floor(Math.random() * 5)
+        ];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (20 + Math.random() * 20) + "px";
+        heart.style.animationDuration = (3 + Math.random() * 4) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 7500);
+    }
+}
+</script>
+
+</body>
+</html>
